@@ -26,11 +26,8 @@ class Site extends REST_Controller {
                     $data[$key]['code'] = $value->code;
                     $data[$key]['libelle'] = $value->libelle;
                     $data[$key]['adresse'] = $value->adresse;
-                    $data[$key]['adresse'] = $value->adresse;
-                    $data[$key]['adresse'] = $value->adresse;
-                    $data[$key]['adresse'] = $value->adresse;
-                    $data[$key]['adresse'] = $value->adresse;
-                    $data[$key]['adresse'] = $value->adresse;
+
+                    //NIOVA VE NY ANY?????
                 }
             }
             if (!$data)
