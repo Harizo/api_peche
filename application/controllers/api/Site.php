@@ -28,6 +28,8 @@ class Site extends REST_Controller {
                     $data[$key]['adresse'] = $value->adresse;
 
                     //TESTE MANIPULATION 2
+
+                    //HARIZO
                 }
             }
             if (!$data)
