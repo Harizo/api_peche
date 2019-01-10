@@ -138,6 +138,10 @@ class Site extends REST_Controller {
             }
         }
     }
+ public function bruce() {
+
+    
+ }  
 }
 /* End of file controllername.php */
 /* Location: ./application/controllers/controllername.php */
