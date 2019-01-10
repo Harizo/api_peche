@@ -11,6 +11,10 @@ class Site extends REST_Controller {
         parent::__construct();
         $this->load->model('site_model', 'SiteManager');
     }
+    public function test harizo()
+    {
+        //BLABALABABALA
+    }
     public function index_get() {
         $id = $this->get('id');
         if ($id) {
