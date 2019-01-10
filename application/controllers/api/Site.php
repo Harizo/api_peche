@@ -11,10 +11,7 @@ class Site extends REST_Controller {
         parent::__construct();
         $this->load->model('site_model', 'SiteManager');
     }
-    public function test harizo()
-    {
-        //BLABALABABALA
-    }
+   
     public function index_get() {
         $id = $this->get('id');
         if ($id) {
@@ -32,14 +29,7 @@ class Site extends REST_Controller {
                     $data[$key]['adresse'] = $value->adresse;
 
 
-                    //TESTE MANIPULATION 3
-
-                    //TESTE MANIPULATION 2
-
-                    //bruce
-
-
-                    //HARIZO
+                  
 
                 }
             }
@@ -142,10 +132,7 @@ class Site extends REST_Controller {
             }
         }
     }
- public function bruce() {
 
-    
- }  
 }
 /* End of file controllername.php */
 /* Location: ./application/controllers/controllername.php */
