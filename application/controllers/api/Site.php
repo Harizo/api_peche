@@ -27,7 +27,7 @@ class Site extends REST_Controller {
                     $data[$key]['libelle'] = $value->libelle;
                     $data[$key]['adresse'] = $value->adresse;
 
-                    //NIOVA VE NY ANY?????
+                    //TESTE MANIPULATION 1
                 }
             }
             if (!$data)
