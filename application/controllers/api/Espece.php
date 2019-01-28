@@ -9,7 +9,7 @@ class espece extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('espece_model', 'EspeceManager');
+        $this->load->model('Espece_model', 'EspeceManager');
     }
 
     public function index_get() {
@@ -25,7 +25,8 @@ class espece extends REST_Controller {
                 $espece= $this->EspeceManager->findById($id);
                 $data['id'] = $espece->id;
                 $data['code'] = $espece->code;
-                $data['nom'] = $espece->nom;
+                $data['nom_local'] = $espece->nom_local;
+                $data['nom_scientifique'] = $espece->nom_scientifique;
                 
             } else {
                 $espece= $this->EspeceManager->findAll();
@@ -34,7 +35,8 @@ class espece extends REST_Controller {
                         
                         $data[$key]['id'] = $value->id;
                         $data[$key]['code'] = $value->code;
-                        $data[$key]['nom'] = $value->nom;
+                        $data[$key]['nom_local'] = $value->nom_local;
+                        $data[$key]['nom_scientifique'] = $value->nom_scientifique;
                         
                     };
                 } else
@@ -62,8 +64,8 @@ class espece extends REST_Controller {
             if ($id == 0) {
                 $data = array(
                     'code' => $this->post('code'),
-                    'nom_locale' => $this->post('nom_locale'),
-                    'nom_scientifique' => $this->post('nom_scientifique')
+                    'nom_local' => $this->post('nom_local'),
+                    'nom_scientifique' => $this->post('nom_scientifique'),
                 );               
                 if (!$data) {
                     $this->response([
@@ -89,8 +91,8 @@ class espece extends REST_Controller {
             } else {
                 $data = array(
                     'code' => $this->post('code'),
-                    'nom_locale' => $this->post('nom_locale'),
-                    'nom_scientifique' => $this->post('nom_scientifique')
+                    'nom_local' => $this->post('nom_local'),
+                    'nom_scientifique' => $this->post('nom_scientifique'),
                 );              
                 if (!$data || !$id) {
                     $this->response([
