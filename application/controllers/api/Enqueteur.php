@@ -5,49 +5,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Commune extends REST_Controller {
+class enqueteur extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('commune_model', 'CommuneManager');
-        $this->load->model('district_model', 'DistrictManager');
+        $this->load->model('enqueteur_model', 'EnqueteurManager');
+        $this->load->model('region_model', 'RegionManager');
     }
+
     public function index_get() {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
-        $id_district = $this->get('id_district');
-        $id_region = $this->get('id_region');
-		$taiza="";
         if ($cle_etrangere) {
-            $data = $this->CommuneManager->findAllByDistrict($cle_etrangere);           
+            $data = $this->EnqueteurManager->findAllByRegion($cle_etrangere);
+            
         } else {
-            if ($id)  {
+            if ($id) {
                 $data = array();
-                $commune = $this->CommuneManager->findById($id);
-                $district = $this->DistrictManager->findById($commune->district_id);
-                $data['id'] = $commune->id;
-                $data['code'] = $commune->code;
-                $data['nom'] = $commune->nom;
-                $data['district'] = $district;
-            } else if($id_district && $id_region) {
-				$taiza="Ato ambony ary id_district=".$id_district."  ary id_region=".$id_region; 
-				$menu = $this->CommuneManager->find_Commune_avec_District_et_Region();
-                if ($menu) {
-					$data=$menu;
-                } else
-                    $data = array();
-			} else {
-				$taiza="findAll no nataony";
-                $menu = $this->CommuneManager->findAll();
+                $enqueteur = $this->EnqueteurManager->findById($id);
+                $region = $this->RegionManager->findById($enqueteur->id_region);
+                $data['id'] = $enqueteur->id;
+                $data['prenom'] = $enqueteur->prenom;
+                $data['nom'] = $enqueteur->nom;
+                $data['cin'] = $enqueteur->cin;
+                $data['region'] = $region;
+            } else {
+                $menu = $this->EnqueteurManager->findAll();
                 if ($menu) {
                     foreach ($menu as $key => $value) {
-                        $district = array();
-                        $district = $this->DistrictManager->findById($value->id_district);
+                        $region = array();
+                        $region = $this->RegionManager->findById($value->id_region);
                         $data[$key]['id'] = $value->id;
-                        $data[$key]['code'] = $value->code;
+                        $data[$key]['prenom'] = $value->prenom;
                         $data[$key]['nom'] = $value->nom;
-                        $data[$key]['district_id'] = $value->id_district;
-                        $data[$key]['district'] = $district;
+                        $data[$key]['cin'] = $value->cin;
+                        $data[$key]['region_id'] = $value->id_region;
+                        $data[$key]['region'] = $region;
                     }
                 } else
                     $data = array();
@@ -57,8 +50,7 @@ class Commune extends REST_Controller {
             $this->response([
                 'status' => TRUE,
                 'response' => $data,
-                'message' => $taiza,
-                // 'message' => 'Get data success',
+                'message' => 'Get data success',
             ], REST_Controller::HTTP_OK);
         } else {
             $this->response([
@@ -74,9 +66,10 @@ class Commune extends REST_Controller {
         if ($supprimer == 0) {
             if ($id == 0) {
                 $data = array(
-                    'code' => $this->post('code'),
                     'nom' => $this->post('nom'),
-                    'district_id' => $this->post('district_id')
+                    'prenom' => $this->post('prenom'),
+                    'cin' => $this->post('cin'),
+                    'id_region' => $this->post('region_id')
                 );
                 if (!$data) {
                     $this->response([
@@ -85,8 +78,8 @@ class Commune extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->CommuneManager->add($data);
-                if (!is_null($dataId))  {
+                $dataId = $this->EnqueteurManager->add($data);
+                if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
                         'response' => $dataId,
@@ -98,43 +91,44 @@ class Commune extends REST_Controller {
                         'response' => 0,
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
-                }         
+                }
             } else {
                 $data = array(
-                    'code' => $this->post('code'),
+                    'prenom' => $this->post('prenom'),
                     'nom' => $this->post('nom'),
-                    'district_id' => $this->post('district_id')
+                    'cin' => $this->post('cin'),
+                    'id_region' => $this->post('region_id')
                 );
                 if (!$data || !$id) {
                     $this->response([
                         'status' => FALSE,
                         'response' => 0,
                         'message' => 'No request found'
-                            ], REST_Controller::HTTP_BAD_REQUEST);
+                    ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->CommuneManager->update($id, $data);
+                $update = $this->EnqueteurManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
                         'response' => 1,
                         'message' => 'Update data success'
-                            ], REST_Controller::HTTP_OK);
+                    ], REST_Controller::HTTP_OK);
                 } else {
                     $this->response([
                         'status' => FALSE,
                         'message' => 'No request found'
-                            ], REST_Controller::HTTP_OK);
+                    ], REST_Controller::HTTP_OK);
                 }
             }
         } else {
             if (!$id) {
-            $this->response([
-                'status' => FALSE,
-                'response' => 0,
-                'message' => 'No request found'
-                    ], REST_Controller::HTTP_BAD_REQUEST);
+                $this->response([
+                    'status' => FALSE,
+                    'response' => 0,
+                    'message' => 'No request found'
+                        ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->CommuneManager->delete($id);
+            $delete = $this->EnqueteurManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,
@@ -148,7 +142,7 @@ class Commune extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_OK);
             }
-        }      
+        }        
     }
 }
 /* End of file controllername.php */

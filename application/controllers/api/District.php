@@ -23,7 +23,7 @@ class District extends REST_Controller {
             if ($id) {
                 $data = array();
                 $district = $this->DistrictManager->findById($id);
-                $region = $this->RegionManager->findById($district->region_id);
+                $region = $this->RegionManager->findById($district->id_region);
                 $data['id'] = $district->id;
                 $data['code'] = $district->code;
                 $data['nom'] = $district->nom;
@@ -33,11 +33,11 @@ class District extends REST_Controller {
                 if ($menu) {
                     foreach ($menu as $key => $value) {
                         $region = array();
-                        $region = $this->RegionManager->findById($value->region_id);
+                        $region = $this->RegionManager->findById($value->id_region);
                         $data[$key]['id'] = $value->id;
                         $data[$key]['code'] = $value->code;
                         $data[$key]['nom'] = $value->nom;
-                        $data[$key]['region_id'] = $value->region_id;
+                        $data[$key]['region_id'] = $value->id_region;
                         $data[$key]['region'] = $region;
                     }
                 } else
@@ -66,7 +66,7 @@ class District extends REST_Controller {
                 $data = array(
                     'code' => $this->post('code'),
                     'nom' => $this->post('nom'),
-                    'region_id' => $this->post('region_id')
+                    'id_region' => $this->post('region_id')
                 );
                 if (!$data) {
                     $this->response([
@@ -93,7 +93,7 @@ class District extends REST_Controller {
                 $data = array(
                     'code' => $this->post('code'),
                     'nom' => $this->post('nom'),
-                    'region_id' => $this->post('region_id')
+                    'id_region' => $this->post('region_id')
                 );
                 if (!$data || !$id) {
                     $this->response([
