@@ -1,7 +1,7 @@
 <?php
-
-defined('BASEPATH') OR exit('No direct script access allowed');
 //harizo
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
@@ -10,34 +10,36 @@ class Region extends REST_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('region_model', 'RegionManager');
-        $this->load->model('site_model', 'SiteManager');
+        $this->load->model('pays_model', 'PaysManager');
     }
 
     public function index_get() {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
-
         if ($cle_etrangere) {
-            $data = $this->RegionManager->findAllBySite($cle_etrangere);
+            $data = $this->RegionManager->findAllByPays($cle_etrangere);
             
         } else {
             if ($id) {
                 $data = array();
                 $region = $this->RegionManager->findById($id);
+                $pays = $this->PaysManager->findById($region->id_pays);
                 $data['id'] = $region->id;
                 $data['code'] = $region->code;
                 $data['nom'] = $region->nom;
-                
+                $data['pays'] = $pays;
             } else {
-                $region = $this->RegionManager->findAll();
-                if ($region) {
-                    foreach ($region as $key => $value) {
-                        
+                $menu = $this->RegionManager->findAll();
+                if ($menu) {
+                    foreach ($menu as $key => $value) {
+                        $pays = array();
+                        $pays = $this->PaysManager->findById($value->id_pays);
                         $data[$key]['id'] = $value->id;
                         $data[$key]['code'] = $value->code;
                         $data[$key]['nom'] = $value->nom;
-                        
-                    };
+                        $data[$key]['pays_id'] = $value->id_pays;
+                        $data[$key]['pays'] = $pays;
+                    }
                 } else
                     $data = array();
             }
@@ -63,8 +65,9 @@ class Region extends REST_Controller {
             if ($id == 0) {
                 $data = array(
                     'code' => $this->post('code'),
-                    'nom' => $this->post('nom')
-                );               
+                    'nom' => $this->post('nom'),
+                    'id_pays' => $this->post('pays_id')
+                );
                 if (!$data) {
                     $this->response([
                         'status' => FALSE,
@@ -72,7 +75,7 @@ class Region extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->RegionManager->add($data);              
+                $dataId = $this->RegionManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -89,38 +92,39 @@ class Region extends REST_Controller {
             } else {
                 $data = array(
                     'code' => $this->post('code'),
-                    'nom' => $this->post('nom')
-                );              
+                    'nom' => $this->post('nom'),
+                    'id_pays' => $this->post('pays_id')
+                );
                 if (!$data || !$id) {
                     $this->response([
                         'status' => FALSE,
                         'response' => 0,
                         'message' => 'No request found'
-                            ], REST_Controller::HTTP_BAD_REQUEST);
+                    ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->RegionManager->update($id, $data);              
-                if(!is_null($update)){
+                $update = $this->RegionManager->update($id, $data);
+                if(!is_null($update)) {
                     $this->response([
-                        'status' => TRUE, 
+                        'status' => TRUE,
                         'response' => 1,
                         'message' => 'Update data success'
-                            ], REST_Controller::HTTP_OK);
+                    ], REST_Controller::HTTP_OK);
                 } else {
                     $this->response([
                         'status' => FALSE,
                         'message' => 'No request found'
-                            ], REST_Controller::HTTP_OK);
+                    ], REST_Controller::HTTP_OK);
                 }
             }
         } else {
             if (!$id) {
-            $this->response([
-            'status' => FALSE,
-            'response' => 0,
-            'message' => 'No request found'
-                ], REST_Controller::HTTP_BAD_REQUEST);
+                $this->response([
+                    'status' => FALSE,
+                    'response' => 0,
+                    'message' => 'No request found'
+                        ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->RegionManager->delete($id);          
+            $delete = $this->RegionManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,
@@ -134,7 +138,7 @@ class Region extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_OK);
             }
-        }   
+        }        
     }
 }
 /* End of file controllername.php */

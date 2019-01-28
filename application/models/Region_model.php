@@ -36,7 +36,7 @@ class Region_model extends CI_Model
         return array(
             'code'       =>      $region['code'],
             'nom'        =>      $region['nom'],
-            'superficie'    =>      $region['superficie']                       
+            'id_pays'     =>      $region['id_pays']                       
         );
     }
 
@@ -82,6 +82,19 @@ class Region_model extends CI_Model
             return null;
         }                 
     }*/
+    public function findAllByPays($pays_id) {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->order_by('nom')
+                        ->where("pays_id", $pays_id)
+                        ->get()
+                        ->result();
+        if($result) {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
 
     public function findById($id)
     {
