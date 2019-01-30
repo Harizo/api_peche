@@ -89,7 +89,19 @@ class Fiche_echantillonnage_capture_model extends CI_Model {
             return null;
         }                 
     }*/
-    public function findById($id) {
+
+public function findById($id)  {
+        $this->db->where("id", $id);
+        $q = $this->db->get($this->table);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+           
+    }
+
+
+
+   /* public function findById($id) {
         $result =  $this->db->select('*')
                         ->from($this->table)
                         ->where("id", $id)
@@ -101,7 +113,10 @@ class Fiche_echantillonnage_capture_model extends CI_Model {
         }else{
             return null;
         }                 
-    }	
+    }*/
+
+
+
     /*public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
