@@ -28,7 +28,8 @@ class enqueteur extends REST_Controller {
                 $data['prenom'] = $enqueteur->prenom;
                 $data['nom'] = $enqueteur->nom;
                 $data['cin'] = $enqueteur->cin;
-                $data['region'] = $region;
+                $data['region_id'] = $enqueteur->id_region;
+                $data['region_nom'] = $region->nom;
             } else {
                 $menu = $this->EnqueteurManager->findAll();
                 if ($menu) {
@@ -40,7 +41,7 @@ class enqueteur extends REST_Controller {
                         $data[$key]['nom'] = $value->nom;
                         $data[$key]['cin'] = $value->cin;
                         $data[$key]['region_id'] = $value->id_region;
-                        $data[$key]['region'] = $region;
+                        $data[$key]['region_nom'] = $region->nom;
                     }
                 } else
                     $data = array();

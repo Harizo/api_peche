@@ -28,7 +28,8 @@ class Commune extends REST_Controller {
                 $data['id'] = $commune->id;
                 $data['code'] = $commune->code;
                 $data['nom'] = $commune->nom;
-                $data['district'] = $district;
+                $data['district_id'] = $commune->district_id;
+                $data['district_nom'] = $district->nom;
             } else if($id_district && $id_region) {
 				$taiza="Ato ambony ary id_district=".$id_district."  ary id_region=".$id_region; 
 				$menu = $this->CommuneManager->find_Commune_avec_District_et_Region();
@@ -47,7 +48,7 @@ class Commune extends REST_Controller {
                         $data[$key]['code'] = $value->code;
                         $data[$key]['nom'] = $value->nom;
                         $data[$key]['district_id'] = $value->id_district;
-                        $data[$key]['district'] = $district;
+                        $data[$key]['district_nom'] = $district->nom;
                     }
                 } else
                     $data = array();

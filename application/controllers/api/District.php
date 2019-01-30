@@ -27,7 +27,8 @@ class District extends REST_Controller {
                 $data['id'] = $district->id;
                 $data['code'] = $district->code;
                 $data['nom'] = $district->nom;
-                $data['region'] = $region;
+                $data['region_id'] = $district->id_region;
+                $data['region_nom'] = $region->nom;
             } else {
                 $menu = $this->DistrictManager->findAll();
                 if ($menu) {
@@ -38,7 +39,7 @@ class District extends REST_Controller {
                         $data[$key]['code'] = $value->code;
                         $data[$key]['nom'] = $value->nom;
                         $data[$key]['region_id'] = $value->id_region;
-                        $data[$key]['region'] = $region;
+                        $data[$key]['region_nom'] = $region->nom;
                     }
                 } else
                     $data = array();

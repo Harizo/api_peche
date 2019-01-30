@@ -27,7 +27,7 @@ class Commune_model extends CI_Model {
         return array(
             'code'           =>      $commune['code'],
             'nom'            =>      $commune['nom'],
-            'district_id'    =>      $commune['district_id']                       
+            'id_district'    =>      $commune['district_id']                       
         );
     }
     public function delete($id) {

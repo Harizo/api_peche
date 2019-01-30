@@ -27,7 +27,8 @@ class Region extends REST_Controller {
                 $data['id'] = $region->id;
                 $data['code'] = $region->code;
                 $data['nom'] = $region->nom;
-                $data['pays'] = $pays;
+                $data['pays_id'] = $pays->id;
+                $data['pays_nom'] = $pays->nom;
             } else {
                 $menu = $this->RegionManager->findAll();
                 if ($menu) {
@@ -38,7 +39,7 @@ class Region extends REST_Controller {
                         $data[$key]['code'] = $value->code;
                         $data[$key]['nom'] = $value->nom;
                         $data[$key]['pays_id'] = $value->id_pays;
-                        $data[$key]['pays'] = $pays;
+                        $data[$key]['pays_nom'] = $pays->nom;
                     }
                 } else
                     $data = array();

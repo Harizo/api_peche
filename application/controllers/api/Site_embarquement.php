@@ -29,7 +29,8 @@ class Site_embarquement extends REST_Controller {
                 $data['id'] = $site_embarquement->id;
                 $data['code'] = $site_embarquement->code;
                 $data['nom'] = $site_embarquement->nom;
-                $data['district'] = $district;
+                $data['district_id'] =$site_embarquement->district_id;
+                $data['district_nom'] = $district->nom;
             } else if($id_district && $id_region) {
 				$taiza="Ato ambony ary id_district=".$id_district."  ary id_region=".$id_region; 
 				$menu = $this->Site_embarquementManager->find_Site_embarquement_avec_District_et_Region();
@@ -53,9 +54,9 @@ class Site_embarquement extends REST_Controller {
                         $data[$key]['longitude'] = $value->longitude;
                         $data[$key]['altitude'] = $value->altitude;
                         $data[$key]['district_id'] = $value->id_district;
-                        $data[$key]['district'] = $district;
-                         $data[$key]['region_id'] = $value->id_region;
-                        $data[$key]['region'] = $region;
+                        $data[$key]['district_nom'] = $district->nom;
+                        $data[$key]['region_id'] = $value->id_region;
+                        $data[$key]['region_nom'] = $region->nom;
 
                     }
                 } else

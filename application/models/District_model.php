@@ -27,7 +27,7 @@ class District_model extends CI_Model {
         return array(
             'code'          =>      $district['code'],
             'nom'           =>      $district['nom'],
-            'region_id'     =>      $district['region_id']                       
+            'id_region'     =>      $district['id_region']                       
         );
     }
     public function delete($id) {
