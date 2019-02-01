@@ -76,11 +76,11 @@ class Echantillon_model extends CI_Model {
             return null;
         }                 
     }
-    public function findAllByRegion($region_id) {
+    public function findAllByFiche_echantillonnnage_capture($fiche_echantillonnnage_capture_id) {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('nom')
-                        ->where("region_id", $region_id)
+                        ->order_by('unique_code')
+                        ->where("id_fiche_echantillonnage_capture", $fiche_echantillonnnage_capture_id)
                         ->get()
                         ->result();
         if($result) {

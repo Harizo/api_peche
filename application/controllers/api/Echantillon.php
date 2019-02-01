@@ -24,7 +24,53 @@ class Echantillon extends REST_Controller {
         $id_region = $this->get('id_region');
 		$taiza="";
         if ($cle_etrangere) {
-            $data = $this->EchantillonManager->findAllByDistrict($cle_etrangere);           
+            $taiza="findcle_etrangere no nataony";
+            $menu = $this->EchantillonManager->findAllByFiche_echantillonnnage_capture($cle_etrangere);
+            if ($menu) {
+                    foreach ($menu as $key => $value) {
+                        $fiche_echantillonnage_capture = array();
+                        $type_canoe = array();
+                        $type_engin = array();
+                        $data_collect = array();
+                        $user = array();
+
+                        $fiche_echantillonnage_capture = $this->Fiche_echantillonnage_captureManager->findById($value->id_fiche_echantillonnage_capture);
+                        $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
+                        $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
+                        $data_collect = $this->Data_collectManager->findById($value->id_data_collect);
+                        $user = $this->UserManager->findById($value->id_user);
+                        $data[$key]['id'] = $value->id;
+                        
+                        $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
+                        $data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
+                       
+                        $data[$key]['type_canoe_id'] = $value->id_type_canoe;
+                        $data[$key]['type_canoe_nom'] = $type_canoe ->nom;
+                        
+                        $data[$key]['type_engin_id'] = $value->id_type_engin;
+                        $data[$key]['type_engin_nom'] = $type_engin->libelle;
+                        
+                        $data[$key]['peche_hier'] = $value->peche_hier;
+                        $data[$key]['peche_avant_hier'] = $value->peche_avant_hier;
+                        $data[$key]['nbr_jrs_peche_dernier_sem'] = $value->nbr_jrs_peche_dernier_sem;
+                        $data[$key]['total_capture'] = $value->total_capture;
+                        $data[$key]['unique_code'] = $value->unique_code;
+                        
+                        $data[$key]['data_collect_id'] = $value->id_data_collect;
+                        $data[$key]['data_collect_nom'] = $data_collect->libelle;
+                        
+                        $data[$key]['nbr_bateau_actif'] = $value->nbr_bateau_actif;
+                        $data[$key]['total_bateau_ecn'] = $value->total_bateau_ecn;
+                        
+                        $data[$key]['user_id'] = $value->id_user;
+                        $data[$key]['user_nom'] = $user->nom;
+                        
+                        $data[$key]['date_creation'] = $value->date_creation;
+                        $data[$key]['date_modification'] = $value->date_modification;
+
+                    }
+                } else
+                    $data = array();         
         } else {
             if ($id)  {
                 $data = array();
