@@ -14,12 +14,6 @@ class Type_engin extends REST_Controller {
 
     public function index_get() {
         $id = $this->get('id');
-        $cle_etrangere = $this->get('cle_etrangere');
-
-        if ($cle_etrangere) {
-            $data = $this->Type_enginManager->findAllBySite($cle_etrangere);
-            
-        } else {
             if ($id) {
                 $data = array();
                 $type_engin = $this->Type_enginManager->findById($id);
@@ -40,7 +34,7 @@ class Type_engin extends REST_Controller {
                 } else
                     $data = array();
             }
-        }
+        
         if (count($data)>0) {
             $this->response([
                 'status' => TRUE,

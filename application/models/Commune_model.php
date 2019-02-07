@@ -51,32 +51,6 @@ class Commune_model extends CI_Model {
             return null;
         }                 
     }
-	public function find_Commune_avec_District_et_Region() {
-		$requete='select c.id,c.nom,c.code,c.district_id,d.nom as nomdistrict,d.region_id,r.nom as region
-				from commune as c
-				left outer join district as d on d.id=c.district_id
-				left outer join region as r on r.id=d.region_id
-				order by c.nom,d.nom,r.nom	';				
-		$query= $this->db->query($requete);		
-		if($query->result()) {
-			return $query->result();
-        }else{
-            return null;
-        }  
-	}
-    public function findAllByDistrict($district_id) {
-        $result =  $this->db->select('*')
-                        ->from($this->table)
-                        ->order_by('nom')
-                        ->where("district_id", $district_id)
-                        ->get()
-                        ->result();
-        if($result) {
-            return $result;
-        }else{
-            return null;
-        }                 
-    }
     public function findById($id) {
         $result =  $this->db->select('*')
                         ->from($this->table)
@@ -90,30 +64,5 @@ class Commune_model extends CI_Model {
             return null;
         }                 
     }	
-    /*public function findById($id)  {
-        $this->db->where("id", $id);
-        $q = $this->db->get($this->table);
-        if ($q->num_rows() > 0) {
-            return $q->row();
-        }
-        return null;
-		if(isset($id)) {
-			$requete='select c.id,c.nom,c.code,c.district_id,d.nom as nomdistrict,r.nom as region,r.site_id,s.nom as nom_site
-			from commune as c
-			left outer join district as d on d.id=c.district_id
-			left outer join region as r on r.id=d.region_id
-			left outer join site as s on s.id=r.site_id where c.id='.$id
-			.' order by r.site_id,c.nom,d.nom	';				
-			$query= $this->db->query($requete);
-			if($query->result())
-			{
-				return $query->row();
-				// return $result;
-			}else{
-				return null;
-			}   
-		} else {
-			return null;
-		}	
-    }*/
+    
 }

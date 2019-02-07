@@ -19,16 +19,9 @@ class Fiche_echantillonnage_capture extends REST_Controller {
     }
     public function index_get() {
         $id = $this->get('id');
-        $cle_etrangere = $this->get('cle_etrangere');
         $id_district = $this->get('id_district');
         $id_region = $this->get('id_region');
 		$taiza="";
-        if ($cle_etrangere) 
-        {
-            $data = $this->Fiche_echantillonnage_captureManager->findAllByDistrict($cle_etrangere);           
-        } 
-        else 
-        {
             if ($id)  
             {
                 $data = array();
@@ -49,15 +42,6 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                 $data['user'] = $user;
 
             } 
-            else if($id_district && $id_region) 
-            {
-				$taiza="Ato ambony ary id_district=".$id_district."  ary id_region=".$id_region; 
-				$menu = $this->Fiche_echantillonnage_captureManager->find_Fiche_echantillonnage_capture_avec_District_et_Region();
-                if ($menu) {
-					$data=$menu;
-                } else
-                    $data = array();
-			} 
             else 
             {
 				$taiza="findAll no nataony";
@@ -93,7 +77,7 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                 } else
                     $data = array();
             }
-        }
+        
         if (count($data)>0) {
             $this->response([
                 'status' => TRUE,

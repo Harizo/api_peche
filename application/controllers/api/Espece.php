@@ -14,12 +14,6 @@ class Espece extends REST_Controller {
 
     public function index_get() {
         $id = $this->get('id');
-        $cle_etrangere = $this->get('cle_etrangere');
-
-        if ($cle_etrangere) {
-            $data = $this->EspeceManager->findAllBySite($cle_etrangere);
-            
-        } else {
             if ($id) {
                 $data = array();
                 $espece= $this->EspeceManager->findById($id);
@@ -42,7 +36,7 @@ class Espece extends REST_Controller {
                 } else
                     $data = array();
             }
-        }
+        
         if (count($data)>0) {
             $this->response([
                 'status' => TRUE,

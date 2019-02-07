@@ -15,13 +15,9 @@ class Site_embarquement extends REST_Controller {
     }
     public function index_get() {
         $id = $this->get('id');
-        $cle_etrangere = $this->get('cle_etrangere');
         $id_district = $this->get('id_district');
         $id_region = $this->get('id_region');
 		$taiza="";
-        if ($cle_etrangere) {
-            $data = $this->Site_embarquementManager->findAllByDistrict($cle_etrangere);           
-        } else {
             if ($id)  {
                 $data = array();
                 $site_embarquement = $this->Site_embarquementManager->findById($id);
@@ -31,14 +27,7 @@ class Site_embarquement extends REST_Controller {
                 $data['nom'] = $site_embarquement->nom;
                 $data['district_id'] =$site_embarquement->district_id;
                 $data['district_nom'] = $district->nom;
-            } else if($id_district && $id_region) {
-				$taiza="Ato ambony ary id_district=".$id_district."  ary id_region=".$id_region; 
-				$menu = $this->Site_embarquementManager->find_Site_embarquement_avec_District_et_Region();
-                if ($menu) {
-					$data=$menu;
-                } else
-                    $data = array();
-			} else {
+            }  else {
 				$taiza="findAll no nataony";
                 $menu = $this->Site_embarquementManager->findAll();
                 if ($menu) {
@@ -62,7 +51,7 @@ class Site_embarquement extends REST_Controller {
                 } else
                     $data = array();
             }
-        }
+        
         if (count($data)>0) {
             $this->response([
                 'status' => TRUE,

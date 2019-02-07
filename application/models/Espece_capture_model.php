@@ -43,9 +43,7 @@ class Espece_capture_model extends CI_Model
             'id_espece' => $espece_capture['espece_id'],
             'capture' => $espece_capture['capture'],
             'prix' => $espece_capture['prix'],
-            'id_user' => $espece_capture['user_id'],
-            //'date_creation' => $espece_capture['date_creation'],
-            //'date_modification' => $espece_capture['date_modification'],                     
+            'id_user' => $espece_capture['user_id']                     
         );
     }
 

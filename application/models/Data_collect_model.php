@@ -66,22 +66,6 @@ class Data_collect_model extends CI_Model
         }                 
     }
 
-   /* public function findAllBySite($site_id)
-    {
-        $result =  $this->db->select('*')
-                        ->from($this->table)
-                        ->order_by('nom')
-                        ->where("site_id", $site_id)
-                        ->get()
-                        ->result();
-        if($result)
-        {
-            return $result;
-        }else{
-            return null;
-        }                 
-    }*/
-
     public function findById($id)
     {
         $this->db->where("id", $id);

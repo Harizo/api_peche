@@ -39,19 +39,7 @@ class District_model extends CI_Model {
             return null;
         }  
     }
-    public function findAll() {
-/*		$requete='select d.id,d.nom,d.code,d.region_id,r.nom as region,r.site_id,s.nom as nom_site
-		from district as d
-		left outer join region as r on r.id=d.region_id
-		left outer join site as s on s.id=r.site_id
-		order by r.site_id,d.nom,r.nom	';				
-		$query= $this->db->query($requete);
-        if($query->result()) {
-			return $query->result();
-            // return $result;
-        }else{
-            return null;
-        }  */               
+    public function findAll() {               
         $result =  $this->db->select('*')
                         ->from($this->table)
                         ->order_by('nom')
@@ -64,38 +52,11 @@ class District_model extends CI_Model {
             return null;
         }                 
     }
-    public function findAllByRegion($region_id) {
-        $result =  $this->db->select('*')
-                        ->from($this->table)
-                        ->order_by('nom')
-                        ->where("region_id", $region_id)
-                        ->get()
-                        ->result();
-        if($result) {
-            return $result;
-        }else{
-            return null;
-        }                 
-    }
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
         if ($q->num_rows() > 0) {
             return $q->row();
         }
-        // return null;
-	/*	$requete='select d.id,d.nom,d.code,d.region_id,r.nom as region,r.site_id,s.nom as nom_site
-		from district as d
-		left outer join region as r on r.id=d.region_id
-		left outer join site as s on s.id=r.site_id where d.id='.$id
-		.' order by r.site_id,d.nom,r.nom ';				
-			$query= $this->db->query($requete);*/
-			// if($query->result())
-			// {
-				// return $query->row();
-				// return $result;
-			// }else{
-				// return null;
-			// }   
     }
 }
