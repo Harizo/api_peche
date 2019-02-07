@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class data_collect extends REST_Controller {
+class Data_collect extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
