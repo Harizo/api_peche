@@ -23,10 +23,14 @@ class Fiche_echantillonnage_capture extends REST_Controller {
         $id_district = $this->get('id_district');
         $id_region = $this->get('id_region');
 		$taiza="";
-        if ($cle_etrangere) {
+        if ($cle_etrangere) 
+        {
             $data = $this->Fiche_echantillonnage_captureManager->findAllByDistrict($cle_etrangere);           
-        } else {
-            if ($id)  {
+        } 
+        else 
+        {
+            if ($id)  
+            {
                 $data = array();
                 $fiche_echantillonnage_capture = $this->Fiche_echantillonnage_captureManager->findById($id);
                 $district = $this->DistrictManager->findById($fiche_echantillonnage_capture->district_id);
@@ -44,14 +48,18 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                 $data['region'] = $region;
                 $data['user'] = $user;
 
-            } else if($id_district && $id_region) {
+            } 
+            else if($id_district && $id_region) 
+            {
 				$taiza="Ato ambony ary id_district=".$id_district."  ary id_region=".$id_region; 
 				$menu = $this->Fiche_echantillonnage_captureManager->find_Fiche_echantillonnage_capture_avec_District_et_Region();
                 if ($menu) {
 					$data=$menu;
                 } else
                     $data = array();
-			} else {
+			} 
+            else 
+            {
 				$taiza="findAll no nataony";
                 $menu = $this->Fiche_echantillonnage_captureManager->findAll();
                 if ($menu) {

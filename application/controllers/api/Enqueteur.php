@@ -16,11 +16,15 @@ class Enqueteur extends REST_Controller {
     public function index_get() {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
-        if ($cle_etrangere) {
+        if ($cle_etrangere) 
+        {
             $data = $this->EnqueteurManager->findAllByRegion($cle_etrangere);
             
-        } else {
-            if ($id) {
+        } 
+        else 
+        {
+            if ($id) 
+            {
                 $data = array();
                 $enqueteur = $this->EnqueteurManager->findById($id);
                 $region = $this->RegionManager->findById($enqueteur->id_region);
@@ -30,10 +34,14 @@ class Enqueteur extends REST_Controller {
                 $data['cin'] = $enqueteur->cin;
                 $data['region_id'] = $enqueteur->id_region;
                 $data['region_nom'] = $region->nom;
-            } else {
+            } 
+            else 
+            {
                 $menu = $this->EnqueteurManager->findAll();
-                if ($menu) {
-                    foreach ($menu as $key => $value) {
+                if ($menu) 
+                {
+                    foreach ($menu as $key => $value) 
+                    {
                         $region = array();
                         $region = $this->RegionManager->findById($value->id_region);
                         $data[$key]['id'] = $value->id;
@@ -42,8 +50,10 @@ class Enqueteur extends REST_Controller {
                         $data[$key]['cin'] = $value->cin;
                         $data[$key]['region_id'] = $value->id_region;
                         $data[$key]['region_nom'] = $region->nom;
+                        $data[$key]['region'] = $region;
                     }
-                } else
+                } 
+                else
                     $data = array();
             }
         }

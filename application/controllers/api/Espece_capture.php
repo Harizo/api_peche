@@ -20,11 +20,14 @@ class Espece_capture extends REST_Controller {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
 
-        if ($cle_etrangere) {
+        if ($cle_etrangere) 
+        {
             $taiza="findcle_etrangere no nataony";
             $menu = $this->Espece_captureManager->findAllByEspece($cle_etrangere);
-             if ($menu) {
-                    foreach ($menu as $key => $value) {
+             if ($menu) 
+             {
+                    foreach ($menu as $key => $value) 
+                    {
                         $fiche_echantillonnage_capture = array();
                         $echantillon = array();
                         $espece = array();
@@ -38,28 +41,36 @@ class Espece_capture extends REST_Controller {
                         
                         $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
                         $data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
+                        $data[$key]['fiche_echantillonnage_capture'] = $fiche_echantillonnage_capture;
                        
                         $data[$key]['echantillon_id'] = $value->id_echantillon;
                         $data[$key]['echantillon_nom'] = $echantillon ->unique_code;
+                        $data[$key]['echantillon'] = $echantillon;
 
                         $data[$key]['capture'] = $value->capture;
                         $data[$key]['prix'] = $value->prix;
                         
                         $data[$key]['espece_id'] = $value->id_espece ;
                         $data[$key]['espece_nom'] = $espece ->nom_local;
+                        $data[$key]['espece'] = $espece;
                         
                         $data[$key]['user_id'] = $value->id_user;
                         $data[$key]['user_nom'] = $user->nom;
+                        $data[$key]['user'] = $user;
                         
                         $data[$key]['date_creation'] = $value->date_creation;
                         $data[$key]['date_modification'] = $value->date_modification;
 
                     }
-                } else
+                } 
+                else
                     $data = array();
             
-        } else {
-            if ($id) {
+        } 
+        else 
+        {
+            if ($id) 
+            {
                 $data = array();
                 $espece_capture= $this->Espece_captureManager->findById($id);
                 $data['id'] = $espece_capture->id;
@@ -72,7 +83,9 @@ class Espece_capture extends REST_Controller {
                 $data['date_creation'] = $espece_capture->date_creation;
                 $data['date_modification'] = $espece_capture->date_modification;
                 
-            } else {
+            } 
+            else 
+            {
                 $espece_capture= $this->Espece_captureManager->findAll();
                 if ($espece_capture) {
                     foreach ($espece_capture as $key => $value) {

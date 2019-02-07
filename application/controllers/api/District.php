@@ -13,14 +13,19 @@ class District extends REST_Controller {
         $this->load->model('region_model', 'RegionManager');
     }
 
-    public function index_get() {
+    public function index_get() 
+    {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
-        if ($cle_etrangere) {
+        if ($cle_etrangere) 
+        {
             $data = $this->DistrictManager->findAllByRegion($cle_etrangere);
             
-        } else {
-            if ($id) {
+        } 
+        else 
+        {
+            if ($id) 
+            {
                 $data = array();
                 $district = $this->DistrictManager->findById($id);
                 $region = $this->RegionManager->findById($district->id_region);
@@ -29,10 +34,14 @@ class District extends REST_Controller {
                 $data['nom'] = $district->nom;
                 $data['region_id'] = $district->id_region;
                 $data['region_nom'] = $region->nom;
-            } else {
+            } 
+            else 
+            {
                 $menu = $this->DistrictManager->findAll();
-                if ($menu) {
-                    foreach ($menu as $key => $value) {
+                if ($menu) 
+                {
+                    foreach ($menu as $key => $value) 
+                    {
                         $region = array();
                         $region = $this->RegionManager->findById($value->id_region);
                         $data[$key]['id'] = $value->id;
@@ -40,8 +49,10 @@ class District extends REST_Controller {
                         $data[$key]['nom'] = $value->nom;
                         $data[$key]['region_id'] = $value->id_region;
                         $data[$key]['region_nom'] = $region->nom;
+                        $data[$key]['region'] = $region;
                     }
-                } else
+                } 
+                else
                     $data = array();
             }
         }
@@ -59,7 +70,8 @@ class District extends REST_Controller {
             ], REST_Controller::HTTP_OK);
         }
     }
-    public function index_post() {
+    public function index_post() 
+    {
         $id = $this->post('id') ;
         $supprimer = $this->post('supprimer') ;
         if ($supprimer == 0) {
