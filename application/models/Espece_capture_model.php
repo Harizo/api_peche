@@ -100,4 +100,73 @@ class Espece_capture_model extends CI_Model
         return null;
     }
 
+
+    public function SauvegarderTout($data) {
+
+        $this->db->trans_begin();
+        $espace_capture=array();
+        $fiche_echantillonnage_capture=array();
+        $fiche_echantillonnage_capture = json_decode($data['fiche_echantillonnage_capture ']);
+        $espace_capture=$fiche_echantillonnage_capture->espace_capture;
+        $valret=array();
+        try{
+            
+            for ($i = 0; $i < count($espace_capture); $i++) {               
+                
+                $id_echantillon=null;
+                if($espace_capture[$i]->id_echantillon >'') {
+                    $id_echantillon=$espace_capture[$i]->id_echantillon;  
+                }
+                $id_espece=null;
+                if($espace_capture[$i]->id_espece >'') {
+                    $id_espece=$espace_capture[$i]->id_espece;  
+                }
+                 $capture=null;
+                if($espace_capture[$i]->capture >'') {
+                    $capture=$espace_capture[$i]->capture;  
+                }
+                $prix=null;
+                if($espace_capture[$i]->prix >'') {
+                    $prix=$espace_capture[$i]->prix;  
+                }
+
+                $tmp = array();               
+                
+                $tmp ['id_fiche_echantillonnage_capture'] = $fiche_echantillonnage_capture->id_fiche_echantillonnage_capture;                
+                $tmp ['id_echantillon'] = $id_echantillon;    
+                $tmp ['id_espece'] = $id_espece;
+                $tmp ['capture'] = $capture;
+                $tmp ['prix'] = $prix;
+                $tmp ['id_user'] =$data['id_user'];
+                
+                $this->db->set($tmp)
+                        ->set('date_creation', 'NOW()', false)
+                        ->set('date_modification', 'NOW()', false)
+                        ->insert($this->table);
+                            $NewId=$this->db->insert_id();
+                          
+                        $tmp['id'] = $NewId;
+                   
+                   
+                $valret[]=$tmp;
+            }
+            if ($this->db->trans_status() === FALSE) {
+                $date=new datetime();
+                $date_anio=$date->format('Y-m-d HH:mm:ss');                     
+                error_log("Erreur dans Espece_capture_model - Function SauvegarderTout :" . $date_anio.' (Rollback)');
+                $this->db->trans_rollback();
+                return "ECHEC";
+            } else {
+                $this->db->trans_commit();          
+                return $valret;
+            }                   
+        } catch(Exception $e){
+            $date=new datetime();
+            $date_anio=$date->format('Y-m-d HH:mm:ss');                     
+            error_log("Erreur dans Espece_capture_model - Function SauvegarderTout :" . $date_anio.' (Except)');
+            $this->db->trans_rollback();
+            return "ECHEC";
+        }           
+    }
+
 }
