@@ -5,40 +5,45 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Enqueteur extends REST_Controller {
+class Site_enqueteur extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->model('enqueteur_model', 'EnqueteurManager');
-        $this->load->model('region_model', 'RegionManager');
+        $this->load->model('site_embarquement_model', 'Site_embarquementManager');
+        $this->load->model('site_enqueteur_model', 'Site_enqueteurManager');
     }
 
     public function index_get() {
         $id = $this->get('id');
-            if ($id) 
-            {
+            if ($id) {
                 $data = array();
-                $enqueteur = $this->EnqueteurManager->findById($id);
-                $data['id'] = $enqueteur->id;
-                $data['prenom'] = $enqueteur->prenom;
-                $data['nom'] = $enqueteur->nom;
-                $data['cin'] = $enqueteur->cin;
-            } 
-            else 
-            {
-                $menu = $this->EnqueteurManager->findAll();
-                if ($menu) 
-                {
-                    foreach ($menu as $key => $value) 
-                    {
-                        $region = array();
+                $site_enqueteur = $this->Site_enqueteurManager->findById($id);
+                $enqueteur = $this->EnqueteurManager->findById($site_enqueteur->id_enqueteur);
+                $site_embarquement = $this->Site_embarquementManager->findById($site_enqueteur->id_site);
+                $data['id'] = $Site_enqueteur->id;
+
+                $data['site_embarquement_id'] = $site_enqueteur->id_site;
+                $data['site_embarquement_nom'] = $site_embarquement->nom;
+
+                $data['enqueteur_id'] = $site_enqueteur->id_enqueteur;
+                $data['enqueteur_nom'] = $enqueteur->nom;
+
+            } else {
+                $menu = $this->Site_enqueteurManager->findAll();
+                if ($menu) {
+                    foreach ($menu as $key => $value) {
+                        $site_embarquement = array();
+                        $enqueteur = array();
+                        $site_embarquement = $this->Site_embarquementManager->findById($value->id_site);
+                        $enqueteur = $this->EnqueteurManager->findById($value->id_enqueteur);
                         $data[$key]['id'] = $value->id;
-                        $data[$key]['prenom'] = $value->prenom;
-                        $data[$key]['nom'] = $value->nom;
-                        $data[$key]['cin'] = $value->cin;
+                        $data[$key]['site_embarquement_id'] = $value->id_site;
+                        $data[$key]['site_embarquement_nom'] = $site_embarquement->libelle;
+                        $data[$key]['enqueteur_id'] = $value->id_enqueteur;
+                        $data[$key]['enqueteur_nom'] = $enqueteur->nom;
                     }
-                } 
-                else
+                } else
                     $data = array();
             }
         
@@ -62,10 +67,8 @@ class Enqueteur extends REST_Controller {
         if ($supprimer == 0) {
             if ($id == 0) {
                 $data = array(
-                    'nom' => $this->post('nom'),
-                    'prenom' => $this->post('prenom'),
-                    'cin' => $this->post('cin'),
-                    'id_region' => $this->post('region_id')
+                    'id_site_embarquement' => $this->post('site_embarquement_id'),
+                    'id_enqueteur' => $this->post('enqueteur_id')
                 );
                 if (!$data) {
                     $this->response([
@@ -74,7 +77,7 @@ class Enqueteur extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->EnqueteurManager->add($data);
+                $dataId = $this->Site_enqueteurManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -90,10 +93,8 @@ class Enqueteur extends REST_Controller {
                 }
             } else {
                 $data = array(
-                    'prenom' => $this->post('prenom'),
-                    'nom' => $this->post('nom'),
-                    'cin' => $this->post('cin'),
-                    'id_region' => $this->post('region_id')
+                    'id_site_embarquement' => $this->post('site_embarquement_id'),
+                    'id_enqueteur' => $this->post('enqueteur_id')
                 );
                 if (!$data || !$id) {
                     $this->response([
@@ -102,7 +103,7 @@ class Enqueteur extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->EnqueteurManager->update($id, $data);
+                $update = $this->Site_enqueteurManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -124,7 +125,7 @@ class Enqueteur extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->EnqueteurManager->delete($id);         
+            $delete = $this->Site_enqueteurManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,

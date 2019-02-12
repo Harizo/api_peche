@@ -1,19 +1,26 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Enqueteur_model extends CI_Model {
-    protected $table = 'enqueteur';
+class Site_enqueteur_model extends CI_Model
+{
+    protected $table = 'site_enqueteur';
 
-    public function add($enqueteur) {
-        $this->db->set($this->_set($enqueteur))
+
+    public function add($site_enqueteur)
+    {
+        $this->db->set($this->_set($site_enqueteur))
                             ->insert($this->table);
-        if($this->db->affected_rows() === 1) {
+        if($this->db->affected_rows() === 1)
+        {
             return $this->db->insert_id();
         }else{
             return null;
         }                    
     }
-    public function update($id, $enqueteur) {
-        $this->db->set($this->_set($enqueteur))
+
+
+    public function update($id, $site_enqueteur)
+    {
+        $this->db->set($this->_set($site_enqueteur))
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,14 +30,18 @@ class Enqueteur_model extends CI_Model {
             return null;
         }                      
     }
-    public function _set($enqueteur) {
+
+    public function _set($site_enqueteur)
+    {
         return array(
-            'nom'          =>      $enqueteur['nom'],
-            'prenom'           =>      $enqueteur['prenom'],
-            'cin'     =>      $enqueteur['cin']                      
+            'id_site'     =>      $site_enqueteur['id_site_embarquement'],
+            'id_enqueteur'     =>      $site_enqueteur['id_enqueteur']                       
         );
     }
-    public function delete($id) {
+
+
+    public function delete($id)
+    {
         $this->db->where('id', (int) $id)->delete($this->table);
         if($this->db->affected_rows() === 1)
         {
@@ -39,10 +50,12 @@ class Enqueteur_model extends CI_Model {
             return null;
         }  
     }
-    public function findAll() {               
+
+    public function findAll()
+    {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('nom')
+                        ->order_by('id_site')
                         ->get()
                         ->result();
         if($result)
@@ -52,11 +65,15 @@ class Enqueteur_model extends CI_Model {
             return null;
         }                 
     }
-    public function findById($id)  {
+
+    public function findById($id)
+    {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
         if ($q->num_rows() > 0) {
             return $q->row();
-        } 
+        }
+        return null;
     }
+
 }
