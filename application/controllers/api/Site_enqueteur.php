@@ -25,9 +25,11 @@ class Site_enqueteur extends REST_Controller {
 
                 $data['site_embarquement_id'] = $site_enqueteur->id_site;
                 $data['site_embarquement_nom'] = $site_embarquement->nom;
+                $data['site_embarquement'] = $site_embarquement;
 
                 $data['enqueteur_id'] = $site_enqueteur->id_enqueteur;
                 $data['enqueteur_nom'] = $enqueteur->nom;
+                $data['enqueteur'] = $enqueteur;
 
             } else {
                 $menu = $this->Site_enqueteurManager->findAll();
@@ -40,7 +42,9 @@ class Site_enqueteur extends REST_Controller {
                         $data[$key]['id'] = $value->id;
                         $data[$key]['site_embarquement_id'] = $value->id_site;
                         $data[$key]['site_embarquement_nom'] = $site_embarquement->libelle;
+                        $data[$key]['site_embarquement'] = $site_embarquement;
                         $data[$key]['enqueteur_id'] = $value->id_enqueteur;
+                        $data[$key]['enqueteur'] = $enqueteur;
                         $data[$key]['enqueteur_nom'] = $enqueteur->nom;
                     }
                 } else
