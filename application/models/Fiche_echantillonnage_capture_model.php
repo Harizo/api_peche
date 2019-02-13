@@ -73,4 +73,32 @@ public function findById($id)  {
            
     }
 
+ public function SauvegarderTout($data) {
+    $tmp = array();
+    $fiche_echantillonnage_capture = array();
+    $fiche_echantillonnage_capture = json_decode($data['fiche_echantillonnage_capture']);
+    
+    $tmp ['code_unique']           = $fiche_echantillonnage_capture->code_unique;                
+    $tmp ['date']                  = $fiche_echantillonnage_capture->date;    
+    $tmp ['id_region']             = $fiche_echantillonnage_capture->region_id;
+    $tmp ['id_district']           = $fiche_echantillonnage_capture->district_id;
+    $tmp ['id_site_embarquement']  = $fiche_echantillonnage_capture->site_embarquement_id;
+    $tmp ['id_enqueteur']          = $fiche_echantillonnage_capture->enqueteur_id;                
+    $tmp ['latitude']              = $fiche_echantillonnage_capture->latitude;    
+    $tmp ['longitude']             = $fiche_echantillonnage_capture->longitude;
+    $tmp ['altitude']              = $fiche_echantillonnage_capture->altitude;
+    $tmp ['id_user']               = $data['user_id'];
+        $this->db->set($tmp)
+                ->set('date_creation', 'NOW()', false)
+                ->set('date_modification', 'NOW()', false)
+                ->insert($this->table);
+        if($this->db->affected_rows() === 1)
+        {
+            return $this->db->insert_id();
+        }else{
+            return null;
+        }
+       }
+
+
 }
