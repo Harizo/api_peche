@@ -42,7 +42,7 @@ class Echantillon extends REST_Controller {
                         $data[$key]['id'] = $value->id;
                         
                         $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
-                        $data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
+                        //$data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
                        
                         $data[$key]['type_canoe_id'] = $value->id_type_canoe;
                         $data[$key]['type_canoe_nom'] = $type_canoe ->nom;
@@ -69,8 +69,9 @@ class Echantillon extends REST_Controller {
                         $data[$key]['date_modification'] = $value->date_modification;
 
                     }
-                } else
+                } else{
                     $data = array();         
+                }
         } else {
             if ($id)  {
                 $data = array();
@@ -121,7 +122,7 @@ class Echantillon extends REST_Controller {
                         $data[$key]['id'] = $value->id;
                         
                         $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
-                        $data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
+                       // $data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
                        
                         $data[$key]['type_canoe_id'] = $value->id_type_canoe;
                         $data[$key]['type_canoe_nom'] = $type_canoe ->nom;
