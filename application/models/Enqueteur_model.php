@@ -27,7 +27,7 @@ class Enqueteur_model extends CI_Model {
         return array(
             'nom'          =>      $enqueteur['nom'],
             'prenom'           =>      $enqueteur['prenom'],
-            'cin'     =>      $enqueteur['cin']                      
+            'telephone'     =>      $enqueteur['telephone']                      
         );
     }
     public function delete($id) {
