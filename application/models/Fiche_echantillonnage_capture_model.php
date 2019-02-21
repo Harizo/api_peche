@@ -73,6 +73,24 @@ public function findById($id)  {
            
     }
 
+public function findByDate($date_debut,$date_fin)
+{
+    $result = $this->db->select('*')
+                        ->from($this->table)
+                        ->where('date BETWEEN "'.$date_debut.'" AND "'.$date_fin.'"')
+                        ->order_by('date', 'asc')
+                        ->get()
+                        ->result();
+    if($result)
+    {
+        return $result;
+    }
+    else
+    {
+        return null;
+    }
+}
+
  public function SauvegarderTout($data) {
     $tmp = array();
     $fiche_echantillonnage_capture = array();
