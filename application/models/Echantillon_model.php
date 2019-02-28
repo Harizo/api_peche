@@ -39,6 +39,7 @@ class Echantillon_model extends CI_Model {
             'id_data_collect'     =>      $echantillon['data_collect_id'], 
             'nbr_bateau_actif'          =>      $echantillon['nbr_bateau_actif'],
             'total_bateau_ecn'           =>      $echantillon['total_bateau_ecn'],
+            'id_unite_peche'     =>      $echantillon['unite_peche_id'],
             'id_user'     =>      $echantillon['user_id']                        
         );
     }

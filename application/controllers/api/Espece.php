@@ -21,6 +21,7 @@ class Espece extends REST_Controller {
                 $data['code'] = $espece->code;
                 $data['nom_local'] = $espece->nom_local;
                 $data['nom_scientifique'] = $espece->nom_scientifique;
+                $data['url_image'] = $espece->url_image;
                 
             } else {
                 $espece= $this->EspeceManager->findAll();
@@ -31,6 +32,7 @@ class Espece extends REST_Controller {
                         $data[$key]['code'] = $value->code;
                         $data[$key]['nom_local'] = $value->nom_local;
                         $data[$key]['nom_scientifique'] = $value->nom_scientifique;
+                        $data[$key]['url_image'] = $value->url_image;
                         
                     };
                 } else
@@ -60,6 +62,7 @@ class Espece extends REST_Controller {
                     'code' => $this->post('code'),
                     'nom_local' => $this->post('nom_local'),
                     'nom_scientifique' => $this->post('nom_scientifique'),
+                    'url_image' => $this->post('url_image'),
                 );               
                 if (!$data) {
                     $this->response([
@@ -87,6 +90,7 @@ class Espece extends REST_Controller {
                     'code' => $this->post('code'),
                     'nom_local' => $this->post('nom_local'),
                     'nom_scientifique' => $this->post('nom_scientifique'),
+                    'url_image' => $this->post('url_image'),
                 );              
                 if (!$data || !$id) {
                     $this->response([

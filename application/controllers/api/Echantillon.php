@@ -198,22 +198,44 @@ class Echantillon extends REST_Controller {
     public function index_post() {
         $id = $this->post('id') ;
         $supprimer = $this->post('supprimer') ;
+        $typeeffort=$this->post('typeeffort');
         if ($supprimer == 0) {
             if ($id == 0) {
-                $data = array(
-                    'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
-                    'type_canoe_id' => $this->post('type_canoe_id'),
-                    'type_engin_id' => $this->post('type_engin_id'),
-                    'peche_hier' => $this->post('peche_hier'),
-                    'peche_avant_hier' => $this->post('peche_avant_hier'),
-                    'nbr_jrs_peche_dernier_sem' => $this->post('nbr_jrs_peche_dernier_sem'),
-                    'total_capture' => $this->post('total_capture'),
-                    'unique_code' => $this->post('unique_code'),
-                    'data_collect_id' => $this->post('data_collect_id'),
-                    'nbr_bateau_actif' => $this->post('nbr_bateau_actif'),
-                    'total_bateau_ecn' => $this->post('total_bateau_ecn'),
-                    'user_id' => $this->post('user_id')
-                );
+                if ($typeeffort=='PAB')
+                {
+                    $data = array(
+                        'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
+                        'type_canoe_id' => $this->post('type_canoe_id'),
+                        'type_engin_id' => $this->post('type_engin_id'),
+                        'peche_hier' => $this->post('peche_hier'),
+                        'peche_avant_hier' => $this->post('peche_avant_hier'),
+                        'nbr_jrs_peche_dernier_sem' => $this->post('nbr_jrs_peche_dernier_sem'),
+                        'total_capture' => $this->post('total_capture'),
+                        'unique_code' => $this->post('unique_code'),
+                        'data_collect_id' => $this->post('data_collect_id'),
+                        'nbr_bateau_actif' => '0',
+                        'total_bateau_ecn' => '0',
+                        'unite_peche_id' => $this->post('unite_peche_id'),
+                        'user_id' => $this->post('user_id')
+                    );
+                }
+                else{
+                    $data = array(
+                        'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
+                        'type_canoe_id' => $this->post('type_canoe_id'),
+                        'type_engin_id' => $this->post('type_engin_id'),
+                        'peche_hier' => '0',
+                        'peche_avant_hier' => '0',
+                        'nbr_jrs_peche_dernier_sem' => '0',
+                        'total_capture' => $this->post('total_capture'),
+                        'unique_code' => $this->post('unique_code'),
+                        'data_collect_id' => $this->post('data_collect_id'),
+                        'nbr_bateau_actif' => $this->post('nbr_bateau_actif'),
+                        'total_bateau_ecn' => $this->post('total_bateau_ecn'),
+                        'unite_peche_id' => $this->post('unite_peche_id'),
+                        'user_id' => $this->post('user_id')
+                    );
+                }
                 if (!$data) {
                     $this->response([
                         'status' => FALSE,
@@ -236,7 +258,7 @@ class Echantillon extends REST_Controller {
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }         
             } else {
-                $typeeffort=$this->post('typeeffort');
+                
                 if ($typeeffort=='PAB')
                 {
                     $data = array(
@@ -251,9 +273,11 @@ class Echantillon extends REST_Controller {
                         'data_collect_id' => $this->post('data_collect_id'),
                         'nbr_bateau_actif' => '0',
                         'total_bateau_ecn' => '0',
+                        'unite_peche_id' => $this->post('unite_peche_id'),
                         'user_id' => $this->post('user_id')
                     );
-                }else{
+                }
+                else{
                     $data = array(
                         'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
                         'type_canoe_id' => $this->post('type_canoe_id'),
@@ -266,6 +290,7 @@ class Echantillon extends REST_Controller {
                         'data_collect_id' => $this->post('data_collect_id'),
                         'nbr_bateau_actif' => $this->post('nbr_bateau_actif'),
                         'total_bateau_ecn' => $this->post('total_bateau_ecn'),
+                        'unite_peche_id' => $this->post('unite_peche_id'),
                         'user_id' => $this->post('user_id')
                     );
                 }
