@@ -24,9 +24,9 @@ class Site_embarquement extends REST_Controller {
                 $district = $this->DistrictManager->findById($site_embarquement->district_id);
                 $data['id'] = $site_embarquement->id;
                 $data['code'] = $site_embarquement->code;
-                $data['nom'] = $site_embarquement->nom;
-                $data['district_id'] =$site_embarquement->district_id;
-                $data['district_nom'] = $district->nom;
+                $data['nom'] = $site_embarquement->nom;/*
+                $data['district_id'] =$site_embarquement->district_id; ************ TONGA DIA ILAY DONNEES REHETRA ALEFA *********************
+                $data['district_nom'] = $district->nom;*/
                 $data['district'] = $district;
             }  else {
 				$taiza="findAll no nataony";
@@ -43,11 +43,11 @@ class Site_embarquement extends REST_Controller {
                         $data[$key]['latitude'] = $value->latitude;
                         $data[$key]['longitude'] = $value->longitude;
                         $data[$key]['altitude'] = $value->altitude;
-                        $data[$key]['district_id'] = $value->id_district;
-                        $data[$key]['district_nom'] = $district->nom;
+                      /*  $data[$key]['district_id'] = $value->id_district; ************ TONGA DIA ILAY DONNEES REHETRA ALEFA *********************
+                        $data[$key]['district_nom'] = $district->nom;*/
                         $data[$key]['district'] = $district;
-                        $data[$key]['region_id'] = $value->id_region;
-                        $data[$key]['region_nom'] = $region->nom;
+                       /* $data[$key]['region_id'] = $value->id_region; ************ TONGA DIA ILAY DONNEES REHETRA ALEFA *********************
+                        $data[$key]['region_nom'] = $region->nom;*/
                         $data[$key]['region'] = $region;
 
                     }

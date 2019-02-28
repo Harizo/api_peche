@@ -73,25 +73,10 @@ public function findById($id)  {
            
     }
 
-public function findByDate($date_debut,$date_fin)
-{
-    $result = $this->db->select('*')
-                        ->from($this->table)
-                        ->where('date BETWEEN "'.$date_debut.'" AND "'.$date_fin.'"')
-                        ->order_by('date', 'asc')
-                        ->get()
-                        ->result();
-    if($result)
-    {
-        return $result;
-    }
-    else
-    {
-        return null;
-    }
-}
 
- public function SauvegarderTout($data) {
+
+ public function SauvegarderTout($data) 
+{
     $tmp = array();
     $fiche_echantillonnage_capture = array();
     $fiche_echantillonnage_capture = json_decode($data['fiche_echantillonnage_capture']);
@@ -106,17 +91,19 @@ public function findByDate($date_debut,$date_fin)
     $tmp ['longitude']             = $fiche_echantillonnage_capture->longitude;
     $tmp ['altitude']              = $fiche_echantillonnage_capture->altitude;
     $tmp ['id_user']               = $data['user_id'];
-        $this->db->set($tmp)
-                ->set('date_creation', 'NOW()', false)
-                ->set('date_modification', 'NOW()', false)
-                ->insert($this->table);
-        if($this->db->affected_rows() === 1)
-        {
-            return $this->db->insert_id();
-        }else{
-            return null;
-        }
-       }
+    $this->db->set($tmp)
+            ->set('date_creation', 'NOW()', false)
+            ->set('date_modification', 'NOW()', false)
+            ->insert($this->table);
+    if($this->db->affected_rows() === 1)
+    {
+        return $this->db->insert_id();
+    }
+    else
+    {
+        return null;
+    }
+}
 
 
 }
