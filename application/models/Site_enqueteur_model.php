@@ -75,5 +75,24 @@ class Site_enqueteur_model extends CI_Model
         }
         return null;
     }
+    public function findAllByEnqueteur($cle_etranger)
+    {
+        $result =  $this->db->select('*')
+                                ->from($this->table)
+                                ->join('site_embarquement', 'site_enqueteur.id_site = site_embarquement.id', 'inner')
+                                ->where("id_enqueteur", $cle_etranger )
+                                ->order_by('id_enqueteur')
+                                ->get()
+                                ->result();
+            if($result)
+            {
+                return $result;
+            }
+            else
+            {
+            return null;
+            }
+
+    }
 
 }

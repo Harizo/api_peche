@@ -19,9 +19,54 @@ class Fiche_echantillonnage_capture extends REST_Controller {
     }
     public function index_get() {
         $id = $this->get('id');
-        $id_district = $this->get('id_district');
-        $id_region = $this->get('id_region');
+        //$id_district = $this->get('id_district');
+       //$id_region = $this->get('id_region');
+        $date_debut = $this->get('date_debut');
+        $date_fin = $this->get('date_fin');
 		$taiza="";
+
+        if($date_debut || $date_fin)
+        {
+
+            $data = array();
+            $menu = $this->Fiche_echantillonnage_captureManager->findByDate($date_debut ,$date_fin);
+
+            if ($menu)
+            {
+                foreach ($menu as $key => $value)
+                {
+                    $district = array();
+                    $district = $this->DistrictManager->findById($value->id_district);
+                    $region = $this->RegionManager->findById($value->id_region);
+                    $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
+                    $enqueteur = $this->EnqueteurManager->findById($value->id_enqueteur);
+                    $user = $this->UserManager->findById($value->id_user);
+                    $data[$key]['id'] = $value->id;
+                    $data[$key]['code_unique'] = $value->code_unique;
+                    $data[$key]['date'] = $value->date;
+                    $data[$key]['date_creation'] = $value->date_creation;
+                    $data[$key]['date_modification'] = $value->date_modification;
+                    $data[$key]['latitude'] = $value->latitude;
+                    $data[$key]['longitude'] = $value->longitude;
+                    $data[$key]['altitude'] = $value->altitude;
+                    $data[$key]['district_id'] = $value->id_district;
+                    $data[$key]['district_nom'] = $district->nom;
+                    $data[$key]['region_id'] = $value->id_region;
+                    $data[$key]['region_nom'] = $region->nom;
+                    $data[$key]['site_embarquement_id'] = $value->id_site_embarquement;
+                    $data[$key]['site_embarquement_nom'] = $site_embarquement->libelle;
+                    $data[$key]['enqueteur_id'] = $value->id_enqueteur;
+                    $data[$key]['enqueteur_nom'] = $enqueteur->nom;
+                    $data[$key]['user_id'] = $user->id;
+                    $data[$key]['user_nom'] = $user->nom;
+
+                }
+            } else
+                    $data = array();
+
+        }
+        else
+        { 
             if ($id)  
             {
                 $data = array();
@@ -77,7 +122,7 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                 } else
                     $data = array();
             }
-        
+        }
         if (count($data)>0) {
             $this->response([
                 'status' => TRUE,

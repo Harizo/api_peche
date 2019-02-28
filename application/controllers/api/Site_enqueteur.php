@@ -12,10 +12,51 @@ class Site_enqueteur extends REST_Controller {
         $this->load->model('enqueteur_model', 'EnqueteurManager');
         $this->load->model('site_embarquement_model', 'Site_embarquementManager');
         $this->load->model('site_enqueteur_model', 'Site_enqueteurManager');
+        $this->load->model('district_model', 'DistrictManager');
+        $this->load->model('region_model', 'RegionManager');
     }
 
     public function index_get() {
         $id = $this->get('id');
+        $cle_etrangere = $this->get('cle_etrangere');
+        if($cle_etrangere)
+        {   $data = array();
+            $taiza="findcle_etrangere no nataony";
+            $menu = $this->Site_enqueteurManager->findAllByEnqueteur($cle_etrangere);
+            $si=$menu;
+            if ($menu) 
+            {
+                foreach ($menu as $key => $value) 
+                {   $district = array();
+                    $region   = array();
+                    
+                    $district = $this->DistrictManager->findById($value->id_district);
+                    $region   = $this->RegionManager->findById($value->id_region);                
+                        
+                    $data[$key]['id']          = $value->id;
+                    $data[$key]['site_embarquement_id']= $value->id_site;
+                    $data[$key]['code']        = $value->code;
+                    $data[$key]['libelle']     = $value->libelle;
+                    $data[$key]['code_unique'] = $value->code_unique;
+                    $data[$key]['latitude']    = $value->latitude;
+                    $data[$key]['longitude']   = $value->longitude;
+                    $data[$key]['altitude']    = $value->altitude;
+                    $data[$key]['district_id'] = $value->id_district;
+                    $data[$key]['district_nom']= $district->nom;
+                    $data[$key]['region_id']   = $value->id_region;
+                    $data[$key]['region_nom']  = $region->nom;
+                    $data[$key]['region']      = $region;
+                    $data[$key]['district']    = $district;
+                    $data[$key]['si']    = $si;
+
+                }
+            } 
+            else
+                $data = array();
+            
+        }
+        else
+        {
             if ($id) {
                 $data = array();
                 $site_enqueteur = $this->Site_enqueteurManager->findById($id);
@@ -50,6 +91,7 @@ class Site_enqueteur extends REST_Controller {
                 } else
                     $data = array();
             }
+        }    
         
         if (count($data)>0) {
             $this->response([

@@ -23,7 +23,7 @@ class Espece_capture extends REST_Controller {
         if ($cle_etrangere) 
         {
             $taiza="findcle_etrangere no nataony";
-            $menu = $this->Espece_captureManager->findAllByEspece($cle_etrangere);
+            $menu = $this->Espece_captureManager->findAllByEchantillon($cle_etrangere);
              if ($menu) 
              {
                     foreach ($menu as $key => $value) 
@@ -40,11 +40,11 @@ class Espece_capture extends REST_Controller {
                         $data[$key]['id'] = $value->id;
                         
                         $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
-                        $data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
+                        //$data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
                         $data[$key]['fiche_echantillonnage_capture'] = $fiche_echantillonnage_capture;
                        
                         $data[$key]['echantillon_id'] = $value->id_echantillon;
-                        $data[$key]['echantillon_nom'] = $echantillon ->unique_code;
+                        //$data[$key]['echantillon_nom'] = $echantillon ->unique_code;
                         $data[$key]['echantillon'] = $echantillon;
 
                         $data[$key]['capture'] = $value->capture;
@@ -87,13 +87,16 @@ class Espece_capture extends REST_Controller {
             else 
             {
                 $espece_capture= $this->Espece_captureManager->findAll();
+
                 if ($espece_capture) {
                     foreach ($espece_capture as $key => $value) {
-                        
-                        $data['id'] = $espece_capture->id;
+                $espece = $this->EspeceManager->findById($value->id_espece);        
+                
+                $data['id'] = $espece_capture->id;
                 $data[$key]['id_fiche_echantillonnage_capture'] = $espece_capture->id_fiche_echantillonnage_capture;
                 $data[$key]['id_echantillon'] = $value->id_echantillon;
-                $data[$key]['id_espece'] = $value->id_espece;
+                $data[$key]['espece_id'] = $value->id_espece ;
+                $data[$key]['espece_nom'] = $espece ->nom_local;
                 $data[$key]['capture'] = $value->capture;
                 $data[$key]['prix'] = $value->prix;
                 $data[$key]['id_user'] = $value->id_user;

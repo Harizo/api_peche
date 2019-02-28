@@ -26,14 +26,7 @@ class Commune extends REST_Controller {
                 $data['nom'] = $commune->nom;
                 $data['district_id'] = $commune->district_id;
                 $data['district_nom'] = $district->nom;
-            } else if($id_district && $id_region) {
-				$taiza="Ato ambony ary id_district=".$id_district."  ary id_region=".$id_region; 
-				$menu = $this->CommuneManager->find_Commune_avec_District_et_Region();
-                if ($menu) {
-					$data=$menu;
-                } else
-                    $data = array();
-			} else {
+            }else {
 				$taiza="findAll no nataony";
                 $menu = $this->CommuneManager->findAll();
                 if ($menu) {

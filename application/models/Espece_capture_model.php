@@ -89,6 +89,21 @@ class Espece_capture_model extends CI_Model
             return null;
         }                 
     }
+    public function findAllByEchantillon($id_echantillon)
+    {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->order_by('capture')
+                        ->where("id_echantillon", $id_echantillon)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
 
     public function findById($id)
     {

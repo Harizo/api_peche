@@ -73,20 +73,14 @@ public function findById($id)  {
            
     }
 
-public function Numerosequenceutilisateur($date_prospection,$id_utilisateur) 
-{
-    $requete="select count(*) as nombre from fiche_prospection where date_envoi='"
-            .$date_prospection."' and id_utilisateur=".$id_utilisateur;
-    $query = $this->db->query($requete);
-    return $query->result();                
-}
+
 
  public function SauvegarderTout($data) 
 {
     $tmp = array();
     $fiche_echantillonnage_capture = array();
     $fiche_echantillonnage_capture = json_decode($data['fiche_echantillonnage_capture']);
-
+    
     $tmp ['code_unique']           = $fiche_echantillonnage_capture->code_unique;                
     $tmp ['date']                  = $fiche_echantillonnage_capture->date;    
     $tmp ['id_region']             = $fiche_echantillonnage_capture->region_id;

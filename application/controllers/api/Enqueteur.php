@@ -22,7 +22,7 @@ class Enqueteur extends REST_Controller {
                 $data['id'] = $enqueteur->id;
                 $data['prenom'] = $enqueteur->prenom;
                 $data['nom'] = $enqueteur->nom;
-                $data['cin'] = $enqueteur->cin;
+                $data['telephone'] = $enqueteur->telephone;
             } 
             else 
             {
@@ -35,7 +35,7 @@ class Enqueteur extends REST_Controller {
                         $data[$key]['id'] = $value->id;
                         $data[$key]['prenom'] = $value->prenom;
                         $data[$key]['nom'] = $value->nom;
-                        $data[$key]['cin'] = $value->cin;
+                        $data[$key]['telephone'] = $value->telephone;
                     }
                 } 
                 else
@@ -64,7 +64,7 @@ class Enqueteur extends REST_Controller {
                 $data = array(
                     'nom' => $this->post('nom'),
                     'prenom' => $this->post('prenom'),
-                    'cin' => $this->post('cin'),
+                    'telephone' => $this->post('telephone'),
                     'id_region' => $this->post('region_id')
                 );
                 if (!$data) {
@@ -92,7 +92,7 @@ class Enqueteur extends REST_Controller {
                 $data = array(
                     'prenom' => $this->post('prenom'),
                     'nom' => $this->post('nom'),
-                    'cin' => $this->post('cin'),
+                    'telephone' => $this->post('telephone'),
                     'id_region' => $this->post('region_id')
                 );
                 if (!$data || !$id) {
