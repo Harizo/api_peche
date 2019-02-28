@@ -73,11 +73,20 @@ public function findById($id)  {
            
     }
 
- public function SauvegarderTout($data) {
+public function Numerosequenceutilisateur($date_prospection,$id_utilisateur) 
+{
+    $requete="select count(*) as nombre from fiche_prospection where date_envoi='"
+            .$date_prospection."' and id_utilisateur=".$id_utilisateur;
+    $query = $this->db->query($requete);
+    return $query->result();                
+}
+
+ public function SauvegarderTout($data) 
+{
     $tmp = array();
     $fiche_echantillonnage_capture = array();
     $fiche_echantillonnage_capture = json_decode($data['fiche_echantillonnage_capture']);
-    
+
     $tmp ['code_unique']           = $fiche_echantillonnage_capture->code_unique;                
     $tmp ['date']                  = $fiche_echantillonnage_capture->date;    
     $tmp ['id_region']             = $fiche_echantillonnage_capture->region_id;
@@ -88,17 +97,19 @@ public function findById($id)  {
     $tmp ['longitude']             = $fiche_echantillonnage_capture->longitude;
     $tmp ['altitude']              = $fiche_echantillonnage_capture->altitude;
     $tmp ['id_user']               = $data['user_id'];
-        $this->db->set($tmp)
-                ->set('date_creation', 'NOW()', false)
-                ->set('date_modification', 'NOW()', false)
-                ->insert($this->table);
-        if($this->db->affected_rows() === 1)
-        {
-            return $this->db->insert_id();
-        }else{
-            return null;
-        }
-       }
+    $this->db->set($tmp)
+            ->set('date_creation', 'NOW()', false)
+            ->set('date_modification', 'NOW()', false)
+            ->insert($this->table);
+    if($this->db->affected_rows() === 1)
+    {
+        return $this->db->insert_id();
+    }
+    else
+    {
+        return null;
+    }
+}
 
 
 }

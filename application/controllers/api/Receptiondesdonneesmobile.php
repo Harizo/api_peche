@@ -19,23 +19,25 @@ class Receptiondesdonneesmobile extends REST_Controller {
     }
 
     public function index_post() { 
-    	'id_serveur' => $this->post('id_serveur'),
 
-			$data = array(
-                    'fiche_echantillonnage_capture' => $this->post('fiche_echantillonnage_capture'),                    
-                    'user_id' => $this->post('user_id')
-                );
-			
-			if($id_serveur == 0)
+    	$id = $this->post('id');
+    	$id_user = $this->post('id_user');
+    	$id_serveur = $this->post('id_serveur');
+    	$date = $this->post('date');
+    	$id_site_embarquement = $this->post('id_site_embarquement');
+    	$id_district = $this->post('id_district');
+    	$id_enqueteur = $this->post('id_enqueteur');
+    	$id_region = $this->post('id_region');
+    	$latitude = $this->post('latitude');
+    	$longitude = $this->post('longitude');
+    	
+			if($id_serveur == 0)//envoi avy any @mobile
 			{		
-				if(count($echatillonnages_captures) >0)
-				{
-				$IdsauvegardeFiche_echantillonnge_capture=$this->Fiche_echantillonnge_captureManager->SauvegarderTout($data);
-
-				$IdsauvegardeEchantillon = $this->EchantillonManager->SauvegarderTout($data);
-				$IdsauvegardeEspece_capture = $this->Espece_captureManager->SauvegarderTout($data);
-
-				}
+				
+			}
+			else
+			{
+				//validation @web na modification
 			}
 			
 						
