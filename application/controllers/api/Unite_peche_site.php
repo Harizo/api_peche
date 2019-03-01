@@ -67,6 +67,7 @@ class Unite_peche_site extends REST_Controller {
                         $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
                         $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
 
+                        $data[$key]['id'] =$value->id;
                         $data[$key]['unite_peche'] =$unite_peche;
                         $data[$key]['site_embarquement'] =$site_embarquement;    
                         
