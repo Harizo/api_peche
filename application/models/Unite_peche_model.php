@@ -32,7 +32,7 @@ class Unite_peche_model extends CI_Model {
     {   return array(
             'id_type_canoe'           =>      $unite_peche['type_canoe_id'],
             'id_type_engin'           =>      $unite_peche['type_engin_id'],
-            'id_site_embarquement'    =>      $unite_peche['site_embarquement_id'],
+          //  'id_site_embarquement'    =>      $unite_peche['site_embarquement_id'],
             'libelle'                 =>      $unite_peche['libelle']                       
         );
     }

@@ -39,7 +39,7 @@ class Unite_peche extends REST_Controller {
 
                         $data[$key]['type_canoe'] = $type_canoe;
                         $data[$key]['type_engin'] = $type_engin;
-                        $data[$key]['site_embarquement'] = $site_embarquement;
+                     //   $data[$key]['site_embarquement'] = $site_embarquement;
                             
                         /*$data[$key]['site_embarquement_id'] = $value->id_site_embarquement;
                         $data[$key]['site_embarquement_nom'] = $site_embarquement->libelle;
@@ -63,7 +63,7 @@ class Unite_peche extends REST_Controller {
                 $unite_peche = $this->Unite_pecheManager->findById($id);
                 $data['id'] = $unite_peche->id;
                 $data['libelle'] = $unite_peche->libelle;
-                $data['id_site_embarquement'] =$unite_peche->id_site_embarquement;
+              //  $data['id_site_embarquement'] =$unite_peche->id_site_embarquement;
                 $data['id_type_canoe'] =$unite_peche->id_type_canoe;
                 $data['id_type_engin'] =$unite_peche->id_type_engin;
                 
@@ -77,7 +77,7 @@ class Unite_peche extends REST_Controller {
                         $type_canoe = array();
                         $type_engin = array();
 
-                        $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
+                      //  $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
                         $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
                         $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
 
@@ -87,7 +87,7 @@ class Unite_peche extends REST_Controller {
                             
                         /*$data[$key]['site_embarquement_id'] = $value->id_site_embarquement;
                         $data[$key]['site_embarquement_nom'] = $site_embarquement->libelle;*/
-                        $data[$key]['site_embarquement'] = $site_embarquement;
+                     //   $data[$key]['site_embarquement'] = $site_embarquement;
                         $data[$key]['type_canoe'] = $type_canoe;
                         $data[$key]['type_engin'] = $type_engin;
                            
@@ -126,7 +126,7 @@ class Unite_peche extends REST_Controller {
         if ($supprimer == 0)
         {   if ($id == 0)
             {   $data = array(
-                    'site_embarquement_id' => $this->post('site_embarquement_id'),
+                   // 'site_embarquement_id' => $this->post('site_embarquement_id'),
                     'type_canoe_id' => $this->post('type_canoe_id'),
                     'type_engin_id' => $this->post('type_engin_id'),
                     'libelle' => $this->post('libelle')
@@ -156,7 +156,7 @@ class Unite_peche extends REST_Controller {
             }
             else
             {   $data = array(
-                    'site_embarquement_id' => $this->post('site_embarquement_id'),
+                   // 'site_embarquement_id' => $this->post('site_embarquement_id'),
                     'type_canoe_id' => $this->post('type_canoe_id'),
                     'type_engin_id' => $this->post('type_engin_id'),
                     'libelle' => $this->post('libelle')
