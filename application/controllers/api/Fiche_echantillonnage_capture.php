@@ -23,7 +23,7 @@ class Fiche_echantillonnage_capture extends REST_Controller {
        //$id_region = $this->get('id_region');
         $date_debut = $this->get('date_debut');
         $date_fin = $this->get('date_fin');
-		$taiza="";
+        $taiza="";
 
         if($date_debut || $date_fin)
         {
@@ -49,16 +49,11 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                     $data[$key]['latitude'] = $value->latitude;
                     $data[$key]['longitude'] = $value->longitude;
                     $data[$key]['altitude'] = $value->altitude;
-                    $data[$key]['district_id'] = $value->id_district;
-                    $data[$key]['district_nom'] = $district->nom;
-                    $data[$key]['region_id'] = $value->id_region;
-                    $data[$key]['region_nom'] = $region->nom;
-                    $data[$key]['site_embarquement_id'] = $value->id_site_embarquement;
-                    $data[$key]['site_embarquement_nom'] = $site_embarquement->libelle;
-                    $data[$key]['enqueteur_id'] = $value->id_enqueteur;
-                    $data[$key]['enqueteur_nom'] = $enqueteur->nom;
-                    $data[$key]['user_id'] = $user->id;
-                    $data[$key]['user_nom'] = $user->nom;
+                    $data[$key]['district'] = $district;
+                    $data[$key]['region'] = $region;
+                    $data[$key]['site_embarquement'] = $site_embarquement;
+                    $data[$key]['enqueteur'] = $enqueteur;
+                    $data[$key]['user'] = $user;
 
                 }
             } else
@@ -89,7 +84,7 @@ class Fiche_echantillonnage_capture extends REST_Controller {
             } 
             else 
             {
-				$taiza="findAll no nataony";
+                $taiza="findAll no nataony";
                 $menu = $this->Fiche_echantillonnage_captureManager->findAll();
                 if ($menu) {
                     foreach ($menu as $key => $value) {
@@ -107,16 +102,11 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                         $data[$key]['latitude'] = $value->latitude;
                         $data[$key]['longitude'] = $value->longitude;
                         $data[$key]['altitude'] = $value->altitude;
-                        $data[$key]['district_id'] = $value->id_district;
-                        $data[$key]['district_nom'] = $district->nom;
-                        $data[$key]['region_id'] = $value->id_region;
-                        $data[$key]['region_nom'] = $region->nom;
-                        $data[$key]['site_embarquement_id'] = $value->id_site_embarquement;
-                        $data[$key]['site_embarquement_nom'] = $site_embarquement->libelle;
-                        $data[$key]['enqueteur_id'] = $value->id_enqueteur;
-                        $data[$key]['enqueteur_nom'] = $enqueteur->nom;
-                        $data[$key]['user_id'] = $user->id;
-                        $data[$key]['user_nom'] = $user->nom;
+                        $data[$key]['district'] = $district;
+                        $data[$key]['region'] = $region;
+                        $data[$key]['site_embarquement'] = $site_embarquement;
+                        $data[$key]['enqueteur'] = $enqueteur;
+                        $data[$key]['user'] = $user;
 
                     }
                 } else

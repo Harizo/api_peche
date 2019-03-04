@@ -29,8 +29,6 @@ class Echantillon_model extends CI_Model {
     public function _set($echantillon) {
         return array(
             'id_fiche_echantillonnage_capture' => $echantillon['fiche_echantillonnage_capture_id'],
-            'id_type_canoe'           =>      $echantillon['type_canoe_id'],
-            'id_type_engin'     =>      $echantillon['type_engin_id'],
             'peche_hier'          =>      $echantillon['peche_hier'],
             'peche_avant_hier'           =>      $echantillon['peche_avant_hier'],
             'nbr_jrs_peche_dernier_sem'     =>      $echantillon['nbr_jrs_peche_dernier_sem'] ,

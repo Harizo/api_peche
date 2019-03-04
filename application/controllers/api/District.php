@@ -24,8 +24,7 @@ class District extends REST_Controller {
                 $data['id'] = $district->id;
                 $data['code'] = $district->code;
                 $data['nom'] = $district->nom;
-                $data['region_id'] = $district->id_region;
-                $data['region_nom'] = $region->nom;
+                $data['region'] = $region;
             } 
             else 
             {
@@ -39,8 +38,6 @@ class District extends REST_Controller {
                         $data[$key]['id'] = $value->id;
                         $data[$key]['code'] = $value->code;
                         $data[$key]['nom'] = $value->nom;
-                        $data[$key]['region_id'] = $value->id_region;
-                        $data[$key]['region_nom'] = $region->nom;
                         $data[$key]['region'] = $region;
                     }
                 } 

@@ -38,24 +38,14 @@ class Espece_capture extends REST_Controller {
                         $espece = $this->EspeceManager->findById($value->id_espece);
                         $user = $this->UserManager->findById($value->id_user);
                         $data[$key]['id'] = $value->id;
-                        
-                        $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
-                        //$data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
                         $data[$key]['fiche_echantillonnage_capture'] = $fiche_echantillonnage_capture;
-                       
-                        $data[$key]['echantillon_id'] = $value->id_echantillon;
-                        //$data[$key]['echantillon_nom'] = $echantillon ->unique_code;
                         $data[$key]['echantillon'] = $echantillon;
 
                         $data[$key]['capture'] = $value->capture;
                         $data[$key]['prix'] = $value->prix;
-                        
-                        $data[$key]['espece_id'] = $value->id_espece ;
-                        $data[$key]['espece_nom'] = $espece ->nom_local;
+
                         $data[$key]['espece'] = $espece;
                         
-                        $data[$key]['user_id'] = $value->id_user;
-                        $data[$key]['user_nom'] = $user->nom;
                         $data[$key]['user'] = $user;
                         
                         $data[$key]['date_creation'] = $value->date_creation;
