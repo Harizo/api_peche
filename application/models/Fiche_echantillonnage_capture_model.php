@@ -32,14 +32,14 @@ class Fiche_echantillonnage_capture_model extends CI_Model {
             'date'                    =>      $fiche_echantillonnage_capture['date'],
            // 'date_creation'           =>      $fiche_echantillonnage_capture['date_creation'],
             //'date_modification'       =>      $fiche_echantillonnage_capture['date_modification'],
-            'id_region'               =>      $fiche_echantillonnage_capture['region_id'],
-            'id_district'             =>      $fiche_echantillonnage_capture['district_id'],
-            'id_site_embarquement'    =>      $fiche_echantillonnage_capture['site_embarquement_id'],
-            'id_enqueteur'            =>      $fiche_echantillonnage_capture['enqueteur_id'],
-            'id_user'                 =>      $fiche_echantillonnage_capture['user_id'],
+            'id_region'               =>      $fiche_echantillonnage_capture['id_region'],
+            'id_district'             =>      $fiche_echantillonnage_capture['id_district'],
+            'id_site_embarquement'    =>      $fiche_echantillonnage_capture['id_site_embarquement'],
+            'id_enqueteur'            =>      $fiche_echantillonnage_capture['id_enqueteur'],
+            'id_user'                 =>      $fiche_echantillonnage_capture['id_user'],
             'latitude'                =>      $fiche_echantillonnage_capture['latitude'],
             'longitude'               =>      $fiche_echantillonnage_capture['longitude'],
-            'altitude'                =>      $fiche_echantillonnage_capture['altitude'],                       
+            'altitude'                =>      $fiche_echantillonnage_capture['altitude']                      
         );
     }
     public function delete($id) {
@@ -103,6 +103,24 @@ public function findById($id)  {
     {
         return null;
     }
+}
+
+
+public function numero($date_envoi)
+{
+   
+    $result =  $this->db->select('COUNT(*) as nombre')
+                        ->from($this->table)
+                        ->where("date_creation", $date_envoi)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                     
+    
 }
 
 

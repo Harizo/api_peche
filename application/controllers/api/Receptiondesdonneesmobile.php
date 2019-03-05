@@ -9,42 +9,77 @@ class Receptiondesdonneesmobile extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('fiche_echatillonnage_capture_model', 'Fiche_echatillonnage_captureManager');
+        $this->load->model('Fiche_echantillonnage_capture_model', 'Fiche_echantillonnage_captureManager');
         $this->load->model('Espece_capture_model', 'Espece_captureManager');
         $this->load->model('echantillon_model', 'EchantillonManager');
+
+        $this->load->model('site_embarquement_model', 'Site_embarquementManager');
+        $this->load->model('district_model', 'DistrictManager');
+        $this->load->model('region_model', 'RegionManager');
 		
 		// DDB        
-        $this->load->model('user_model', 'UserManager');
+        $this->load->model('Utilisateurs_model', 'UserManager');
 	
     }
 
     public function index_post() { 
 
-    	$id = $this->post('id');
-    	$id_user = $this->post('id_user');
-    	$id_serveur = $this->post('id_serveur');
-    	$date = $this->post('date');
-    	$id_site_embarquement = $this->post('id_site_embarquement');
-    	$id_district = $this->post('id_district');
-    	$id_enqueteur = $this->post('id_enqueteur');
-    	$id_region = $this->post('id_region');
-    	$latitude = $this->post('latitude');
-    	$longitude = $this->post('longitude');
     	
-			if($id_serveur == 0)//envoi avy any @mobile
+        $date_envoi = date('Y/m/d');
+    	$date_code_unique = date('d/m/Y');
+
+    	$numero_fiche = $this->Fiche_echantillonnage_captureManager->numero($date_envoi);
+    	$site_embarquement = $this->Site_embarquementManager->findById($this->post('id_site_embarquement'));
+    	$district = $this->DistrictManager->findById($site_embarquement->id_district);
+        $region = $this->RegionManager->findById($site_embarquement->id_region);
+
+        $sequence = intval($numero_fiche[0]->nombre) + 1;
+		if($sequence < 10) {
+			$sequence = '0'.$sequence;
+		}
+
+        $code_unique = $region->nom."-".$site_embarquement->libelle."-".$date_code_unique."-".$sequence ;
+
+
+        $id_serveur = $this->post('id_serveur') ;
+    	$data = array(
+
+                    'code_unique'    => $code_unique,
+                    'date' => $this->post('date'),
+                    'id_user'    => $this->post('id_user'),
+                    'id_serveur' => $this->post('id_serveur'),
+                    'id_site_embarquement' => $this->post('id_site_embarquement'),
+                    'id_district' => $this->post('id_district'),
+                    'id_enqueteur' => $this->post('id_enqueteur'),
+                    'id_region' => $this->post('id_region'),
+                    'latitude' => $this->post('latitude'),
+                    'longitude' => $this->post('longitude'),
+                    'altitude' => $this->post('altitude')
+                );
+
+   
+
+
+    	
+			if($id_serveur == 0)//envoi avy any @mobile na web site tsy app centrale
 			{		
-				
+				$dataId_fiche = $this->Fiche_echantillonnage_captureManager->add($data);
 			}
 			else
 			{
 				//validation @web na modification
 			}
+
+            $obj = array() ;
+
+            $obj['id_serveur'] = $dataId_fiche ;
+            $obj['code_unique'] = $code_unique ;
 			
 						
-			if(!is_null($IdsauvegardeFiche_echantillonnge_capture)) {
+			if(!is_null($obj)) {
 				$this->response([
 					'status' => TRUE,
-					'response' => $IdsauvegardeFiche_echantillonnge_capture,
+					'response' => $obj,
 					'message' => "Mise à jour ok"
 						], REST_Controller::HTTP_OK);
 			} else {
