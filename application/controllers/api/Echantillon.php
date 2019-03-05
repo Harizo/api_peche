@@ -11,8 +11,7 @@ class Echantillon extends REST_Controller {
         parent::__construct();
         $this->load->model('echantillon_model', 'EchantillonManager');
         $this->load->model('fiche_echantillonnage_capture_model', 'Fiche_echantillonnage_captureManager');
-        $this->load->model('type_canoe_model', 'Type_canoeManager');
-        $this->load->model('type_engin_model', 'Type_enginManager');
+        $this->load->model('unite_peche_model', 'Unite_pecheManager');
         $this->load->model('utilisateurs_model', 'UserManager');
         $this->load->model('data_collect_model', 'Data_collectManager');
         $this->load->model('unite_peche_model', 'Unite_pecheManager');
@@ -23,7 +22,7 @@ class Echantillon extends REST_Controller {
         $cle_etrangere = $this->get('cle_etrangere');
         $id_district = $this->get('id_district');
         $id_region = $this->get('id_region');
-		$taiza="";
+        $taiza="";
         if ($cle_etrangere) {
             $taiza="findcle_etrangere no nataony";
             $menu = $this->EchantillonManager->findAllByFiche_echantillonnnage_capture($cle_etrangere);
@@ -36,9 +35,10 @@ class Echantillon extends REST_Controller {
                         $data_collect = array();
                         $user = array();
 
-                        $fiche_echantillonnage_capture = $this->Fiche_echantillonnage_captureManager->findById($value->id_fiche_echantillonnage_capture);
-                        $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
-                        $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
+                        //$fiche_echantillonnage_capture = $this->Fiche_echantillonnage_captureManager->findById($value->id_fiche_echantillonnage_capture);
+                        //$type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
+                        //$type_engin = $this->Type_enginManager->findById($value->id_type_engin);
+                        $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
                         $data_collect = $this->Data_collectManager->findById($value->id_data_collect);
                         $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
                         $user = $this->UserManager->findById($value->id_user);
@@ -61,31 +61,14 @@ class Echantillon extends REST_Controller {
                             $data[$key]['total_bateau_ecn'] = $value->total_bateau_ecn; 
                         }
 
-                        $data[$key]['id'] = $value->id;
-                        
-                        $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
-                        //$data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
-                       
-                        $data[$key]['type_canoe_id'] = $value->id_type_canoe;
-                        $data[$key]['type_canoe_nom'] = $type_canoe ->nom;
-                        
-                        $data[$key]['type_engin_id'] = $value->id_type_engin;
-                        $data[$key]['type_engin_nom'] = $type_engin->libelle;
-                        
+                        $data[$key]['id'] = $value->id;                        
                         $data[$key]['total_capture'] = $value->total_capture;
-                        $data[$key]['unique_code'] = $value->unique_code;
-                        
-                        $data[$key]['data_collect_id'] = $value->id_data_collect;
-                        $data[$key]['data_collect_nom'] = $data_collect->code;
-
-                        $data[$key]['unite_peche_id'] = $value->id_unite_peche;
-                        $data[$key]['unite_peche_nom'] = $unite_peche->libelle;                        
-                        
-                        $data[$key]['user_id'] = $value->id_user;
-                        $data[$key]['user_nom'] = $user->nom;
-                        
+                        $data[$key]['unique_code'] = $value->unique_code;                        
                         $data[$key]['date_creation'] = $value->date_creation;
-                        $data[$key]['date_modification'] = $value->date_modification;
+                        $data[$key]['date_modification'] = $value->date_modification;                       
+                        $data[$key]['data_collect'] = $data_collect;
+                        $data[$key]['unite_peche'] = $unite_peche;
+                        $data[$key]['user'] = $user;
 
                     }
                 } else{
@@ -97,10 +80,8 @@ class Echantillon extends REST_Controller {
                 $echantillon = $this->EchantillonManager->findById($id);
                 //$data_collect = $this->Data_collectManager->findById($echantillon->district_id);
                // $user = $this->Data_collectManager->findById($echantillon->district_id);
+                $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
                 $data['id'] = $echantillon->id;
-                $data['id_fiche_echantillonage_capture'] =$echantillon->id_fiche_echantillonnage_capture;
-                $data['id_type_canoe'] =$echantillon->id_type_canoe;
-                $data['id_type_engin'] =$echantillon->id_type_engin;
                 $data[$key]['unite_peche_id'] = $value->id_unite_peche;
                 $data['peche_hier'] = $echantillon->peche_hier;
                 $data['peche_avant_hier'] = $echantillon->peche_avant_hier;
@@ -117,7 +98,7 @@ class Echantillon extends REST_Controller {
                 
 
             } else {
-				$taiza="findAll no nataony";
+                $taiza="findAll no nataony";
                 $menu = $this->EchantillonManager->findAll();
                 if ($menu) {
                     foreach ($menu as $key => $value) {
@@ -151,27 +132,13 @@ class Echantillon extends REST_Controller {
                         }
                         
                         $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
-                       // $data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;
-                       
-                        $data[$key]['type_canoe_id'] = $value->id_type_canoe;
-                        $data[$key]['type_canoe_nom'] = $type_canoe ->nom;
-                        
-                        $data[$key]['type_engin_id'] = $value->id_type_engin;
-                        $data[$key]['type_engin_nom'] = $type_engin->libelle;
-                        
-                        
+                       // $data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;                  
+                                            
                         $data[$key]['total_capture'] = $value->total_capture;
                         $data[$key]['unique_code'] = $value->unique_code;
-                        
-                        $data[$key]['data_collect_id'] = $value->id_data_collect;
-                        $data[$key]['data_collect_nom'] = $data_collect->code;
-                        
-                        $data[$key]['unite_peche_id'] = $value->id_unite_peche;
-                        $data[$key]['unite_peche_nom'] = $unite_peche->libelle;
-                        
-                        $data[$key]['user_id'] = $value->id_user;
-                        $data[$key]['user_nom'] = $user->nom;
-                        
+                        $data[$key]['data_collect'] = $data_collect;
+                        $data[$key]['unite_peche'] = $unite_peche;                        
+                        $data[$key]['user'] = $user;                        
                         $data[$key]['date_creation'] = $value->date_creation;
                         $data[$key]['date_modification'] = $value->date_modification;
 
@@ -198,22 +165,42 @@ class Echantillon extends REST_Controller {
     public function index_post() {
         $id = $this->post('id') ;
         $supprimer = $this->post('supprimer') ;
+        $typeeffort=$this->post('typeeffort');
         if ($supprimer == 0) {
             if ($id == 0) {
-                $data = array(
-                    'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
-                    'type_canoe_id' => $this->post('type_canoe_id'),
-                    'type_engin_id' => $this->post('type_engin_id'),
-                    'peche_hier' => $this->post('peche_hier'),
-                    'peche_avant_hier' => $this->post('peche_avant_hier'),
-                    'nbr_jrs_peche_dernier_sem' => $this->post('nbr_jrs_peche_dernier_sem'),
-                    'total_capture' => $this->post('total_capture'),
-                    'unique_code' => $this->post('unique_code'),
-                    'data_collect_id' => $this->post('data_collect_id'),
-                    'nbr_bateau_actif' => $this->post('nbr_bateau_actif'),
-                    'total_bateau_ecn' => $this->post('total_bateau_ecn'),
-                    'user_id' => $this->post('user_id')
-                );
+                if ($typeeffort=='PAB')
+                {
+                    $data = array(
+                        'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
+                        'unite_peche_id' => $this->post('unite_peche_id'),
+                        'peche_hier' => $this->post('peche_hier'),
+                        'peche_avant_hier' => $this->post('peche_avant_hier'),
+                        'nbr_jrs_peche_dernier_sem' => $this->post('nbr_jrs_peche_dernier_sem'),
+                        'total_capture' => $this->post('total_capture'),
+                        'unique_code' => $this->post('unique_code'),
+                        'data_collect_id' => $this->post('data_collect_id'),
+                        'nbr_bateau_actif' => '0',
+                        'total_bateau_ecn' => '0',
+                        'unite_peche_id' => $this->post('unite_peche_id'),
+                        'user_id' => $this->post('user_id')
+                    );
+                }
+                else{
+                    $data = array(
+                        'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
+                        'unite_peche_id' => $this->post('unite_peche_id'),
+                        'peche_hier' => '0',
+                        'peche_avant_hier' => '0',
+                        'nbr_jrs_peche_dernier_sem' => '0',
+                        'total_capture' => $this->post('total_capture'),
+                        'unique_code' => $this->post('unique_code'),
+                        'data_collect_id' => $this->post('data_collect_id'),
+                        'nbr_bateau_actif' => $this->post('nbr_bateau_actif'),
+                        'total_bateau_ecn' => $this->post('total_bateau_ecn'),
+                        'unite_peche_id' => $this->post('unite_peche_id'),
+                        'user_id' => $this->post('user_id')
+                    );
+                }
                 if (!$data) {
                     $this->response([
                         'status' => FALSE,
@@ -236,13 +223,12 @@ class Echantillon extends REST_Controller {
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }         
             } else {
-                $typeeffort=$this->post('typeeffort');
+                
                 if ($typeeffort=='PAB')
                 {
                     $data = array(
                         'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
-                        'type_canoe_id' => $this->post('type_canoe_id'),
-                        'type_engin_id' => $this->post('type_engin_id'),
+                        'unite_peche_id' => $this->post('unite_peche_id'),
                         'peche_hier' => $this->post('peche_hier'),
                         'peche_avant_hier' => $this->post('peche_avant_hier'),
                         'nbr_jrs_peche_dernier_sem' => $this->post('nbr_jrs_peche_dernier_sem'),
@@ -251,13 +237,14 @@ class Echantillon extends REST_Controller {
                         'data_collect_id' => $this->post('data_collect_id'),
                         'nbr_bateau_actif' => '0',
                         'total_bateau_ecn' => '0',
+                        'unite_peche_id' => $this->post('unite_peche_id'),
                         'user_id' => $this->post('user_id')
                     );
-                }else{
+                }
+                else{
                     $data = array(
                         'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
-                        'type_canoe_id' => $this->post('type_canoe_id'),
-                        'type_engin_id' => $this->post('type_engin_id'),
+                        'unite_peche_id' => $this->post('unite_peche_id'),
                         'peche_hier' => '0',
                         'peche_avant_hier' => '0',
                         'nbr_jrs_peche_dernier_sem' => '0',
@@ -266,6 +253,7 @@ class Echantillon extends REST_Controller {
                         'data_collect_id' => $this->post('data_collect_id'),
                         'nbr_bateau_actif' => $this->post('nbr_bateau_actif'),
                         'total_bateau_ecn' => $this->post('total_bateau_ecn'),
+                        'unite_peche_id' => $this->post('unite_peche_id'),
                         'user_id' => $this->post('user_id')
                     );
                 }

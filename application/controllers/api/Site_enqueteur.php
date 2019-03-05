@@ -33,21 +33,17 @@ class Site_enqueteur extends REST_Controller {
                     $district = $this->DistrictManager->findById($value->id_district);
                     $region   = $this->RegionManager->findById($value->id_region);                
                         
-                    $data[$key]['id']          = $value->id;
-                    $data[$key]['site_embarquement_id']= $value->id_site;
+                    //$data[$key]['id']          = $value->id;
+                    $data[$key]['id']          = $value->id_site;
                     $data[$key]['code']        = $value->code;
                     $data[$key]['libelle']     = $value->libelle;
                     $data[$key]['code_unique'] = $value->code_unique;
                     $data[$key]['latitude']    = $value->latitude;
                     $data[$key]['longitude']   = $value->longitude;
                     $data[$key]['altitude']    = $value->altitude;
-                    $data[$key]['district_id'] = $value->id_district;
-                    $data[$key]['district_nom']= $district->nom;
-                    $data[$key]['region_id']   = $value->id_region;
-                    $data[$key]['region_nom']  = $region->nom;
                     $data[$key]['region']      = $region;
                     $data[$key]['district']    = $district;
-                    $data[$key]['si']    = $si;
+                    //$data[$key]['si']    = $si;
 
                 }
             } 
@@ -63,13 +59,7 @@ class Site_enqueteur extends REST_Controller {
                 $enqueteur = $this->EnqueteurManager->findById($site_enqueteur->id_enqueteur);
                 $site_embarquement = $this->Site_embarquementManager->findById($site_enqueteur->id_site);
                 $data['id'] = $Site_enqueteur->id;
-
-                $data['site_embarquement_id'] = $site_enqueteur->id_site;
-                $data['site_embarquement_nom'] = $site_embarquement->nom;
                 $data['site_embarquement'] = $site_embarquement;
-
-                $data['enqueteur_id'] = $site_enqueteur->id_enqueteur;
-                $data['enqueteur_nom'] = $enqueteur->nom;
                 $data['enqueteur'] = $enqueteur;
 
             } else {
@@ -81,12 +71,8 @@ class Site_enqueteur extends REST_Controller {
                         $site_embarquement = $this->Site_embarquementManager->findById($value->id_site);
                         $enqueteur = $this->EnqueteurManager->findById($value->id_enqueteur);
                         $data[$key]['id'] = $value->id;
-                        $data[$key]['site_embarquement_id'] = $value->id_site;
-                        $data[$key]['site_embarquement_nom'] = $site_embarquement->libelle;
                         $data[$key]['site_embarquement'] = $site_embarquement;
-                        $data[$key]['enqueteur_id'] = $value->id_enqueteur;
                         $data[$key]['enqueteur'] = $enqueteur;
-                        $data[$key]['enqueteur_nom'] = $enqueteur->nom;
                     }
                 } else
                     $data = array();

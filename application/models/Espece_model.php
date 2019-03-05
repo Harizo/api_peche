@@ -36,7 +36,8 @@ class Espece_model extends CI_Model
         return array(
             'code'       =>      $espece['code'],
             'nom_local'    =>      $espece['nom_local'], 
-            'nom_scientifique'    =>      $espece['nom_scientifique']                      
+            'nom_scientifique'=>      $espece['nom_scientifique'], 
+            'url_image'    =>      $espece['url_image']                       
         );
     }
 

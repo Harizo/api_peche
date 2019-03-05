@@ -24,8 +24,7 @@ class Commune extends REST_Controller {
                 $data['id'] = $commune->id;
                 $data['code'] = $commune->code;
                 $data['nom'] = $commune->nom;
-                $data['district_id'] = $commune->district_id;
-                $data['district_nom'] = $district->nom;
+                $data['district'] = $district;
             }else {
 				$taiza="findAll no nataony";
                 $menu = $this->CommuneManager->findAll();
@@ -36,8 +35,7 @@ class Commune extends REST_Controller {
                         $data[$key]['id'] = $value->id;
                         $data[$key]['code'] = $value->code;
                         $data[$key]['nom'] = $value->nom;
-                        $data[$key]['district_id'] = $value->id_district;
-                        $data[$key]['district_nom'] = $district->nom;
+                        $data[$key]['district'] = $district;
                     }
                 } else
                     $data = array();

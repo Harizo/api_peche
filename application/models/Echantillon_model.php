@@ -29,8 +29,6 @@ class Echantillon_model extends CI_Model {
     public function _set($echantillon) {
         return array(
             'id_fiche_echantillonnage_capture' => $echantillon['fiche_echantillonnage_capture_id'],
-            'id_type_canoe'           =>      $echantillon['type_canoe_id'],
-            'id_type_engin'     =>      $echantillon['type_engin_id'],
             'peche_hier'          =>      $echantillon['peche_hier'],
             'peche_avant_hier'           =>      $echantillon['peche_avant_hier'],
             'nbr_jrs_peche_dernier_sem'     =>      $echantillon['nbr_jrs_peche_dernier_sem'] ,
@@ -39,6 +37,7 @@ class Echantillon_model extends CI_Model {
             'id_data_collect'     =>      $echantillon['data_collect_id'], 
             'nbr_bateau_actif'          =>      $echantillon['nbr_bateau_actif'],
             'total_bateau_ecn'           =>      $echantillon['total_bateau_ecn'],
+            'id_unite_peche'     =>      $echantillon['unite_peche_id'],
             'id_user'     =>      $echantillon['user_id']                        
         );
     }
