@@ -127,8 +127,8 @@ class Unite_peche extends REST_Controller {
         {   if ($id == 0)
             {   $data = array(
                    // 'site_embarquement_id' => $this->post('site_embarquement_id'),
-                    'type_canoe_id' => $this->post('type_canoe_id'),
-                    'type_engin_id' => $this->post('type_engin_id'),
+                    'id_type_canoe' => $this->post('type_canoe_id'),
+                    'id_type_engin' => $this->post('type_engin_id'),
                     'libelle' => $this->post('libelle')
                 );
                 if (!$data)
@@ -157,8 +157,8 @@ class Unite_peche extends REST_Controller {
             else
             {   $data = array(
                    // 'site_embarquement_id' => $this->post('site_embarquement_id'),
-                    'type_canoe_id' => $this->post('type_canoe_id'),
-                    'type_engin_id' => $this->post('type_engin_id'),
+                    'id_type_canoe' => $this->post('type_canoe_id'),
+                    'id_type_engin' => $this->post('type_engin_id'),
                     'libelle' => $this->post('libelle')
                 );
                 

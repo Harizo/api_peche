@@ -38,12 +38,12 @@ class Espece_capture_model extends CI_Model
     {
         return array(
             
-            'id_fiche_echantillonnage_capture' => $espece_capture['fiche_echantillonnage_capture_id'],
-            'id_echantillon' => $espece_capture['echantillon_id'],
-            'id_espece' => $espece_capture['espece_id'],
+            'id_fiche_echantillonnage_capture' => $espece_capture['id_fiche_echantillonnage_capture'],
+            'id_echantillon' => $espece_capture['id_echantillon'],
+            'id_espece' => $espece_capture['id_espece'],
             'capture' => $espece_capture['capture'],
             'prix' => $espece_capture['prix'],
-            'id_user' => $espece_capture['user_id']                     
+            'id_user' => $espece_capture['id_user']                     
         );
     }
 

@@ -82,8 +82,8 @@ class Site_embarquement extends REST_Controller {
                     'latitude' => $this->post('latitude'),
                     'longitude' => $this->post('longitude'),
                     'altitude' => $this->post('altitude'),
-                    'region_id' => $this->post('region_id'),
-                    'district_id' => $this->post('district_id')
+                    'id_region' => $this->post('region_id'),
+                    'id_district' => $this->post('district_id')
                 );
                 if (!$data) {
                     $this->response([
@@ -114,8 +114,8 @@ class Site_embarquement extends REST_Controller {
                     'latitude' => $this->post('latitude'),
                     'longitude' => $this->post('longitude'),
                     'altitude' => $this->post('altitude'),
-                    'region_id' => $this->post('region_id'),
-                    'district_id' => $this->post('district_id')
+                    'id_region' => $this->post('region_id'),
+                    'id_district' => $this->post('district_id')
                 );
                 if (!$data || !$id) {
                     $this->response([
