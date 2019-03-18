@@ -118,12 +118,12 @@ class Espece_capture extends REST_Controller {
         if ($supprimer == 0) {
             if ($id == 0) {
                 $data = array(
-                    'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
-                    'echantillon_id' => $this->post('echantillon_id'),
-                    'espece_id' => $this->post('espece_id'),
+                    'id_fiche_echantillonnage_capture' => $this->post('fiche_echantillonnage_capture_id'),
+                    'id_echantillon' => $this->post('echantillon_id'),
+                    'id_espece' => $this->post('espece_id'),
                     'capture' => $this->post('capture'),
                     'prix' => $this->post('prix'),
-                    'user_id' => $this->post('user_id')
+                    'id_user' => $this->post('user_id')
                 );               
                 if (!$data) {
                     $this->response([
@@ -148,12 +148,12 @@ class Espece_capture extends REST_Controller {
                 }
             } else {
                 $data = array(
-                    'fiche_echantillonnage_capture_id' => $this->post('fiche_echantillonnage_capture_id'),
-                    'echantillon_id' => $this->post('echantillon_id'),
-                    'espece_id' => $this->post('espece_id'),
+                    'id_fiche_echantillonnage_capture' => $this->post('fiche_echantillonnage_capture_id'),
+                    'id_echantillon' => $this->post('echantillon_id'),
+                    'id_espece' => $this->post('espece_id'),
                     'capture' => $this->post('capture'),
                     'prix' => $this->post('prix'),
-                    'user_id' => $this->post('user_id')
+                    'id_user' => $this->post('user_id')
                 );              
                 if (!$data || !$id) {
                     $this->response([

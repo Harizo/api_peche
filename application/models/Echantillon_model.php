@@ -28,17 +28,17 @@ class Echantillon_model extends CI_Model {
     }
     public function _set($echantillon) {
         return array(
-            'id_fiche_echantillonnage_capture' => $echantillon['fiche_echantillonnage_capture_id'],
+            'id_fiche_echantillonnage_capture' => $echantillon['id_fiche_echantillonnage_capture'],
             'peche_hier'          =>      $echantillon['peche_hier'],
             'peche_avant_hier'           =>      $echantillon['peche_avant_hier'],
             'nbr_jrs_peche_dernier_sem'     =>      $echantillon['nbr_jrs_peche_dernier_sem'] ,
             'total_capture'          =>      $echantillon['total_capture'],
             'unique_code'           =>      $echantillon['unique_code'],
-            'id_data_collect'     =>      $echantillon['data_collect_id'], 
+            'id_data_collect'     =>      $echantillon['id_data_collect'], 
             'nbr_bateau_actif'          =>      $echantillon['nbr_bateau_actif'],
             'total_bateau_ecn'           =>      $echantillon['total_bateau_ecn'],
-            'id_unite_peche'     =>      $echantillon['unite_peche_id'],
-            'id_user'     =>      $echantillon['user_id']                        
+            'id_unite_peche'     =>      $echantillon['id_unite_peche'],
+            'id_user'     =>      $echantillon['id_user']                        
         );
     }
     public function delete($id) {

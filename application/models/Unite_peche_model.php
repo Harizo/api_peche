@@ -30,8 +30,8 @@ class Unite_peche_model extends CI_Model {
     }
     public function _set($unite_peche)
     {   return array(
-            'id_type_canoe'           =>      $unite_peche['type_canoe_id'],
-            'id_type_engin'           =>      $unite_peche['type_engin_id'],
+            'id_type_canoe'           =>      $unite_peche['id_type_canoe'],
+            'id_type_engin'           =>      $unite_peche['id_type_engin'],
           //  'id_site_embarquement'    =>      $unite_peche['site_embarquement_id'],
             'libelle'                 =>      $unite_peche['libelle']                       
         );
@@ -70,35 +70,25 @@ class Unite_peche_model extends CI_Model {
         }
            
     }   
-  /*public function findById($id)
-    {   $result =  $this->db->select('*')
-                        ->from($this->table)
-                        ->where("id", $id)
-                        ->order_by('id', 'asc')
-                        ->get()
-                        ->result();
-        if($result)
-        {
-            return $result;
-        }
-        else
-        {
-            return null;
-        }                 
-    }*/
 
-    public function findAllBySite_embarquement($site_embarquement_id) {
+    public function findAllBySite_embarquement($cle_etranger)
+    {
         $result =  $this->db->select('*')
-                        ->from($this->table)
-                        ->order_by('id_site_embarquement')
-                        ->where("id_site_embarquement", $site_embarquement_id)
-                        ->get()
-                        ->result();
-        if($result) {
-            return $result;
-        }else{
+                                ->from($this->table)
+                                ->join('unite_peche_site', 'unite_peche_site.id_unite_peche = unite_peche.id', 'inner')
+                                ->where("id_site_embarquement", $cle_etranger )
+                                ->order_by('id_site_embarquement')
+                                ->get()
+                                ->result();
+            if($result)
+            {
+                return $result;
+            }
+            else
+            {
             return null;
-        }                 
+            }
+
     }	
     
 }

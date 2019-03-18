@@ -139,11 +139,11 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                     'latitude' => $this->post('latitude'),
                     'longitude' => $this->post('longitude'),
                     'altitude' => $this->post('altitude'),
-                    'region_id' => $this->post('region_id'),
-                    'district_id' => $this->post('district_id'),
-                    'site_embarquement_id' => $this->post('site_embarquement_id'),
-                    'enqueteur_id' => $this->post('enqueteur_id'),
-                    'user_id' => $this->post('user_id')
+                    'id_region' => $this->post('region_id'),
+                    'id_district' => $this->post('district_id'),
+                    'id_site_embarquement' => $this->post('site_embarquement_id'),
+                    'id_enqueteur' => $this->post('enqueteur_id'),
+                    'id_user' => $this->post('user_id')
                 );
                 if (!$data) {
                     $this->response([
@@ -173,11 +173,11 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                     'latitude' => $this->post('latitude'),
                     'longitude' => $this->post('longitude'),
                     'altitude' => $this->post('altitude'),
-                    'region_id' => $this->post('region_id'),
-                    'district_id' => $this->post('district_id'),
-                    'site_embarquement_id' => $this->post('site_embarquement_id'),
-                    'enqueteur_id' => $this->post('enqueteur_id'),
-                    'user_id' => $this->post('user_id')
+                    'id_region' => $this->post('region_id'),
+                    'id_district' => $this->post('district_id'),
+                    'id_site_embarquement' => $this->post('site_embarquement_id'),
+                    'id_enqueteur' => $this->post('enqueteur_id'),
+                    'id_user' => $this->post('user_id')
                 );
                 if (!$data || !$id) {
                     $this->response([

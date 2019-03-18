@@ -17,8 +17,7 @@ class Importerfichier extends CI_Controller {
 		$replace=array('e','e','e','a','o','c','_');
 		$search= array('é','è','ê','à','ö','ç',' ');
 		$repertoire= $_POST['repertoire'];
-		$id=$_POST['id'];
-		$code=$_POST['code'];
+		$name_image=$_POST['name_image'];
 
 		$repertoire=str_replace($search,$replace,$repertoire);
 		//The name of the directory that we need to create.
@@ -39,17 +38,16 @@ class Importerfichier extends CI_Controller {
 		{
 			$name=$_FILES['file']['name'];
 			//$name1=str_replace($search,$replace,$name);
-			$name1='img_'.$code.'_'.$id;
-			$rapport['nomImage']=$name1;
-			$config['file_name'] = $name1;
-			$rapport['repertoire']=$name1;
+			$rapport['nomImage']=$name_image;
+			$config['file_name']=$name_image;
+			//$rapport['repertoire']=$name_image;
 			$this->load->library('upload', $config);
 			$this->upload->initialize($config);
 			//$ff=$this->upload->do_upload('file');
 			if(!$this->upload->do_upload('file'))
 			{
 
-				$rapport["erreur"]= 'Type d\'image invalide' ;
+				$rapport["erreur"]= 'Type d\'image invalide. Veuillez inserer une image.png';
 				echo json_encode($rapport);
 			}else{
 				
@@ -63,7 +61,5 @@ class Importerfichier extends CI_Controller {
 		} 
 		
 	}  
-	
-			
 	
 } ?>	
