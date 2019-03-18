@@ -67,8 +67,14 @@ class Receptiondesdonneesmobile extends REST_Controller {
 			}
 			else
 			{
-				//validation @web na modification
+				//$dataId_fiche = $id_serveur ;
+                
 			}
+
+            if ($dataId_fiche) //insertion zanany
+            {
+                
+            }
 
             $obj = array() ;
 
