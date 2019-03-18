@@ -24,7 +24,8 @@ class Site_embarquement extends REST_Controller {
                 $district = $this->DistrictManager->findById($site_embarquement->district_id);
                 $data['id'] = $site_embarquement->id;
                 $data['code'] = $site_embarquement->code;
-                $data['nom'] = $site_embarquement->nom;/*
+                $data['nom'] = $site_embarquement->nom;
+                $data['limite'] = $site_embarquement->limite;/*
                 $data['district_id'] =$site_embarquement->district_id; ************ TONGA DIA ILAY DONNEES REHETRA ALEFA *********************
                 $data['district_nom'] = $district->nom;*/
                 $data['district'] = $district;
@@ -43,6 +44,7 @@ class Site_embarquement extends REST_Controller {
                         $data[$key]['latitude'] = $value->latitude;
                         $data[$key]['longitude'] = $value->longitude;
                         $data[$key]['altitude'] = $value->altitude;
+                        $data[$key]['limite'] = $value->limite;
                       /*  $data[$key]['district_id'] = $value->id_district; ************ TONGA DIA ILAY DONNEES REHETRA ALEFA *********************
                         $data[$key]['district_nom'] = $district->nom;*/
                         $data[$key]['district'] = $district;
@@ -83,7 +85,8 @@ class Site_embarquement extends REST_Controller {
                     'longitude' => $this->post('longitude'),
                     'altitude' => $this->post('altitude'),
                     'id_region' => $this->post('region_id'),
-                    'id_district' => $this->post('district_id')
+                    'id_district' => $this->post('district_id'),
+                    'limite' => $this->post('limite')
                 );
                 if (!$data) {
                     $this->response([
@@ -115,7 +118,8 @@ class Site_embarquement extends REST_Controller {
                     'longitude' => $this->post('longitude'),
                     'altitude' => $this->post('altitude'),
                     'id_region' => $this->post('region_id'),
-                    'id_district' => $this->post('district_id')
+                    'id_district' => $this->post('district_id'),
+                    'limite' => $this->post('limite')
                 );
                 if (!$data || !$id) {
                     $this->response([

@@ -51,6 +51,7 @@ class Unite_peche_site extends REST_Controller {
             {   $data = array();
                 $unite_peche = $this->Unite_peche_site_Manager->findById($id);
                 $data['id'] = $unite_peche->id;
+                $data['nbr_echantillon'] = $unite_peche->nbr_echantillon;
             
                 $unite_peche = $this->Unite_pecheManager->findById($unite_peche->id_unite_peche);
                 $site_embarquement = $this->Site_embarquementManager->findById($unite_peche->id_site_embarquement);
@@ -69,7 +70,8 @@ class Unite_peche_site extends REST_Controller {
 
                         $data[$key]['id'] =$value->id;
                         $data[$key]['unite_peche'] =$unite_peche;
-                        $data[$key]['site_embarquement'] =$site_embarquement;    
+                        $data[$key]['site_embarquement'] =$site_embarquement;
+                        $data[$key]['nbr_echantillon'] =$value->nbr_echantillon;    
                         
                     }
                 } else
@@ -100,7 +102,8 @@ class Unite_peche_site extends REST_Controller {
             {   $data = array(
                 
                     'id_unite_peche' => $this->post('unite_peche_id'),
-                    'id_site_embarquement' => $this->post('site_embarquement_id')
+                    'id_site_embarquement' => $this->post('site_embarquement_id'),
+                    'nbr_echantillon' => $this->post('nbr_echantillon')
                 );
                 if (!$data)
                 {   $this->response([
@@ -128,7 +131,8 @@ class Unite_peche_site extends REST_Controller {
             else
             {   $data = array(
                    'id_unite_peche' => $this->post('unite_peche_id'),
-                    'id_site_embarquement' => $this->post('site_embarquement_id')
+                    'id_site_embarquement' => $this->post('site_embarquement_id'),
+                    'nbr_echantillon' => $this->post('nbr_echantillon')
                 );
                 
                 if (!$data || !$id)

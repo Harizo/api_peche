@@ -35,7 +35,8 @@ class Unite_peche_site_model extends CI_Model
     {
         return array(
             'id_site_embarquement'     =>      $unite_peche_site['id_site_embarquement'],
-            'id_unite_peche'     =>      $unite_peche_site['id_unite_peche']                       
+            'id_unite_peche'     =>      $unite_peche_site['id_unite_peche'] ,
+            'nbr_echantillon'     =>      $unite_peche_site['nbr_echantillon']                       
         );
     }
 
