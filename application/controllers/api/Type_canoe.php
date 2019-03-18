@@ -20,6 +20,7 @@ class Type_canoe extends REST_Controller {
                 $data['id'] = $type_canoe->id;
                 $data['code'] = $type_canoe->code;
                 $data['nom'] = $type_canoe->nom;
+                $data['url_image'] = $type_canoe->url_image;
                 
             } else {
                 $type_canoe= $this->Type_canoeManager->findAll();
@@ -29,7 +30,7 @@ class Type_canoe extends REST_Controller {
                         $data[$key]['id'] = $value->id;
                         $data[$key]['code'] = $value->code;
                         $data[$key]['nom'] = $value->nom;
-                        
+                        $data[$key]['url_image'] = $value->url_image;
                     };
                 } else
                     $data = array();
@@ -56,7 +57,8 @@ class Type_canoe extends REST_Controller {
             if ($id == 0) {
                 $data = array(
                     'code' => $this->post('code'),
-                    'nom' => $this->post('nom')
+                    'nom' => $this->post('nom'),
+                    'url_image' => $this->post('url_image'),
                 );               
                 if (!$data) {
                     $this->response([
@@ -82,7 +84,8 @@ class Type_canoe extends REST_Controller {
             } else {
                 $data = array(
                     'code' => $this->post('code'),
-                    'nom' => $this->post('nom')
+                    'nom' => $this->post('nom'),
+                    'url_image' => $this->post('url_image'),
                 );              
                 if (!$data || !$id) {
                     $this->response([

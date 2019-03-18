@@ -35,7 +35,8 @@ class Type_canoe_model extends CI_Model
     {
         return array(
             'code'       =>      $type_canoe['code'],
-            'nom'    =>      $type_canoe['nom']                       
+            'nom'        =>      $type_canoe['nom'],
+            'url_image'  =>      $type_canoe['url_image']                        
         );
     }
 
