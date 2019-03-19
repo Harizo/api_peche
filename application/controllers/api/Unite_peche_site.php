@@ -22,28 +22,22 @@ class Unite_peche_site extends REST_Controller {
 	
         if($cle_etrangere)
         {
-            /*$taiza="findcle_etrangere no nataony";
+            $taiza="findcle_etrangere no nataony";
             $menu = $this->Unite_peche_site_Manager->findAllBySite_embarquement($cle_etrangere);
             if ($menu)
             {   foreach ($menu as $key => $value)
-                {   $site_embarquement = array();
-                    $type_canoe = array();
-                    $type_engin = array();
-
+                {   
+                    $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
                     $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
-                    $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
-                    $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
 
-                    $data[$key]['id'] = $value->id;
-                    $data[$key]['libelle'] = $value->libelle;
-
-                    $data[$key]['type_canoe'] = $type_canoe;
-                    $data[$key]['type_engin'] = $type_engin;
-
+                    $data[$key]['id'] =$value->id;
+                    $data[$key]['unite_peche'] =$unite_peche;
+                    $data[$key]['site_embarquement'] =$site_embarquement;
+                    $data[$key]['nbr_echantillon'] =$value->nbr_echantillon; 
                 }
             } 
             else
-                    $data = array();*/
+                    $data = array();
         }
         else
         {
