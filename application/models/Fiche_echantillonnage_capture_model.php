@@ -73,11 +73,11 @@ public function findById($id)  {
         }
            
     }
-public function findByDate($date_debut,$date_fin) {
+public function findByDate($date_debut,$date_fin,$validation) {
         $result =  $this->db->select('*')
                         ->from($this->table)
                         ->where('date BETWEEN "'.$date_debut.'" AND "'.$date_fin.'"')
-                        ->where('validation',0)
+                        ->where('validation',$validation)
                         ->order_by('date', 'asc')
                         ->get()
                         ->result();

@@ -24,10 +24,10 @@ class Fiche_echantillonnage_capture extends REST_Controller {
         $date_fin = $this->get('date_fin');
         $taiza="";
 
-        if($date_debut || $date_fin)
+        if($date_debut || $date_fin || $validation)
         {   
             $data = array();
-            $menu = $this->Fiche_echantillonnage_captureManager->findByDate($date_debut ,$date_fin);
+            $menu = $this->Fiche_echantillonnage_captureManager->findByDate($date_debut ,$date_fin,$validation);
 
             if ($menu)
             {
