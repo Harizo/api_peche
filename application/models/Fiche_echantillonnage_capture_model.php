@@ -39,7 +39,8 @@ class Fiche_echantillonnage_capture_model extends CI_Model {
             'id_user'                 =>      $fiche_echantillonnage_capture['id_user'],
             'latitude'                =>      $fiche_echantillonnage_capture['latitude'],
             'longitude'               =>      $fiche_echantillonnage_capture['longitude'],
-            'altitude'                =>      $fiche_echantillonnage_capture['altitude']                      
+            'altitude'                =>      $fiche_echantillonnage_capture['altitude'],
+            'validation'                =>      $fiche_echantillonnage_capture['validation']                      
         );
     }
     public function delete($id) {
@@ -76,6 +77,7 @@ public function findByDate($date_debut,$date_fin) {
         $result =  $this->db->select('*')
                         ->from($this->table)
                         ->where('date BETWEEN "'.$date_debut.'" AND "'.$date_fin.'"')
+                        ->where('validation',0)
                         ->order_by('date', 'asc')
                         ->get()
                         ->result();
@@ -85,7 +87,19 @@ public function findByDate($date_debut,$date_fin) {
             return null;
         }                 
     }
-
+public function findByValidation($validation) {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where('validation',$validation)
+                        ->order_by('date', 'asc')
+                        ->get()
+                        ->result();
+        if($result) {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
 
  public function SauvegarderTout($data) 
 {
