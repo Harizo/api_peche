@@ -5,74 +5,47 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Unite_peche_site extends REST_Controller {
+class Nbr_jrs_mois_unite_peche extends REST_Controller {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('unite_peche_site_model', 'Unite_peche_site_Manager');
+        $this->load->model('nbr_jrs_mois_unite_peche_model', 'Nbr_jrs_mois_unite_peche_Manager');
         $this->load->model('unite_peche_model', 'Unite_pecheManager');
-        $this->load->model('site_embarquement_model', 'Site_embarquementManager');
         
     }
     public function index_get()
     {
         $id = $this->get('id');
-        $cle_etrangere = $this->get('cle_etrangere');
-	
-        if($cle_etrangere)
-        {
-            $taiza="findcle_etrangere no nataony";
-            $menu = $this->Unite_peche_site_Manager->findAllBySite_embarquement($cle_etrangere);
-            if ($menu)
-            {   foreach ($menu as $key => $value)
-                {   
-                    $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
-                    $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
 
-                    $data[$key]['id'] =$value->id;
-                    $data[$key]['unite_peche'] =$unite_peche;
-                    $data[$key]['site_embarquement'] =$site_embarquement;
-                    $data[$key]['nbr_echantillon'] =$value->nbr_echantillon; 
-                }
-            } 
-            else
-                    $data = array();
-        }
-        else
-        {
             if ($id)
             {   $data = array();
-                $unite_peche = $this->Unite_peche_site_Manager->findById($id);
+                $unite_peche = $this->Nbr_jrs_mois_unite_peche_Manager->findById($id);
                 $data['id'] = $unite_peche->id;
-                $data['nbr_echantillon'] = $unite_peche->nbr_echantillon;
+                $data['max_jrs_peche'] = $unite_peche->max_jrs_peche;
             
                 $unite_peche = $this->Unite_pecheManager->findById($unite_peche->id_unite_peche);
-                $site_embarquement = $this->Site_embarquementManager->findById($unite_peche->id_site_embarquement);
                 $data['unite_peche'] =$unite_peche;
-                $data['site_embarquement'] =$site_embarquement;
                 
             } 
             else
             {	
-                $menu = $this->Unite_peche_site_Manager->findAll();
+                $menu = $this->Nbr_jrs_mois_unite_peche_Manager->findAll();
                 if ($menu)
                 {   foreach ($menu as $key => $value)
                     {   
                         $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
-                        $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
 
                         $data[$key]['id'] =$value->id;
                         $data[$key]['unite_peche'] =$unite_peche;
-                        $data[$key]['site_embarquement'] =$site_embarquement;
-                        $data[$key]['nbr_echantillon'] =$value->nbr_echantillon;    
+                        $data[$key]['max_jrs_peche'] =$value->max_jrs_peche;    
                         
                     }
                 } else
                         $data = array();
                 
             }
-        }
+       
         if (count($data)>0)
         {   $this->response([
                 'status' => TRUE,
@@ -96,8 +69,7 @@ class Unite_peche_site extends REST_Controller {
             {   $data = array(
                 
                     'id_unite_peche' => $this->post('unite_peche_id'),
-                    'id_site_embarquement' => $this->post('site_embarquement_id'),
-                    'nbr_echantillon' => $this->post('nbr_echantillon')
+                    'max_jrs_peche' => $this->post('max_jrs_peche')
                 );
                 if (!$data)
                 {   $this->response([
@@ -106,7 +78,7 @@ class Unite_peche_site extends REST_Controller {
                         'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->Unite_peche_site_Manager->add($data);
+                $dataId = $this->Nbr_jrs_mois_unite_peche_Manager->add($data);
                 if (!is_null($dataId)) 
                 {   $this->response([
                         'status' => TRUE,
@@ -125,8 +97,7 @@ class Unite_peche_site extends REST_Controller {
             else
             {   $data = array(
                    'id_unite_peche' => $this->post('unite_peche_id'),
-                    'id_site_embarquement' => $this->post('site_embarquement_id'),
-                    'nbr_echantillon' => $this->post('nbr_echantillon')
+                    'max_jrs_peche' => $this->post('max_jrs_peche')
                 );
                 
                 if (!$data || !$id)
@@ -136,7 +107,7 @@ class Unite_peche_site extends REST_Controller {
                         'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->Unite_peche_site_Manager->update($id, $data);
+                $update = $this->Nbr_jrs_mois_unite_peche_Manager->update($id, $data);
                 if(!is_null($update))
                 {   $this->response([
                         'status' => TRUE,
@@ -160,7 +131,7 @@ class Unite_peche_site extends REST_Controller {
                     'message' => 'No request found'
                 ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->Unite_peche_site_Manager->delete($id);
+            $delete = $this->Nbr_jrs_mois_unite_peche_Manager->delete($id);
             if (!is_null($delete))
             {   $this->response([
                     'status' => TRUE,

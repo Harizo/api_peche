@@ -1,13 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Unite_peche_site_model extends CI_Model
+class Nbr_jrs_mois_unite_peche_model extends CI_Model
 {
-    protected $table = 'unite_peche_site';
+    protected $table = 'nbr_jrs_peche_mois_unite_peche';
 
 
-    public function add($unite_peche_site)
+    public function add($nbr_jrs_mois_unite_peche)
     {
-        $this->db->set($this->_set($unite_peche_site))
+        $this->db->set($this->_set($nbr_jrs_mois_unite_peche))
                             ->insert($this->table);
         if($this->db->affected_rows() === 1)
         {
@@ -18,9 +18,9 @@ class Unite_peche_site_model extends CI_Model
     }
 
 
-    public function update($id, $unite_peche_site)
+    public function update($id, $nbr_jrs_mois_unite_peche)
     {
-        $this->db->set($this->_set($unite_peche_site))
+        $this->db->set($this->_set($nbr_jrs_mois_unite_peche))
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -31,12 +31,11 @@ class Unite_peche_site_model extends CI_Model
         }                      
     }
 
-    public function _set($unite_peche_site)
+    public function _set($nbr_jrs_mois_unite_peche)
     {
         return array(
-            'id_site_embarquement'     =>      $unite_peche_site['id_site_embarquement'],
-            'id_unite_peche'     =>      $unite_peche_site['id_unite_peche'] ,
-            'nbr_echantillon'     =>      $unite_peche_site['nbr_echantillon']                       
+            'id_unite_peche'     =>      $nbr_jrs_mois_unite_peche['id_unite_peche'] ,
+            'max_jrs_peche'     =>      $nbr_jrs_mois_unite_peche['max_jrs_peche']                       
         );
     }
 
@@ -56,7 +55,7 @@ class Unite_peche_site_model extends CI_Model
     {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('id_site_embarquement')
+                        ->order_by('max_jrs_peche')
                         ->get()
                         ->result();
         if($result)
@@ -77,25 +76,5 @@ class Unite_peche_site_model extends CI_Model
         return null;
     }
 
-    public function findAllBySite_embarquement($cle_etranger)
-    {
-        $result =  $this->db->select('*')
-                                ->from($this->table)
-                                ->join('unite_peche', 'unite_peche_site.id_unite_peche = unite_peche.id', 'inner')
-                                ->where("id_site_embarquement", $cle_etranger )
-                                ->order_by('id_site_embarquement')
-                                ->get()
-                                ->result();
-            if($result)
-            {
-                return $result;
-            }
-            else
-            {
-            return null;
-            }
-
-    }
-  
 
 }

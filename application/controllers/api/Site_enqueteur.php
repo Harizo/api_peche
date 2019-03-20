@@ -19,6 +19,7 @@ class Site_enqueteur extends REST_Controller {
     public function index_get() {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
+        $cle_site = $this->get('cle_site');
         if($cle_etrangere)
         {   $data = array();
             $taiza="findcle_etrangere no nataony";
@@ -62,20 +63,43 @@ class Site_enqueteur extends REST_Controller {
                 $data['site_embarquement'] = $site_embarquement;
                 $data['enqueteur'] = $enqueteur;
 
-            } else {
-                $menu = $this->Site_enqueteurManager->findAll();
-                if ($menu) {
-                    foreach ($menu as $key => $value) {
-                        $site_embarquement = array();
-                        $enqueteur = array();
-                        $site_embarquement = $this->Site_embarquementManager->findById($value->id_site);
-                        $enqueteur = $this->EnqueteurManager->findById($value->id_enqueteur);
-                        $data[$key]['id'] = $value->id;
-                        $data[$key]['site_embarquement'] = $site_embarquement;
-                        $data[$key]['enqueteur'] = $enqueteur;
-                    }
-                } else
+            }
+            else
+            { 
+                if($cle_site)
+                {
                     $data = array();
+                    $taiza="findcle_site no nataony";
+                    $menu = $this->Site_enqueteurManager->findAllBySite($cle_etrangere);
+                    $si=$menu;
+                    if ($menu) 
+                    {
+                        foreach ($menu as $key => $value) 
+                        {   
+                            $data[$key]['id']          = $value->id_enqueteur;
+                            //$data[$key]['nom']        = $value->enqueteur->nom;
+                            //$data[$key]['prenom']     = $value->enqueteur->prenom;
+                            //$data[$key]['telephone'] = $value->enqueteur->telephone;                     
+                        }
+                    } 
+                    else
+                        $data = array();
+                    
+                }else{
+                    $menu = $this->Site_enqueteurManager->findAll();
+                    if ($menu) {
+                        foreach ($menu as $key => $value) {
+                            $site_embarquement = array();
+                            $enqueteur = array();
+                            $site_embarquement = $this->Site_embarquementManager->findById($value->id_site);
+                            $enqueteur = $this->EnqueteurManager->findById($value->id_enqueteur);
+                            $data[$key]['id'] = $value->id;
+                            $data[$key]['site_embarquement'] = $site_embarquement;
+                            $data[$key]['enqueteur'] = $enqueteur;
+                        }
+                    } else
+                        $data = array();
+                }    
             }
         }    
         
