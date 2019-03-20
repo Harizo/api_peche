@@ -42,6 +42,10 @@ class Receptiondesdonneesmobile extends REST_Controller {
 
 
         $id_serveur = $this->post('id_serveur') ;
+
+        $echantillons = $this->post('echantillons') ;
+       // $especes_captures = $this->post('especes_captures') ;
+
     	$data = array(
 
                     'code_unique'    => $code_unique,
@@ -57,10 +61,7 @@ class Receptiondesdonneesmobile extends REST_Controller {
                     'altitude' => $this->post('altitude')
                 );
 
-   
 
-
-    	
 			if($id_serveur == 0)//envoi avy any @mobile na web site tsy app centrale
 			{		
 				$dataId_fiche = $this->Fiche_echantillonnage_captureManager->add($data);
@@ -73,20 +74,29 @@ class Receptiondesdonneesmobile extends REST_Controller {
 
             if ($dataId_fiche) //insertion zanany
             {
-                
+                if (count($echantillons) > 0 ) 
+                {
+                    /*foreach ($echantillons as $key_ech => $ech) 
+                    {
+                        
+                    }*/
+
+                    $etat_echantillon = $this->EchantillonManager->save_all($dataId_fiche, json_decode($echantillons));
+                }
             }
 
             $obj = array() ;
 
             $obj['id_serveur'] = $dataId_fiche ;
             $obj['code_unique'] = $code_unique ;
+           // $obj['etat_echantillon'] = $etat_echantillon ;
 			
 						
 			if(!is_null($obj)) {
 				$this->response([
 					'status' => TRUE,
 					'response' => $obj,
-					'message' => "Mise à jour ok"
+					'message' => "Inserer avec succès"
 						], REST_Controller::HTTP_OK);
 			} else {
 				$this->response([

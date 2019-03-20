@@ -19,6 +19,32 @@ class Espece_capture_model extends CI_Model
         }                    
     }
 
+    public function add_all($id_fiche, $id_echantillon, $espece_capture)
+    {
+        $this->db->set($this->_set_all($id_fiche, $id_echantillon, $espece_capture))
+                            ->set('date_creation', 'NOW()', false)
+                            ->set('date_modification', 'NOW()', false)
+                            ->insert($this->table);
+        if($this->db->affected_rows() === 1)
+        {
+            return $this->db->insert_id();
+        }else{
+            return null;
+        }                    
+    }
+
+    public function _set_all($id_fiche, $id_echantillon,$espece_capture)
+    {
+        return array(
+            
+            'id_fiche_echantillonnage_capture' => $id_fiche,
+            'id_echantillon' => $id_echantillon,
+            'id_espece' => $espece_capture->id_espece,
+            'capture' => $espece_capture->capture,
+            'prix' => $espece_capture->prix                  
+        );
+    }
+
 
     public function update($id, $espece_capture)
     {

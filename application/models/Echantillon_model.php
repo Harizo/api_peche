@@ -1,6 +1,12 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Echantillon_model extends CI_Model {
+
+    public function __construct() 
+    {
+        parent::__construct();
+        $this->load->model('Espece_capture_model', 'Espece_captureManager');
+    }
     protected $table = 'echantillon';
 
     public function add($echantillon) {
@@ -83,7 +89,7 @@ class Echantillon_model extends CI_Model {
             return $q->row();
         }  
     }
- public function SauvegarderTout($data) {
+/* public function SauvegarderTout($data) {
         $this->db->trans_begin();
 
         $echantillon=array();
@@ -181,6 +187,72 @@ class Echantillon_model extends CI_Model {
             $this->db->trans_rollback();
             return "ECHEC";
         }           
+    }*/
+
+    public function _set_all($id_fiche,$echantillon) {
+        return array(
+            'id_fiche_echantillonnage_capture' => $id_fiche,
+            'peche_hier'          =>      $echantillon->peche_hier,
+            'peche_avant_hier'           =>      $echantillon->peche_avant_hier,
+            'nbr_jrs_peche_dernier_sem'     =>      $echantillon->nbr_jrs_peche_dernier_sem ,
+            'total_capture'          =>      $echantillon->total_capture,
+            'unique_code'           =>      $echantillon->unique_code,
+            'id_data_collect'     =>      $echantillon->id_data_collect, 
+            'nbr_bateau_actif'          =>      $echantillon->nbr_bateau_actif,
+            'total_bateau_ecn'           =>      $echantillon->total_bateau_ecn,
+            'id_unite_peche'     =>      $echantillon->id_unite_peche,
+            'id_user'     =>      $echantillon->id_user                 
+        );
+    }
+
+    public function add_all($id_fiche, $echantillon) {
+        $this->db->set($this->_set_all($id_fiche,$echantillon))
+                            ->set('date_creation', 'NOW()', false)
+                            ->set('date_modification', 'NOW()', false)
+                            ->insert($this->table);
+        if($this->db->affected_rows() === 1) {
+            return $this->db->insert_id();
+        }else{
+            return null;
+        }                    
+    }
+
+    public function save_all($id_fiche, $data)
+    {
+        $this->db->trans_begin ();
+
+        $tab_retour = array();
+
+        foreach ($data as $key => $value) 
+        {
+            
+            $echantillon_insert_id = $this->add_all($id_fiche,$value);
+
+            //insert capture
+            foreach ($value->especes_captures as $key_capture => $value_capture) 
+            {
+                 $dataId = $this->Espece_captureManager->add_all($id_fiche, $echantillon_insert_id, $value_capture);
+                 $tab_retour[$key_capture] = $dataId ;
+            }
+            //insert capture fin
+        }
+ 
+
+        if  ( $this->db->trans_status ()  ===  FALSE ) 
+        { 
+            $date=new datetime();
+            $date_anio=$date->format('Y-m-d HH:mm:ss');                     
+            error_log("Erreur dans Echantillon_model - Function save_all :" . $date_anio.' (Rollback)');
+
+            $this->db->trans_rollback (); return "ECHEC" ;
+        } 
+        else 
+        { 
+            $date=new datetime();
+            $date_anio=$date->format('Y-m-d HH:mm:ss');    
+            error_log("Erreur dans Echantillon_model - Function save_all :" . $date_anio.' (test_commit)');
+            $this->db->trans_commit ();   return $tab_retour ;
+        }
     }
 
 
