@@ -73,13 +73,24 @@ class Enquete_cadre_model extends CI_Model {
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
-        if ($q->num_rows() > 0) {
+        if ($q->num_rows() > 0) {   
             return $q->row();
         }
            
     }
 
-    public function duplication()
+    public function get_last_year()
+    {
+
+         $this->db->select_max('annee');
+        $q = $this->db->get($this->table);
+        if ($q->num_rows() > 0) {   
+            return $q->row();
+        }
+       
+    }
+
+    public function duplication($last_year, $now_year)
     {
         $requete="Insert into enquete_cadre (".
             "annee,". 
@@ -90,13 +101,14 @@ class Enquete_cadre_model extends CI_Model {
             "nbr_unite_peche".    
                
 
-            ") Select ".    
-            "2019,a.id_region,".    
+            ") Select ". 
+            $now_year.   
+            ",a.id_region,".    
             "a.id_district,".    
             "a.id_site_embarquement,".    
             "a.id_unite_peche,".   
             "a.nbr_unite_peche ". 
-            "From enquete_cadre as a Where a.annee=2012";
+            "From enquete_cadre as a Where a.annee=".$last_year;
 
         /*$query= $this->db->query($requete);
         return $query->result();*/

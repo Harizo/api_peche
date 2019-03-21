@@ -111,7 +111,22 @@ class Enquete_cadre extends REST_Controller {
         $duplication = $this->post('duplication') ;
         if ($duplication) 
         {
-            $menu = $this->Enquete_cadreManager->duplication();
+            $last_year = $this->Enquete_cadreManager->get_last_year();
+            $now_year = date("Y");
+            $etat = $this->Enquete_cadreManager->duplication($last_year->annee, $now_year);
+            if (!is_null($etat))  {
+                        $this->response([
+                            'status' => TRUE,
+                            'response' => $etat,
+                            'message' => 'Data duplicated success'
+                                ], REST_Controller::HTTP_OK);
+                    } else {
+                        $this->response([
+                            'status' => FALSE,
+                            'response' => 0,
+                            'message' => 'No request found'
+                                ], REST_Controller::HTTP_BAD_REQUEST);
+                    }   
         }
         else 
         {
