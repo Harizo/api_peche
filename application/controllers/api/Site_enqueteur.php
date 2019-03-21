@@ -52,9 +52,7 @@ class Site_enqueteur extends REST_Controller {
                 $data = array();
             
         }
-        else
-        {
-            if ($id) {
+        elseif ($id) {
                 $data = array();
                 $site_enqueteur = $this->Site_enqueteurManager->findById($id);
                 $enqueteur = $this->EnqueteurManager->findById($site_enqueteur->id_enqueteur);
@@ -63,45 +61,38 @@ class Site_enqueteur extends REST_Controller {
                 $data['site_embarquement'] = $site_embarquement;
                 $data['enqueteur'] = $enqueteur;
 
-            }
-            else
-            { 
-                if($cle_site)
-                {
-                    $data = array();
-                    $taiza="findcle_site no nataony";
-                    $menu = $this->Site_enqueteurManager->findAllBySite($cle_etrangere);
-                    $si=$menu;
+            }elseif($cle_site){
+                 $data = array();
+                    $taiza="findcle_etrangere no nataony";
+                    $menu = $this->Site_enqueteurManager->findAllBysite($cle_site);
+                   
                     if ($menu) 
                     {
                         foreach ($menu as $key => $value) 
-                        {   
-                            $data[$key]['id']          = $value->id_enqueteur;
-                            //$data[$key]['nom']        = $value->enqueteur->nom;
-                            //$data[$key]['prenom']     = $value->enqueteur->prenom;
-                            //$data[$key]['telephone'] = $value->enqueteur->telephone;                     
+                        {          
+                            $enqueteur = $this->EnqueteurManager->findById($value->id_enqueteur);    
+                        $data[$key]['id']     = $value->id;
+                        $data[$key]['enqueteur']  = $enqueteur;
                         }
                     } 
                     else
                         $data = array();
-                    
-                }else{
-                    $menu = $this->Site_enqueteurManager->findAll();
-                    if ($menu) {
-                        foreach ($menu as $key => $value) {
-                            $site_embarquement = array();
-                            $enqueteur = array();
-                            $site_embarquement = $this->Site_embarquementManager->findById($value->id_site);
-                            $enqueteur = $this->EnqueteurManager->findById($value->id_enqueteur);
-                            $data[$key]['id'] = $value->id;
-                            $data[$key]['site_embarquement'] = $site_embarquement;
-                            $data[$key]['enqueteur'] = $enqueteur;
-                        }
-                    } else
-                        $data = array();
-                }    
+            } else {
+                $menu = $this->Site_enqueteurManager->findAll();
+                if ($menu) {
+                    foreach ($menu as $key => $value) {
+                        $site_embarquement = array();
+                        $enqueteur = array();
+                        $site_embarquement = $this->Site_embarquementManager->findById($value->id_site);
+                        $enqueteur = $this->EnqueteurManager->findById($value->id_enqueteur);
+                        $data[$key]['id'] = $value->id;
+                        $data[$key]['site_embarquement'] = $site_embarquement;
+                        $data[$key]['enqueteur'] = $enqueteur;
+                    }
+                } else
+                    $data = array();
             }
-        }    
+           
         
         if (count($data)>0) {
             $this->response([

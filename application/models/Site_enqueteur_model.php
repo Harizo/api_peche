@@ -96,7 +96,7 @@ class Site_enqueteur_model extends CI_Model
     }
         public function findAllBySite($cle_site)
     {
-        $result =  $this->db->select('*')
+        $result =  $this->db->select('enqueteur.id as id_enqueteur, site_enqueteur.id as id')
                                 ->from($this->table)
                                 ->join('enqueteur', 'site_enqueteur.id_enqueteur = enqueteur.id', 'inner')
                                 ->where("id_site", $cle_site )

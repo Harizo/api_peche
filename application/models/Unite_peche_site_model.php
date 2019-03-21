@@ -94,7 +94,25 @@ class Unite_peche_site_model extends CI_Model
             {
             return null;
             }
+    }
 
+    public function findAllBySite_embarquementCanoeEngin($cle_site)
+    {
+        $result =  $this->db->select('unite_peche.id as id_unite_peche, unite_peche_site.id as id,unite_peche_site.nbr_echantillon as nbr_echantillon, unite_peche.id_type_canoe as id_type_canoe, unite_peche.id_type_engin as id_type_engin')
+                                ->from($this->table)
+                                ->join('unite_peche', 'unite_peche_site.id_unite_peche = unite_peche.id', 'inner')
+                                ->where("id_site_embarquement", $cle_site )
+                                ->order_by('id_site_embarquement')
+                                ->get()
+                                ->result();
+            if($result)
+            {
+                return $result;
+            }
+            else
+            {
+            return null;
+            }
     }
   
 

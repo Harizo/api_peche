@@ -13,12 +13,15 @@ class Unite_peche_site extends REST_Controller {
         $this->load->model('unite_peche_site_model', 'Unite_peche_site_Manager');
         $this->load->model('unite_peche_model', 'Unite_pecheManager');
         $this->load->model('site_embarquement_model', 'Site_embarquementManager');
+        $this->load->model('type_canoe_model', 'Type_canoeManager');
+        $this->load->model('type_engin_model', 'Type_enginManager');
         
     }
     public function index_get()
     {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
+        $cle_site = $this->get('cle_site');
 	
         if($cle_etrangere)
         {
@@ -39,9 +42,7 @@ class Unite_peche_site extends REST_Controller {
             else
                     $data = array();
         }
-        else
-        {
-            if ($id)
+        elseif ($id)
             {   $data = array();
                 $unite_peche = $this->Unite_peche_site_Manager->findById($id);
                 $data['id'] = $unite_peche->id;
@@ -52,7 +53,32 @@ class Unite_peche_site extends REST_Controller {
                 $data['unite_peche'] =$unite_peche;
                 $data['site_embarquement'] =$site_embarquement;
                 
-            } 
+            }elseif($cle_site){
+                $taiza="findclesite no nataony";
+                $menu = $this->Unite_peche_site_Manager->findAllBySite_embarquementCanoeEngin($cle_site);
+                if ($menu)
+                {   foreach ($menu as $key => $value)
+                    {   $site_embarquement = array();
+                        $type_canoe = array();
+                        $type_engin = array();
+                        $unite_peche = array();
+
+                        $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
+                        $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
+                        $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
+                        
+                        $data[$key]['id'] = $value->id;
+                        $data[$key]['nbr_echantillon'] = $value->nbr_echantillon;
+                        $data[$key]['type_canoe'] = $type_canoe;
+                        $data[$key]['type_engin'] = $type_engin;
+                        $data[$key]['unite_peche'] = $unite_peche;
+                          
+                    }
+                } else
+                        $data = array();
+
+            }
+            
             else
             {	
                 $menu = $this->Unite_peche_site_Manager->findAll();
@@ -72,7 +98,7 @@ class Unite_peche_site extends REST_Controller {
                         $data = array();
                 
             }
-        }
+        
         if (count($data)>0)
         {   $this->response([
                 'status' => TRUE,
