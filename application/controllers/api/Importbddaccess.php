@@ -1098,6 +1098,7 @@ class Importbddaccess extends CI_Controller {
 							}
 						}
 					}
+				}	
 			}		
 		}	
 		$liste_retour[0]["enquete_cadre"] = $liste_enquete_cadre;
