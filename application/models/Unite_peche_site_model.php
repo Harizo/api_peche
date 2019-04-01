@@ -81,7 +81,6 @@ class Unite_peche_site_model extends CI_Model
     {
         $result =  $this->db->select('*')
                                 ->from($this->table)
-                                ->join('unite_peche', 'unite_peche_site.id_unite_peche = unite_peche.id', 'inner')
                                 ->where("id_site_embarquement", $cle_etranger )
                                 ->order_by('id_site_embarquement')
                                 ->get()

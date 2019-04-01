@@ -58,7 +58,7 @@ class Utilisateurs extends REST_Controller {
                     }
                 }
                 
-                $data = $nbr;
+                $data['nbrUser'] = $nbr;
             }
             else
             {

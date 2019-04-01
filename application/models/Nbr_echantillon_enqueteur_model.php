@@ -1,13 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Type_engin_model extends CI_Model
+class Nbr_echantillon_enqueteur_model extends CI_Model
 {
-    protected $table = 'type_engin';
+    protected $table = 'nbr_echantillon_enqueteur';
 
 
-    public function add($type_engin)
+    public function add($nbr_echantillon_enqueteur)
     {
-        $this->db->set($this->_set($type_engin))
+        $this->db->set($this->_set($nbr_echantillon_enqueteur))
                             ->insert($this->table);
         if($this->db->affected_rows() === 1)
         {
@@ -18,9 +18,9 @@ class Type_engin_model extends CI_Model
     }
 
 
-    public function update($id, $type_engin)
+    public function update($id, $nbr_echantillon_enqueteur)
     {
-        $this->db->set($this->_set($type_engin))
+        $this->db->set($this->_set($nbr_echantillon_enqueteur))
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -31,15 +31,15 @@ class Type_engin_model extends CI_Model
         }                      
     }
 
-    public function _set($type_engin)
+    public function _set($nbr_echantillon_enqueteur)
     {
         return array(
-            'code'       =>      $type_engin['code'],
-            'libelle'    =>      $type_engin['libelle'],
-            'url_image'  =>      $type_engin['url_image'],                       
+            'id_enqueteur'         => $nbr_echantillon_enqueteur['id_enqueteur'],
+            'id_site_embarquement' => $nbr_echantillon_enqueteur['id_site_embarquement'],
+            'id_unite_peche'       => $nbr_echantillon_enqueteur['id_unite_peche'],
+            'nbr_max_echantillon'  => $nbr_echantillon_enqueteur['nbr_max_echantillon']                       
         );
     }
-
 
     public function delete($id)
     {
@@ -56,7 +56,7 @@ class Type_engin_model extends CI_Model
     {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('id')
+                        ->order_by('id_enqueteur')
                         ->get()
                         ->result();
         if($result)
@@ -75,6 +75,6 @@ class Type_engin_model extends CI_Model
             return $q->row();
         }
         return null;
-    }
+    }  
 
 }

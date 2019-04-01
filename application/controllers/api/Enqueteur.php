@@ -31,7 +31,6 @@ class Enqueteur extends REST_Controller {
                 {
                     foreach ($menu as $key => $value) 
                     {
-                        $region = array();
                         $data[$key]['id'] = $value->id;
                         $data[$key]['prenom'] = $value->prenom;
                         $data[$key]['nom'] = $value->nom;

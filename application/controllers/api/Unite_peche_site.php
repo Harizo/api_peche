@@ -31,12 +31,12 @@ class Unite_peche_site extends REST_Controller {
             {   foreach ($menu as $key => $value)
                 {   
                     $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
-                    $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
+                    //$site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
 
                     $data[$key]['id'] =$value->id;
                     $data[$key]['unite_peche'] =$unite_peche;
-                    $data[$key]['site_embarquement'] =$site_embarquement;
-                    $data[$key]['nbr_echantillon'] =$value->nbr_echantillon; 
+                    //$data[$key]['site_embarquement'] =$site_embarquement;
+                    //$data[$key]['nbr_echantillon'] =$value->nbr_echantillon; 
                 }
             } 
             else
@@ -44,12 +44,12 @@ class Unite_peche_site extends REST_Controller {
         }
         elseif ($id)
             {   $data = array();
-                $unite_peche = $this->Unite_peche_site_Manager->findById($id);
-                $data['id'] = $unite_peche->id;
+                $unite_peche_site = $this->Unite_peche_site_Manager->findById($id);
+                $data['id'] = $unite_peche_site->id;
                 $data['nbr_echantillon'] = $unite_peche->nbr_echantillon;
             
-                $unite_peche = $this->Unite_pecheManager->findById($unite_peche->id_unite_peche);
-                $site_embarquement = $this->Site_embarquementManager->findById($unite_peche->id_site_embarquement);
+                $unite_peche = $this->Unite_pecheManager->findById($unite_peche_site->id_unite_peche);
+                $site_embarquement = $this->Site_embarquementManager->findById($unite_peche_site->id_site_embarquement);
                 $data['unite_peche'] =$unite_peche;
                 $data['site_embarquement'] =$site_embarquement;
                 

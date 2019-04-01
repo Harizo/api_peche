@@ -33,7 +33,8 @@ class Site_embarquement_model extends CI_Model {
             'latitude'       =>      $site_embarquement['latitude'],
             'longitude'      =>      $site_embarquement['longitude'],
             'altitude'       =>      $site_embarquement['altitude'],
-            'limite'         =>      $site_embarquement['limite'],                       
+            'limite'         =>      $site_embarquement['limite'],
+            'type_effort_peche' =>   $site_embarquement['type_effort_peche'],                       
         );
     }
     public function delete($id) {

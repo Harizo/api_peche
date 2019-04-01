@@ -20,7 +20,7 @@ class Type_engin extends REST_Controller {
                 $data['id'] = $type_engin->id;
                 $data['code'] = $type_engin->code;
                 $data['libelle'] = $type_engin->libelle;
-                
+                $data['url_image'] = $type_canoe->url_image;                
             } else {
                 $type_engin = $this->Type_enginManager->findAll();
                 if ($type_engin) {
@@ -29,7 +29,7 @@ class Type_engin extends REST_Controller {
                         $data[$key]['id'] = $value->id;
                         $data[$key]['code'] = $value->code;
                         $data[$key]['libelle'] = $value->libelle;
-                        
+                        $data[$key]['url_image'] = $value->url_image;
                     };
                 } else
                     $data = array();
@@ -56,7 +56,8 @@ class Type_engin extends REST_Controller {
             if ($id == 0) {
                 $data = array(
                     'code' => $this->post('code'),
-                    'libelle' => $this->post('libelle')
+                    'libelle' => $this->post('libelle'),
+                    'url_image' => $this->post('url_image'),
                 );               
                 if (!$data) {
                     $this->response([
@@ -82,7 +83,8 @@ class Type_engin extends REST_Controller {
             } else {
                 $data = array(
                     'code' => $this->post('code'),
-                    'libelle' => $this->post('libelle')
+                    'libelle' => $this->post('libelle'),
+                    'url_image' => $this->post('url_image'),
                 );              
                 if (!$data || !$id) {
                     $this->response([

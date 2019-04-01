@@ -38,9 +38,11 @@ class Importerfichier extends CI_Controller {
 		{
 			$name=$_FILES['file']['name'];
 			//$name1=str_replace($search,$replace,$name);
-			$rapport['nomImage']=$name_image;
+			$file_ext = pathinfo($name,PATHINFO_EXTENSION);
+			$rapport['nomImage']=$name_image.'.'.$file_ext;
 			$config['file_name']=$name_image;
 			//$rapport['repertoire']=$name_image;
+
 			$this->load->library('upload', $config);
 			$this->upload->initialize($config);
 			//$ff=$this->upload->do_upload('file');
@@ -60,6 +62,7 @@ class Importerfichier extends CI_Controller {
             echo json_encode($rapport);
 		} 
 		
-	}  
+	}
+	  
 	
 } ?>	
