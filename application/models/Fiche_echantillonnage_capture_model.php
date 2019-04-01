@@ -101,7 +101,7 @@ public function findByValidation($validation) {
         }                 
     }
 
- public function SauvegarderTout($data) 
+public function SauvegarderTout($data) 
 {
     $tmp = array();
     $fiche_echantillonnage_capture = array();
@@ -147,6 +147,31 @@ public function numero($date_envoi)
             return null;
         }                     
     
+}
+
+public function get_nbr_echantillon($requete)
+{
+        /*$debut = $year."/01/01" ;
+        $fin = $year."/12/31" ;
+        
+        $array = array('date >=' => $debut, 'date <=' => $fin);*/
+
+        $result = $this->db->select('COUNT(*) as nombre')
+            ->from('echantillon')
+            
+            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
+            //$this->db->join('table3', 'table1.id = table3.id');
+            //  ->where("(echantillon.surface_total > '0' ) AND (fiche_echantillonnage_capture.id_type_fiche_prospection =".$id_type_fiche.")")
+            ->where($requete)
+        
+            ->get()
+            ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }  
 }
 
 
