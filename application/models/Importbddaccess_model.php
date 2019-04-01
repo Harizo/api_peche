@@ -210,7 +210,7 @@ class Importbddaccess_model extends CI_Model
 		}	
 		return $id;
 	}
-	public function AjouterUnitePeche($region,$site,$site_sansespace,$engin_canoe) {
+	public function AjouterUnitePeche($region,$site,$site_sansespace,$engin_canoe,$site_original,$region_original) {
 		$pos_space = strpos($engin_canoe," ");
 		$ajout_canoe="existe deja";
 		$ajout_engin="existe deja";
@@ -273,11 +273,22 @@ class Importbddaccess_model extends CI_Model
 		$requete1='select id,libelle from site_embarquement where (lower(libelle)="'.$site.'" or lower(libelle)="'.$site_sansespace.'") and id_region='.$id_region;
 		$query1 = $this->db->query($requete1);
         $retour_site = $query1->result();	
-		foreach($retour_site as $k=>$v) {
-			if($k==0) {
-				$id_site=$v->id;
+		if($retour_site) {
+			foreach($retour_site as $k=>$v) {
+				if($k==0) {
+					$id_site=$v->id;
+				}
 			}
-		}
+		} else {
+			$remplacer=array("");
+			$trouver= array(" ");
+			$site_sansespace=str_replace($trouver,$remplacer,$site_original);
+			$code="SITE".$site_sansespace."???";
+			$code_unique="Madagascar_".$region_original."_".$site_sansespace."???";
+			$requete='insert into site_embarquement (code,libelle,code_unique,id_region) values ("'.$code.'","'.$site_original.'","'.$code_unique.'","'.$id_region.'")';
+			$query = $this->db->query($requete);
+			$id_site = $this->db->insert_id();			
+		}	
 		if($id_engin && $id_canoe && $id_site) {
 			$req="select id,count(*) as nombre from unite_peche where id_type_canoe=".$id_canoe." and id_type_engin=".$id_engin." group by id";
 			$que=$this->db->query($req);
@@ -338,7 +349,7 @@ class Importbddaccess_model extends CI_Model
 				$requete1="select ups.id,ups.id_unite_peche,ups.id_site_embarquement,up.libelle,'ajout' as ajout"
 						." from unite_peche_site as ups"
 						." left outer join unite_peche as up on ups.id_unite_peche=up.id"
-						." where ups.id=".$id_temp;
+						." where ups.id=".$id_temp." and ups.id_site_embarquement=".$id_site_embarquement;
 				$query1 = $this->db->query($requete1);
 				$id = $query1->result();		
 			} else {
@@ -346,7 +357,7 @@ class Importbddaccess_model extends CI_Model
 				$requete1="select ups.id,ups.id_unite_peche,ups.id_site_embarquement,up.libelle,'déjà existe' as ajout"
 						." from unite_peche_site as ups"
 						." left outer join unite_peche as up on ups.id_unite_peche=up.id"
-						." where ups.id_unite_peche=".$id_unite_peche;
+						." where ups.id_unite_peche=".$id_unite_peche." and ups.id_site_embarquement=".$id_site_embarquement;
 				$query1 = $this->db->query($requete1);
 				$id = $query1->result();		
 			}	
@@ -607,6 +618,22 @@ class Importbddaccess_model extends CI_Model
 			$que=$this->db->query($req);
 			$id = $que->result();	
 
+		return $id;		
+	}
+	public function RAZ_enquete_cadre() {
+		$req="delete from enquete_cadre";
+		$que=$this->db->query($req);
+		$req="alter table enquete_cadre AUTO_INCREMENT =1";
+		$que=$this->db->query($req);
+		return 'OK';	
+	}
+	public function AjouterEnqueteCadre($annee,$id_region,$id_site_embarquement,$id_unite_peche,$nbr_unite_peche) {
+			$requete="insert into enquete_cadre (id_region,id_site_embarquement,id_unite_peche,nbr_unite_peche,annee) values ('".$id_region."','".$id_site_embarquement."','".$id_unite_peche."','".$nbr_unite_peche."','".$annee."')";
+			$query = $this->db->query($requete);
+			$id_temp = $this->db->insert_id();
+			$req="select * from enquete_cadre where id=".$id_temp;
+			$que=$this->db->query($req);
+			$id = $que->result();	
 		return $id;		
 	}
 }
