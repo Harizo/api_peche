@@ -62,6 +62,23 @@ class Unite_peche_model extends CI_Model {
             return null;
         }                 
     }
+
+    public function findByIdtab($id)
+    {   $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where("id", $id)
+                        ->order_by('libelle')
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
+    }
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
