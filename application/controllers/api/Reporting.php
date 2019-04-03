@@ -12,6 +12,7 @@ class Reporting extends REST_Controller {
        // $this->load->model('site_model', 'SiteManager');
         $this->load->model('fiche_echantillonnage_capture_model', 'Fiche_echantillonnage_captureManager');
         $this->load->model('unite_peche_model', 'Unite_pecheManager');
+        $this->load->model('enquete_cadre_model', 'Enquete_cadreManager');  
     }
    
     public function index_get() 
@@ -56,7 +57,22 @@ class Reporting extends REST_Controller {
                 $_10 = 0 ;
                 $_11 = 0 ;
                 $_12 = 0 ;
+
+               
                 $data[$key]['unite_peche'] = $value->libelle ;
+
+                $enquete_cadre = $this->Enquete_cadreManager->findByannee_site_unite_peche_region($annee, $id_region, $value->id);//enquete cadre
+
+                if ($enquete_cadre[0]->nbr_unite_peche != null) 
+                {
+                    $data[$key]['enquete_cadre'] = $enquete_cadre[0]->nbr_unite_peche ;
+                }
+                else 
+                {
+                    $data[$key]['enquete_cadre'] = '0' ;
+                }
+                
+
 
                 //**********recuperation nbr_echantillon par mois
 

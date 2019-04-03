@@ -1105,5 +1105,6 @@ class Importbddaccess extends CI_Controller {
 		// FERMETURE FICHIER : désallocation mémoire
 		unset($Excel);
 		unset($objet_read_write);		
+		echo json_encode("succès");
 	}
 } ?>	
