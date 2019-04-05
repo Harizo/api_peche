@@ -76,5 +76,20 @@ class Region_model extends CI_Model
         }
         return null;
     }
+    public function findByIdtab($id)
+    {   $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where("id", $id)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
+    }
 
 }

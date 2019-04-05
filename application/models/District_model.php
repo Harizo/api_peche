@@ -59,4 +59,34 @@ class District_model extends CI_Model {
             return $q->row();
         }
     }
+    public function findByIdtab($id)
+    {   $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where("id", $id)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
+    }
+     public function findByregion($id_region)
+    {   $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where("id_region", $id_region)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
+    }
 }
