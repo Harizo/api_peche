@@ -1,6 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Fiche_echantillonnage_capture_model extends CI_Model {
+class Fiche_echantillonnage_capture_model extends CI_Model 
+{
     protected $table = 'fiche_echantillonnage_capture';
 
     public function add($fiche_echantillonnage_capture) {
@@ -202,27 +203,30 @@ class Fiche_echantillonnage_capture_model extends CI_Model {
                 return null;
             }  
     }
-                }  
-}
-public function som_capture_totales($requete)
-{
-    $result = $this->db->select_sum('capture')
-                        ->select_sum('prix')
-                        ->from('espece_capture')
-                        ->join('echantillon', 'espece_capture.id_echantillon = echantillon.id') 
-                        ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')                        
-                        ->where($requete)                          
-                        ->where('fiche_echantillonnage_capture.validation',1)
-                        ->get()
-                        ->result();
-       if($result)
-        {
-            return $result;
-        }else{
-            return null;
-        }
+
+    public function som_capture_totales($requete)
+    {
+        $result = $this->db->select_sum('capture')
+                            ->select_sum('prix')
+                            ->from('espece_capture')
+                            ->join('echantillon', 'espece_capture.id_echantillon = echantillon.id') 
+                            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')                        
+                            ->where($requete)                          
+                            ->where('fiche_echantillonnage_capture.validation',1)
+                            ->get()
+                            ->result();
+           if($result)
+            {
+                return $result;
+            }else{
+                return null;
+            }
 
 
-}
+    }
+                
 
 }
+
+
+
