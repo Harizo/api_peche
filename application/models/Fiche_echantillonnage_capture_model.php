@@ -149,7 +149,7 @@ public function numero($date_envoi)
     
 }
 
-public function get_nbr_echantillon($requete)
+public function get_nbr_echantillon($condition)
 {
         /*$debut = $year."/01/01" ;
         $fin = $year."/12/31" ;
@@ -162,7 +162,8 @@ public function get_nbr_echantillon($requete)
             ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
             //$this->db->join('table3', 'table1.id = table3.id');
             //  ->where("(echantillon.surface_total > '0' ) AND (fiche_echantillonnage_capture.id_type_fiche_prospection =".$id_type_fiche.")")
-            ->where($requete)
+            ->where($condition)
+            ->where("fiche_echantillonnage_capture.validation = 1")
         
             ->get()
             ->result();
