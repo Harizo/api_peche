@@ -29,9 +29,7 @@ class Reporting extends REST_Controller {
         //*********************************** Nombre echantillon ***************************[0]->nombre
 
         if ($menu == "nombre_echantillon") 
-        {
-
-            
+        {            
 
             if (($id_unite_peche!='*')&&($id_unite_peche!='undefined')) 
             {
@@ -164,7 +162,6 @@ class Reporting extends REST_Controller {
 
         }
         
-        
         //********************************* fin Nombre echantillon *****************************
         if (count($data)>0) {
             $this->response([
@@ -208,6 +205,7 @@ class Reporting extends REST_Controller {
 
         return $requete ;
     }
+
     
 
 }
