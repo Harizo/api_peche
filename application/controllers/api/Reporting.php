@@ -32,7 +32,6 @@ class Reporting extends REST_Controller {
         if ($menu == "nombre_echantillon") 
         {
 
-            
 
             if (($id_unite_peche!='*')&&($id_unite_peche!='undefined')) 
             {
@@ -173,9 +172,6 @@ class Reporting extends REST_Controller {
                 $data[$key]['dec'] = $_12 ;
                
             }
-            
-            
-            
 
 
         }
