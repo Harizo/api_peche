@@ -150,7 +150,7 @@ class Utilisateurs_model extends CI_Model
 
     public function findAllByEnabled($enabled)
     {
-        $result = $this->db->select('*')
+        $result = $this->db->select('COUNT(*) as nombre')
                         ->from($this->table)
                         ->where("enabled", $enabled)
                         ->order_by('id', 'desc')

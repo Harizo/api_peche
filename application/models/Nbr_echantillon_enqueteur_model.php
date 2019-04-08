@@ -77,4 +77,16 @@ class Nbr_echantillon_enqueteur_model extends CI_Model
         return null;
     }  
 
+    public function findByenqueteur_unite_peche_site($id_enqueteur, $id_unite_peche, $id_site_embarquement)
+    {
+        $this->db->where("id_enqueteur", $id_enqueteur)
+                 ->where("id_unite_peche", $id_unite_peche)
+                 ->where("id_site_embarquement", $id_site_embarquement);
+        $q = $this->db->get($this->table);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return null;
+    }  
+
 }
