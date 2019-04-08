@@ -226,10 +226,10 @@ class Fiche_echantillonnage_capture_model extends CI_Model
     }
                 
 
-}
 
 
-}
+
+
 public function max_id()
 {
    
