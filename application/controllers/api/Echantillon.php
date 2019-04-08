@@ -78,11 +78,16 @@ class Echantillon extends REST_Controller {
             if ($id)  {
                 $data = array();
                 $echantillon = $this->EchantillonManager->findById($id);
-                //$data_collect = $this->Data_collectManager->findById($echantillon->district_id);
-               // $user = $this->Data_collectManager->findById($echantillon->district_id);
-                $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
-                $data['id'] = $echantillon->id;
-                $data[$key]['unite_peche_id'] = $value->id_unite_peche;
+                if($echantillon)
+                {
+                    $data['id'] = $echantillon->id;
+                    $data['fiche_echantillonnage_capture_id'] = $echantillon->id_fiche_echantillonnage_capture;
+                }else{
+                    $data = array();
+                }
+                
+                
+              /* $data['unite_peche_id'] = $echantillon->id_unite_peche;
                 $data['peche_hier'] = $echantillon->peche_hier;
                 $data['peche_avant_hier'] = $echantillon->peche_avant_hier;
                 $data['nbr_jrs_peche_dernier_sem'] = $echantillon->nbr_jrs_peche_dernier_sem;
@@ -94,7 +99,7 @@ class Echantillon extends REST_Controller {
                 $data['id_user'] =$echantillon->id_user;
                 
                 $data['date_creation'] = $echantillon->date_creation;
-                $data['date_modification'] = $echantillon->date_modification;
+                $data['date_modification'] = $echantillon->date_modification;*/
                 
 
             } else {
@@ -166,8 +171,20 @@ class Echantillon extends REST_Controller {
         $id = $this->post('id') ;
         $supprimer = $this->post('supprimer') ;
         $typeeffort=$this->post('typeeffort');
+        $num_dernier_code=$this->post('num_dernier_code');
         if ($supprimer == 0) {
             if ($id == 0) {
+
+                if($num_dernier_code)
+                {
+                    $sequence = intval($num_dernier_code) + 1;
+                    $unique_code = 'Echantillon '.$sequence;
+                }
+                else
+                {
+                    $unique_code = 'Echantillon 1';  
+                }
+                
                 if ($typeeffort=='PAB')
                 {
                     $data = array(
@@ -177,7 +194,7 @@ class Echantillon extends REST_Controller {
                         'peche_avant_hier' => $this->post('peche_avant_hier'),
                         'nbr_jrs_peche_dernier_sem' => $this->post('nbr_jrs_peche_dernier_sem'),
                         'total_capture' => $this->post('total_capture'),
-                        'unique_code' => $this->post('unique_code'),
+                        'unique_code' => $unique_code,
                         'id_data_collect' => $this->post('data_collect_id'),
                         'nbr_bateau_actif' => '0',
                         'total_bateau_ecn' => '0',
@@ -193,7 +210,7 @@ class Echantillon extends REST_Controller {
                         'peche_avant_hier' => '0',
                         'nbr_jrs_peche_dernier_sem' => '0',
                         'total_capture' => $this->post('total_capture'),
-                        'unique_code' => $this->post('unique_code'),
+                        'unique_code' => $unique_code,
                         'id_data_collect' => $this->post('data_collect_id'),
                         'nbr_bateau_actif' => $this->post('nbr_bateau_actif'),
                         'total_bateau_ecn' => $this->post('total_bateau_ecn'),
@@ -210,9 +227,12 @@ class Echantillon extends REST_Controller {
                 }
                 $dataId = $this->EchantillonManager->add($data);
                 if (!is_null($dataId))  {
+                    $dataretour=array();
+                    $dataretour['id']=$dataId;
+                    $dataretour['unique_code']=$unique_code;
                     $this->response([
                         'status' => TRUE,
-                        'response' => $dataId,
+                        'response' => $dataretour,
                         'message' => 'Data insert success'
                             ], REST_Controller::HTTP_OK);
                 } else {
@@ -285,7 +305,7 @@ class Echantillon extends REST_Controller {
                 'response' => 0,
                 'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
-            }
+            };
             $delete = $this->EchantillonManager->delete($id);
             if (!is_null($delete)) {
                 $this->response([

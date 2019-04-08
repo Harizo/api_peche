@@ -193,5 +193,20 @@ public function som_capture_totales($requete)
         }
 
 }
+public function max_id()
+{
+   
+    $result =  $this->db->select_max('id')
+                        ->from($this->table)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                     
+    
+}
 
 }

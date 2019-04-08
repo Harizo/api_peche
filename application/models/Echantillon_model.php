@@ -72,7 +72,7 @@ class Echantillon_model extends CI_Model {
     public function findAllByFiche_echantillonnnage_capture($fiche_echantillonnnage_capture_id) {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('unique_code')
+                        ->order_by('id')
                         ->where("id_fiche_echantillonnage_capture", $fiche_echantillonnnage_capture_id)
                         ->get()
                         ->result();
@@ -253,6 +253,40 @@ class Echantillon_model extends CI_Model {
             error_log("Erreur dans Echantillon_model - Function save_all :" . $date_anio.' (test_commit)');
             $this->db->trans_commit ();   return $tab_retour ;
         }
+    }
+    public function uniquecode($id_fiche)
+    {       
+        $id=$this->max_id($id_fiche);
+        if($id)
+        {
+            $result =  $this->db->select('unique_code')
+                                ->from($this->table)
+                                ->where('id_fiche_echantillonnage_capture',$id_fiche)
+                                ->where('id',$id[0]->id)
+                                ->get()
+                                ->result();
+                if($result)
+                {
+                    return $result;
+                }else{
+                    return null;
+                }                 
+       } 
+    }
+    public function max_id($id_fiche)
+    {       
+        $result =  $this->db->select_max('id')
+                            ->from($this->table)
+                            ->where('id_fiche_echantillonnage_capture',$id_fiche)
+                            ->get()
+                            ->result();
+            if($result)
+            {
+                return $result;
+            }else{
+                return null;
+            }                     
+        
     }
 
 
