@@ -51,6 +51,11 @@ class Receptiondesdonneesmobile extends REST_Controller {
         $echantillons = $this->post('echantillons') ;
        // $especes_captures = $this->post('especes_captures') ;
 
+        $nbr_echantillon_enqueteur = array() ;
+        $limite_echantillon = array() ;
+        $echantillon_max = array() ;
+        $nbr_echantillon_bdd = array() ;
+
     	$data = array(
 
                     'code_unique'    => $code_unique,
@@ -73,49 +78,82 @@ class Receptiondesdonneesmobile extends REST_Controller {
                 
                 foreach (json_decode($echantillons) as $key => $value) 
                 {
-                    //get max echantillon possible
-                        $nbr_echantillon_enqueteur = $this->Nbr_echantillon_enqueteurManager->findByenqueteur_unite_peche_site($id_enqueteur, $value->id_unite_peche ,$site_embarquement->id);
-                    //get max echantillon possible
-
-                    if (!$nbr_echantillon_enqueteur) 
-                    {
-                        $message_erreur = "Limite non définie pour /".$value->id_unite_peche ;
-
-                        break ;
+                    if (!isset($nbr_echantillon_bdd[$value->id_unite_peche])) {
+                        $nbr_echantillon_bdd[$value->id_unite_peche] = 0 ;
                     }
-                    else
-                    {
-                        $limite_echantillon = $nbr_echantillon_enqueteur->nbr_max_echantillon ;
-                        //nbr echantillon efa vita
+                    
+                    //get max echantillon possible
                         
+                         if (!isset($nbr_echantillon_enqueteur[$value->id_unite_peche])) 
+                         {
+                            $nbr_echantillon_enqueteur[$value->id_unite_peche] = $this->Nbr_echantillon_enqueteurManager->findByenqueteur_unite_peche_site($id_enqueteur, $value->id_unite_peche ,$site_embarquement->id);
+                            
+                            
+                            
+                         }
+                    //get max echantillon possible
 
-                            $echantillon_max = $this->Fiche_echantillonnage_captureManager->get_nbr_max_echantillon($date,$id_enqueteur,$value->id_unite_peche);
+                    //************************************************************
+                        if ($nbr_echantillon_enqueteur[$value->id_unite_peche]) 
+                        {
+                            
+                            $limite_echantillon[$value->id_unite_peche] = $nbr_echantillon_enqueteur[$value->id_unite_peche]->nbr_max_echantillon ;
+                            //nbr echantillon efa vita
+                    
 
-                            if (!$echantillon_max) 
+                        
+                            if (!isset($echantillon_max[$value->id_unite_peche])) 
                             {
-                                $nbr_echantillon_bdd = 0 ;
-                                $nbr_echantillon_bdd++;
+                                //nbr echantillon ao @serveur
+                                $echantillon_max[$value->id_unite_peche] = $this->Fiche_echantillonnage_captureManager->get_nbr_max_echantillon($date,$id_enqueteur,$value->id_unite_peche);
+                                //fin nbr echantillon ao @serveur
+                                
+
+                                if ($echantillon_max[$value->id_unite_peche]) 
+                                {
+                                    $nbr_echantillon_bdd[$value->id_unite_peche] = $echantillon_max[$value->id_unite_peche][0]->nombre + 1;
+                                }
+                                else
+                                {
+                                   $nbr_echantillon_bdd[$value->id_unite_peche] ++ ;
+                                }
+                                
+                                
                             }
                             else
                             {
-                                $nbr_echantillon_bdd = $echantillon_max[0]->nombre ;
-                                $nbr_echantillon_bdd++;
+                                $nbr_echantillon_bdd[$value->id_unite_peche] ++ ;
+                                
                             }
-                            //bloackage ajout si limite inferieur
-                            if ( $nbr_echantillon_bdd > $limite_echantillon) 
+
+                            if ( $nbr_echantillon_bdd[$value->id_unite_peche] > $limite_echantillon[$value->id_unite_peche]) 
                             {
                                 $tab_date = explode('-', $date) ;
-                                $message_erreur ="Maximum atteint pour le Mois de ".$this->affichage_mois($tab_date[1])."Envoyé:".$nbr_echantillon_bdd." Max:".$limite_echantillon." Unité de pêche: /".$value->id_unite_peche ;
-                                break;
+                                $message_erreur ="Nombre maximum atteint pour le Mois de ".$this->affichage_mois($tab_date[1])." ,Nbr d'échantillon sur la base de données du serveur:".$echantillon_max[$value->id_unite_peche][0]->nombre." Tentative: ".($nbr_echantillon_bdd[$value->id_unite_peche]-$echantillon_max[$value->id_unite_peche][0]->nombre)." Max autorisé:".$limite_echantillon[$value->id_unite_peche]." Unité de pêche: /".$value->id_unite_peche ;
+                                //break;
+                               
                             }
+
                             
-                            //fin bloackage ajout si limite inferieur
-                        
-                        //nbr echantillon efa vita
-                    }
+                            
+                            //nbr echantillon efa vita
+                        }
+                        else
+                        {
+                            $message_erreur = "Limite non définie pour /".$value->id_unite_peche ;
+
+                            break ;
+                        }
+                    //************************************************************
+
+          
 
                     
                 }
+
+
+
+              //  $message_erreur = " ok ".$echantillon_max[1][0]->nombre." - ".$message_erreur ;
 
                 if ($message_erreur == "") 
                 {
@@ -130,21 +168,13 @@ class Receptiondesdonneesmobile extends REST_Controller {
 
 
 			}
-			else
-			{
-				//$dataId_fiche = $id_serveur ;
-                
-			}
+		
 
             if ($dataId_fiche) //insertion zanany
             {
                 if (count($echantillons) > 0 ) 
                 {
-                    /*foreach ($echantillons as $key_ech => $ech) 
-                    {
-                        
-                    }*/
-
+                    
                     $etat_echantillon = $this->EchantillonManager->save_all($dataId_fiche, json_decode($echantillons));
                 }
             }
