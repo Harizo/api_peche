@@ -20,6 +20,7 @@ class Importerfichier extends CI_Controller {
 		$name_image=$_POST['name_image'];
 
 		$repertoire=str_replace($search,$replace,$repertoire);
+		$name_image=str_replace($search,$replace,$name_image);
 		//The name of the directory that we need to create.
 		$directoryName = dirname(__FILE__) ."/../../../../../../assets/ddb/" .$repertoire;
 		//Check if the directory already exists.

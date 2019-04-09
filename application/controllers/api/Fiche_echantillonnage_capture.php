@@ -167,13 +167,25 @@ class Fiche_echantillonnage_capture extends REST_Controller {
         }
     }
 
-    public function index_post() {
+    public function index_post()
+    {  
         $id = $this->post('id') ;
         $supprimer = $this->post('supprimer') ;
         if ($supprimer == 0) {
             if ($id == 0) {
+                $date_code_unique  = date('d/m/Y');    
+                $site_embarquement = $this->Site_embarquementManager->findById($this->post('site_embarquement_id'));
+                $max_id   =$this->Fiche_echantillonnage_captureManager->max_id();
+                $region   = $this->RegionManager->findById($site_embarquement->id_region);
+                $sequence = intval($max_id[0]->id) + 1;
+                
+                if($sequence < 10)
+                {
+                    $sequence = '0'.$sequence;
+                }
+                $code_unique = $region->nom."-".$site_embarquement->libelle."-".$date_code_unique."-".$sequence;
                 $data = array(
-                    'code_unique' => $this->post('code_unique'),
+                    'code_unique' => $code_unique,
                     'date' => $this->post('date'),
                     'latitude' => $this->post('latitude'),
                     'longitude' => $this->post('longitude'),
@@ -194,9 +206,12 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                 }
                 $dataId = $this->Fiche_echantillonnage_captureManager->add($data);
                 if (!is_null($dataId))  {
+                    $dataretour=array();
+                    $dataretour['id']=$dataId;
+                    $dataretour['code_unique']=$code_unique;
                     $this->response([
                         'status' => TRUE,
-                        'response' => $dataId,
+                        'response' => $dataretour,
                         'message' => 'Data insert success'
                             ], REST_Controller::HTTP_OK);
                 } else {
