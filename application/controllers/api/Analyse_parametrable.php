@@ -26,95 +26,235 @@ class Analyse_parametrable extends REST_Controller {
         $id_district = $this->get('id_district');
         $id_site_embarquement = $this->get('id_site_embarquement');
         $id_unite_peche = $this->get('id_unite_peche');
+        $pivot = $this->get('pivot');
+
+        $data = array() ;
+        $donnees = array() ;
         
 
         //*********************************** Nombre echantillon ***************************[0]->nombre
 
         if ($menu == "analyse_parametrable") 
         {
-            if(($id_unite_peche!='*')&&($id_unite_peche!='undefined'))
-            {
-                $all_unite_peche = $this->Unite_pecheManager->findByIdtab($id_unite_peche);
-            }
-            else
-            {
-                $all_unite_peche=$this->Unite_pecheManager->findAll();
-            }
-
-            if($id_region)
-            {
-                $all_region = $this->RegionManager->findById($id_region);
-                
-            }
             
-                 
-               if($all_region)
-               {
-                    if(($id_district!='*')&&($id_district!='undefined'))
-                    {
-                        $all_district = $this->DistrictManager->findByIdtab($id_district);
-                    }
-                    else
-                    {
-                        $all_district=$this->DistrictManager->findByregion($all_region->id);
-                    }
 
-                    if(($id_site_embarquement!='*')&&($id_site_embarquement!='undefined'))
-                    {
-                        $all_site_embarquement = $this->Site_embarquementManager->findByIdtab($id_site_embarquement);
-                    }
-                    else
-                    {
-                        $all_site_embarquement=$this->Site_embarquementManager->findByregion($all_region->id);
-                    }
-                    foreach ($all_district as $key => $value)
-                    {
-                        foreach ($all_site_embarquement as $key1 => $value1)
-                        {
-                            foreach ($all_unite_peche as $key2 => $value2)
-                            {
-                                $capture_totales=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region, $value->id, $value1->id, $value2->id));                       
-                               if($capture_totales[0]->capture)
-                               {
-                                    
-                                   $data[$key2]['region']= $all_region->nom;
-                                   $data[$key2]['district']= $value->nom;
-                                   $data[$key2]['site_embarquement']= $value1->libelle;
-                                   $data[$key2]['unite_peche']= $value2->libelle;                               
-                                   $data[$key2]['capture_totales']=$capture_totales[0]->capture;
-                                   $data[$key2]['prix']=$capture_totales[0]->prix;
-                               }
-                            
-                           }
-                        }
-                    }
-            }
-            /*foreach ($all_unite_peche as $key => $value)
-            {
-                $data[$key]['unite_peche']=$value->libelle;
-                $capture_totales=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region, $id_district, $id_site_embarquement, $value->id));
-
-                if($capture_totales)
+            
+            //initialisation
+                if (($id_region!='*')&&($id_region!='undefined')) 
                 {
-                  $data[$key]['capture_totales']=$capture_totales->total_capture;  
+                    $all_region = $this->RegionManager->findByIdtab($id_region);
                 }
-                if(($id_region!='*')&&($id_region!='undefined'))
+                else 
                 {
-                    $region = $this->RegionManager->findById($id_region);
-                    $data[$key]['region']=$region;
+                    $all_region = $this->RegionManager->findAll();
+                }
+
+                if(($id_unite_peche!='*')&&($id_unite_peche!='undefined'))
+                {
+                    $all_unite_peche = $this->Unite_pecheManager->findByIdtab($id_unite_peche);
                 }
                 else
                 {
-                  // $region = $this->RegionManager->findById($capture_totales->id_region);
-                   //$data[$key]['region']=$region; 
-                }
-                if(($id_district!='*')&&($id_district!='undefined'))
-                {
-                    $district = $this->DistrictManager->findById($id_district);
-                    $data[$key]['district']=$district;
+                    $all_unite_peche=$this->Unite_pecheManager->findAll();
                 }
 
-            }*/
+                if(($id_site_embarquement!='*')&&($id_site_embarquement!='undefined'))
+                {
+                    $all_site_embarquement = $this->Site_embarquementManager->findByIdtab($id_site_embarquement);
+                }
+                else
+                {
+                    $all_site_embarquement=$this->Site_embarquementManager->findAllByFiche($annee);
+                }
+            //initialisation
+
+
+                
+                
+            //Pivot * 
+                if ($pivot == "*") 
+                {
+                    $indice = 0 ;
+                    $total_prix = 0 ;
+                    $total_capture = 0 ;
+                    $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region, $id_district, $id_site_embarquement, $id_unite_peche));
+
+                    if ($donnees[0]->capture != null )
+                    {
+                        $total_prix = $total_prix + $donnees[0]->prix ;
+                        $total_capture = $total_capture + $donnees[0]->capture ;
+                       
+
+                        $donnees[0]->region = "-" ;
+                        $donnees[0]->site_embarquement = "-" ;
+                        $donnees[0]->unite_peche = "-" ;
+                        $data[$indice] = $donnees[0] ;
+                        $indice++ ;
+                    }
+
+                    /*$data['total_prix'] = $total_prix ;
+                    $data['total_capture'] = $total_capture ;*/
+                        
+                    
+                }
+            //Pivot * 
+
+            //Pivot region 
+                if ($pivot == "id_region") 
+                {
+                    $indice = 0 ;
+                    $total_prix = 0 ;
+                    $total_capture = 0 ;
+                    foreach ($all_region as $key_region => $value_region) 
+                    {
+                        $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $value_region->id, $id_district, $id_site_embarquement, $id_unite_peche));
+
+                        if ($donnees[0]->capture != null )
+                        {
+                            $total_prix = $total_prix + $donnees[0]->prix ;
+                            $total_capture = $total_capture + $donnees[0]->capture ;
+                            $donnees[0]->region = $value_region->nom ;
+                            $donnees[0]->site_embarquement = "-" ;
+                            $donnees[0]->unite_peche = "-" ;
+                            $data[$indice] = $donnees[0] ;
+                            $indice++ ;
+                        }
+                        
+                    }
+                    /*$data['total_prix'] = $total_prix ;
+                    $data['total_capture'] = $total_capture ;*/
+                }
+            //Pivot region
+            //Pivot unite peche 
+                if ($pivot == "id_unite_peche") 
+                {
+                    $indice = 0 ;
+                    $total_prix = 0 ;
+                    $total_capture = 0 ;
+                    foreach ($all_unite_peche as $key => $value) 
+                    {
+                        $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $id_site_embarquement, $value->id));
+
+                        if ($donnees[0]->capture != null )
+                        {
+                            $total_prix = $total_prix + $donnees[0]->prix ;
+                            $total_capture = $total_capture + $donnees[0]->capture ;
+                            $donnees[0]->region = "-" ;
+                            $donnees[0]->site_embarquement = "-" ;
+                            $donnees[0]->unite_peche = $value->libelle ;
+                            $data[$indice] = $donnees[0] ;
+                            $indice++ ;
+                        }
+                        
+                    }
+                   /* $data['total_prix'] = $total_prix ;
+                    $data['total_capture'] = $total_capture ;*/
+                }
+            //Pivot unite peche 
+
+            //Pivot site 
+                if ($pivot == "id_site_embarquement") 
+                {
+                    $indice = 0 ;
+                    $total_prix = 0 ;
+                    $total_capture = 0 ;
+                    if ($all_site_embarquement) {
+                        foreach ($all_site_embarquement as $key => $value) 
+                        {
+                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $value->id_site_embarquement, $id_unite_peche));
+
+                            if ($donnees[0]->capture != null )
+                            {
+                                $total_prix = $total_prix + $donnees[0]->prix ;
+                                $total_capture = $total_capture + $donnees[0]->capture ;
+                                $donnees[0]->region = "-" ;
+                                $donnees[0]->site_embarquement = $value->libelle ;
+                                $donnees[0]->unite_peche = "-" ;
+                                $data[$indice] = $donnees[0] ;
+                                $indice++ ;
+                            }
+                            
+                        }
+                    }
+                    
+
+                    /*$data['total_prix'] = $total_prix ;
+                    $data['total_capture'] = $total_capture ;*/
+                }
+            //Pivot site 
+
+            //Pivot region  and unite peche
+                if ($pivot == "id_region_and_id_unite_peche") 
+                {
+                    $indice = 0 ;
+                    $total_prix = 0 ;
+                    $total_capture = 0 ;
+                    foreach ($all_region as $key_region => $value_region) 
+                    {
+                        
+
+                        foreach ($all_unite_peche as $key => $value) 
+                        {
+                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $value_region->id , $id_district, $id_site_embarquement, $value->id));
+
+                            if ($donnees[0]->capture != null )
+                            {
+                                $total_prix = $total_prix + $donnees[0]->prix ;
+                                $total_capture = $total_capture + $donnees[0]->capture ;
+                                $donnees[0]->region = $value_region->nom ;
+                                $donnees[0]->site_embarquement = "-" ;
+                                $donnees[0]->unite_peche = $value->libelle ;
+                                $data[$indice] = $donnees[0] ;
+                                $indice++ ;
+                            }
+                            
+                        }
+                        
+                    }
+
+                    /*$data['total_prix'] = $total_prix ;
+                    $data['total_capture'] = $total_capture ;*/
+                }
+            //Pivot region and unite peche
+            //Pivot site  and unite peche
+                if ($pivot == "id_site_embarquement_and_id_unite_peche") 
+                {
+                    $indice = 0 ;
+                    $total_prix = 0 ;
+                    $total_capture = 0 ;
+                    foreach ($all_site_embarquement as $key_site => $value_site) 
+                    {
+                        
+
+                        foreach ($all_unite_peche as $key => $value) 
+                        {
+                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $value_site->id_site_embarquement, $value->id));
+
+                            if ($donnees[0]->capture != null )
+                            {
+                                $total_prix = $total_prix + $donnees[0]->prix ;
+                                $total_capture = $total_capture + $donnees[0]->capture ;
+                                $donnees[0]->region = "-";
+                                $donnees[0]->site_embarquement = $value_site->libelle ;
+                                $donnees[0]->unite_peche = $value->libelle ;
+                                $data[$indice] = $donnees[0] ;
+                                $indice++ ;
+                            }
+
+                               
+                            
+                        }
+                        
+                    }
+                   /* $data['total_prix'] = $total_prix ;
+                    $data['total_capture'] = $total_capture ;*/
+                }
+            //Pivot site and unite peche
+
+                $total['total_prix'] = $total_prix ;
+                    $total['total_capture'] = $total_capture ;
+            
+
         }
         
         
@@ -123,6 +263,7 @@ class Analyse_parametrable extends REST_Controller {
             $this->response([
                 'status' => TRUE,
                 'response' => $data,
+                'total' => $total,
                 'message' => 'Get data success',
             ], REST_Controller::HTTP_OK);
         } else {
