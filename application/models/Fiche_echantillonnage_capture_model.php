@@ -237,18 +237,10 @@ class Fiche_echantillonnage_capture_model extends CI_Model
             }else{
                 return null;
             }
-
-
-    }
-                
-
-
-
-
+    }            
 
 public function max_id()
-{
-   
+{   
     $result =  $this->db->select_max('id')
                         ->from($this->table)
                         ->get()
