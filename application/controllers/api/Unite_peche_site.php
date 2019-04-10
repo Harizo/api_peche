@@ -35,6 +35,7 @@ class Unite_peche_site extends REST_Controller {
 
                     $data[$key]['id'] =$value->id;
                     $data[$key]['unite_peche'] =$unite_peche;
+                    $data[$key]['libelle'] =$unite_peche->libelle;
                     //$data[$key]['site_embarquement'] =$site_embarquement;
                     //$data[$key]['nbr_echantillon'] =$value->nbr_echantillon; 
                 }

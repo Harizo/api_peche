@@ -14,20 +14,36 @@ class Utilisateurs extends REST_Controller {
         $this->load->model('region_model', 'RegionManager');
     }
 
-    public function index_get() {
+    public function index_get() 
+    {
         //find by id
         $id = $this->get('id');
         $enabled = $this->get('enabled');
+        $profil = $this->get('profil');
+        $type_get = $this->get('type_get');
 
-        
-            
+       /* if ($profil == 1) 
+        {
+            $data = array(
+                'nom' => $this->post('nom'),
+                'prenom' => $this->post('prenom'),
+                'email' => $this->post('email'),
+                'password' => sha1($this->post('password'))
       
+            );
 
-        if ($id) {
+         
+
+            $data = $this->UserManager->update_profil($id, $data);
+           
+        }*/
+
+        if ($id) 
+        {
             $user = $this->UserManager->findById($id);
             if ($user) 
             {
-                #$data['id'] = $user->id;
+                $data['id'] = $user->id;
                 $data['nom'] = $user->nom;
                 $data['prenom'] = $user->prenom;
                // $data['sigle'] = $user->sigle;
@@ -45,51 +61,42 @@ class Utilisateurs extends REST_Controller {
     
                 
         }
-        else 
+
+        if ($enabled == 1) 
         {
-            if ($enabled == 1) 
+            $nbr = 0 ;
+            $user = $this->UserManager->findAllByEnabled(0);          
+            $data = $user[0];   
+        }
+        
+        if ($type_get == "findAll") 
+        {
+            $usr = $this->UserManager->findAll();
+            if ($usr)
             {
-                $nbr = 0 ;
-                $user = $this->UserManager->findAllByEnabled(0);
-                if ($user) {
-                    foreach ($user as $key => $value) 
-                    {
-                        $nbr++ ;
-                    }
+                foreach ($usr as $key => $value) 
+                {
+                    $data[$key]['id'] = $value->id;
+                    $data[$key]['nom'] = $value->nom;
+                    $data[$key]['prenom'] = $value->prenom;
+                 //   $data[$key]['sigle'] = $value->sigle;
+                    $data[$key]['token'] = $value->token;
+                    $data[$key]['email'] = $value->email;
+                    $data[$key]['enabled'] = $value->enabled;
+              
+           
+                    $data[$key]['roles'] = unserialize($value->roles);
+
+
                 }
-                
-                $data['nbrUser'] = $nbr;
             }
             else
             {
-                $usr = $this->UserManager->findAll();
-                if ($usr)
-                {
-                    foreach ($usr as $key => $value) 
-                    {
-                        $data[$key]['id'] = $value->id;
-                        $data[$key]['nom'] = $value->nom;
-                        $data[$key]['prenom'] = $value->prenom;
-                     //   $data[$key]['sigle'] = $value->sigle;
-                        $data[$key]['token'] = $value->token;
-                        $data[$key]['email'] = $value->email;
-                        $data[$key]['enabled'] = $value->enabled;
-                  
-               
-                        $data[$key]['roles'] = unserialize($value->roles);
-
-
-                    }
-                }
-                else
-                {
-                    $data = array();
-                }
+                $data = array();
             }
-                
-
-                
         }
+        
+       
 
         //authentification
         $email = $this->get('email');
@@ -169,6 +176,7 @@ class Utilisateurs extends REST_Controller {
         $id = $this->post('id') ;
         $gestion_utilisateur = $this->post('gestion_utilisateur') ;
         $supprimer = $this->post('supprimer') ;
+        $profil = $this->post('profil') ;
 
         if ($gestion_utilisateur == 1) 
         {
@@ -220,14 +228,48 @@ class Utilisateurs extends REST_Controller {
         }
         else
         {
-            
-           
+            if ($profil == 1) 
+            {
+                $data = array(
+                    'nom' => $this->post('nom'),
+                    'prenom' => $this->post('prenom'),
+                    //'cin' => $this->post('cin'),
+                    'email' => $this->post('email'),
+                    'password' => sha1($this->post('password'))
+          
+                );
+
+                if (!$data) {
+                    $this->response([
+                        'status' => FALSE,
+                        'response' => 0,
+                        'message' => 'No request found'
+                            ], REST_Controller::HTTP_OK);
+                }
+
+                $dataId = $this->UserManager->update_profil($id, $data);
+                if (!is_null($dataId)) {
+                    $this->response([
+                        'status' => TRUE,
+                        'response' => $dataId
+                            ], REST_Controller::HTTP_OK);
+                } else {
+                    $this->response([
+                        'status' => FALSE,
+                        'message' => 'No request found 2'
+                            ], REST_Controller::HTTP_OK);
+                }
+            }
+            else 
+            {
                 $getrole = array("USER");
                 $data = array(
                     'nom' => $this->post('nom'),
                     'prenom' => $this->post('prenom'),
                     'sigle' => $this->post('sigle'),
                     'email' => $this->post('email'),
+                    'id_region' => $this->post('id_region'),
+                    'id_district' => $this->post('id_district'),
                     'password' => sha1($this->post('password')),
                     'enabled' => 0,
                     'token' => bin2hex(openssl_random_pseudo_bytes(32)),
@@ -254,6 +296,9 @@ class Utilisateurs extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_OK);
                 }
+            }
+           
+                
             
 
         }

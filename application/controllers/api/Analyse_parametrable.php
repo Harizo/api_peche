@@ -15,6 +15,7 @@ class Analyse_parametrable extends REST_Controller {
         $this->load->model('region_model', 'RegionManager');
         $this->load->model('district_model', 'DistrictManager');
         $this->load->model('site_embarquement_model', 'Site_embarquementManager');
+        $this->load->model('Espece_model', 'EspeceManager');
     }
    
     public function index_get() 
@@ -26,6 +27,7 @@ class Analyse_parametrable extends REST_Controller {
         $id_district = $this->get('id_district');
         $id_site_embarquement = $this->get('id_site_embarquement');
         $id_unite_peche = $this->get('id_unite_peche');
+        $id_espece = $this->get('id_espece');
         $pivot = $this->get('pivot');
 
         $data = array() ;
@@ -66,6 +68,16 @@ class Analyse_parametrable extends REST_Controller {
                 {
                     $all_site_embarquement=$this->Site_embarquementManager->findAllByFiche($annee);
                 }
+
+
+                if(($id_espece!='*')&&($id_espece!='undefined'))
+                {
+                    $all_espece = $this->EspeceManager->findByIdtab($id_espece);
+                }
+                else
+                {
+                    $all_espece=$this->EspeceManager->findAllByFiche($annee);
+                }
             //initialisation
 
 
@@ -77,7 +89,7 @@ class Analyse_parametrable extends REST_Controller {
                     $indice = 0 ;
                     $total_prix = 0 ;
                     $total_capture = 0 ;
-                    $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region, $id_district, $id_site_embarquement, $id_unite_peche));
+                    $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece));
 
                     if ($donnees[0]->capture != null )
                     {
@@ -107,7 +119,7 @@ class Analyse_parametrable extends REST_Controller {
                     $total_capture = 0 ;
                     foreach ($all_region as $key_region => $value_region) 
                     {
-                        $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $value_region->id, $id_district, $id_site_embarquement, $id_unite_peche));
+                        $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $value_region->id, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece));
 
                         if ($donnees[0]->capture != null )
                         {
@@ -133,7 +145,7 @@ class Analyse_parametrable extends REST_Controller {
                     $total_capture = 0 ;
                     foreach ($all_unite_peche as $key => $value) 
                     {
-                        $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $id_site_embarquement, $value->id));
+                        $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $id_site_embarquement, $value->id, $id_espece));
 
                         if ($donnees[0]->capture != null )
                         {
@@ -161,7 +173,7 @@ class Analyse_parametrable extends REST_Controller {
                     if ($all_site_embarquement) {
                         foreach ($all_site_embarquement as $key => $value) 
                         {
-                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $value->id_site_embarquement, $id_unite_peche));
+                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $value->id_site_embarquement, $id_unite_peche, $id_espece));
 
                             if ($donnees[0]->capture != null )
                             {
@@ -195,7 +207,7 @@ class Analyse_parametrable extends REST_Controller {
 
                         foreach ($all_unite_peche as $key => $value) 
                         {
-                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $value_region->id , $id_district, $id_site_embarquement, $value->id));
+                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $value_region->id , $id_district, $id_site_embarquement, $value->id, $id_espece));
 
                             if ($donnees[0]->capture != null )
                             {
@@ -228,7 +240,7 @@ class Analyse_parametrable extends REST_Controller {
 
                         foreach ($all_unite_peche as $key => $value) 
                         {
-                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $value_site->id_site_embarquement, $value->id));
+                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $value_site->id_site_embarquement, $value->id, $id_espece));
 
                             if ($donnees[0]->capture != null )
                             {
@@ -250,6 +262,40 @@ class Analyse_parametrable extends REST_Controller {
                     $data['total_capture'] = $total_capture ;*/
                 }
             //Pivot site and unite peche
+            //Pivot site 
+                if ($pivot == "id_espece") 
+                {
+                    $indice = 0 ;
+                    $total_prix = 0 ;
+                    $total_capture = 0 ;
+                    if ($all_espece) {
+                        foreach ($all_espece as $key => $value) 
+                        {
+                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee, $id_region , $id_district, $id_site_embarquement, $id_unite_peche, $value->id_espece));
+
+                            if ($donnees[0]->capture != null )
+                            {
+                                $total_prix = $total_prix + $donnees[0]->prix ;
+                                $total_capture = $total_capture + $donnees[0]->capture ;
+                                $donnees[0]->espece_nom_local = $value->nom_local ;
+                                $donnees[0]->espece_nom_scientifique = $value->nom_scientifique ;
+                                $donnees[0]->espece_code = $value->code ;
+                                $donnees[0]->region = "-" ;
+                                $donnees[0]->site_embarquement = "-" ;
+                                $donnees[0]->unite_peche = "-" ;
+                                $data[$indice] = $donnees[0] ;
+                                $indice++ ;
+                            }
+                            
+                        }
+                    }
+                    
+
+                    /*$data['total_prix'] = $total_prix ;
+                    $data['total_capture'] = $total_capture ;*/
+                }
+            //Pivot site 
+
 
                 $total['total_prix'] = $total_prix ;
                     $total['total_capture'] = $total_capture ;
@@ -275,7 +321,7 @@ class Analyse_parametrable extends REST_Controller {
         }
     }
 
-    public function generer_requete_analyse($annee, $id_region, $id_district, $id_site_embarquement, $id_unite_peche)
+    public function generer_requete_analyse($annee, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece)
     {
         $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
             
@@ -298,6 +344,11 @@ class Analyse_parametrable extends REST_Controller {
             if (($id_unite_peche!='*')&&($id_unite_peche!='undefined')) 
             {
                 $requete = $requete." AND id_unite_peche='".$id_unite_peche."'" ;
+            }
+
+            if (($id_espece!='*')&&($id_espece!='undefined')) 
+            {
+                $requete = $requete." AND id_espece='".$id_espece."'" ;
             }
             
         return $requete ;

@@ -70,7 +70,7 @@ class Utilisateurs_model extends CI_Model
             'prenom'                =>      $utilisateurs['prenom'],
             'email'                 =>      $utilisateurs['email'],
             'password'              =>      $utilisateurs['password'],
-            'cin'                   =>      $utilisateurs['cin'],
+           // 'cin'                   =>      $utilisateurs['cin'],
       
             
         );
@@ -99,6 +99,8 @@ class Utilisateurs_model extends CI_Model
     /*        'sigle'                =>      $utilisateurs['sigle'],*/
             'email'                 =>      $utilisateurs['email'],
             'password'              =>      $utilisateurs['password'],
+            'id_region'              =>      $utilisateurs['id_region'],
+            'id_district'              =>      $utilisateurs['id_district'],
             'enabled'               =>      $utilisateurs['enabled'],
             'token'                 =>      $utilisateurs['token'],
             'roles'                 =>      $utilisateurs['roles'],
@@ -115,7 +117,6 @@ class Utilisateurs_model extends CI_Model
             'nom'                   =>      $utilisateurs['nom'],
             'prenom'                =>      $utilisateurs['prenom'],
             'email'                 =>      $utilisateurs['email'],
-            'sigle'                 =>      $utilisateurs['sigle'],
             'enabled'               =>      $utilisateurs['enabled'],
             'roles'                 =>      $utilisateurs['roles'],
         );
