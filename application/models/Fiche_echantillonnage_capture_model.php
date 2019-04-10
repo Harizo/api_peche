@@ -215,6 +215,7 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                             ->where('fiche_echantillonnage_capture.validation',1)                         
                             ->get()
                             ->result();
+
         if($result)
         {
             return $result;
@@ -233,8 +234,7 @@ class Fiche_echantillonnage_capture_model extends CI_Model
 
 
 public function max_id()
-{
-   
+{   
     $result =  $this->db->select_max('id')
                         ->from($this->table)
                         ->get()

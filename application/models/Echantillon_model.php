@@ -180,7 +180,7 @@ class Echantillon_model extends CI_Model {
                 }                 
        } 
     }
-    public function max_id($id_fiche)
+/*    public function max_id($id_fiche)
     {       
         $result =  $this->db->select_max('id')
                             ->from($this->table)
@@ -194,7 +194,7 @@ class Echantillon_model extends CI_Model {
                 return null;
             }                     
         
-    }
+    }*/
 
 
     

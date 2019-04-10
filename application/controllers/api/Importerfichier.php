@@ -33,7 +33,7 @@ class Importerfichier extends CI_Controller {
 		//$rapport['repertoire']=dirname(__FILE__) ."/../../../../../../assets/ddb/" .$repertoire;
 		$config['upload_path']          = dirname(__FILE__) ."/../../../../../../assets/ddb/".$repertoire;
 		$config['allowed_types'] = 'png';
-		$config['max_size'] = 222048;
+		$config['max_size'] = 2000;
 		$config['overwrite'] = TRUE;
 		if (isset($_FILES['file']['tmp_name']))
 		{
@@ -49,8 +49,9 @@ class Importerfichier extends CI_Controller {
 			//$ff=$this->upload->do_upload('file');
 			if(!$this->upload->do_upload('file'))
 			{
-
-				$rapport["erreur"]= 'Type d\'image invalide. Veuillez inserer une image.png';
+				$error = array('error' => $this->upload->display_errors());
+				//$rapport["erreur"]= 'Type d\'image invalide. Veuillez inserer une image.png';
+				$rapport["erreur"]= $error;
 				echo json_encode($rapport);
 			}else{
 				
