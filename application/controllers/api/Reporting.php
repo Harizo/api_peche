@@ -61,7 +61,7 @@ class Reporting extends REST_Controller {
                
                 $data[$key]['unite_peche'] = $value->libelle ;
 
-                $enquete_cadre = $this->Enquete_cadreManager->findByannee_site_unite_peche_region($annee, $id_region, $value->id);//enquete cadre
+                $enquete_cadre = $this->Enquete_cadreManager->findByannee_site_unite_peche_region($this->generer_requete_enquete_cadre($annee, $id_region, $id_site_embarquement, $value->id));//enquete cadre
 
                 if ($enquete_cadre[0]->nbr_unite_peche != null) 
                 {
@@ -220,6 +220,30 @@ class Reporting extends REST_Controller {
 
         return $requete ;
     }
+
+    public function generer_requete_enquete_cadre($annee, $id_region, $id_site_embarquement, $id_unite_peche)
+    {
+        $requete = "annee = ".$annee ;
+            
+
+            if (($id_region!='*')&&($id_region!='undefined')) 
+            {
+                $requete = $requete." AND id_region='".$id_region."'" ;
+            }
+
+            if (($id_site_embarquement!='*')&&($id_site_embarquement!='undefined')) 
+            {
+                $requete = $requete." AND id_site_embarquement='".$id_site_embarquement."'" ;
+            }
+
+            if (($id_unite_peche!='*')&&($id_unite_peche!='undefined')) 
+            {
+                $requete = $requete." AND id_unite_peche='".$id_unite_peche."'" ;
+            }
+
+        return $requete ;
+    }
+
 
     
 

@@ -206,25 +206,28 @@ class Analyse_parametrable extends REST_Controller {
                     $total_capture = 0 ;
                     for ($mois=1; $mois <=12 ; $mois++) 
                     {
-                        foreach ($all_espece as $key => $value) 
+                        if ($all_espece) 
                         {
-                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee,$mois, $id_region , $id_district, $id_site_embarquement, $id_unite_peche, $value->id_espece));
-
-                            if ($donnees[0]->capture != null )
+                            foreach ($all_espece as $key => $value) 
                             {
-                                $total_prix = $total_prix + $donnees[0]->prix ;
-                                $total_capture = $total_capture + $donnees[0]->capture ;
-                                $donnees[0]->espece_nom_local = $value->nom_local ;
-                                $donnees[0]->espece_nom_scientifique = $value->nom_scientifique ;
-                                $donnees[0]->espece_code = $value->code ;
-                                $donnees[0]->region = "-" ;
-                                $donnees[0]->mois = $this->affichage_mois($mois) ;
-                                $donnees[0]->site_embarquement = "-" ;
-                                $donnees[0]->unite_peche = "-" ;
-                                $data[$indice] = $donnees[0] ;
-                                $indice++ ;
+                                $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee,$mois, $id_region , $id_district, $id_site_embarquement, $id_unite_peche, $value->id_espece));
+
+                                if ($donnees[0]->capture != null )
+                                {
+                                    $total_prix = $total_prix + $donnees[0]->prix ;
+                                    $total_capture = $total_capture + $donnees[0]->capture ;
+                                    $donnees[0]->espece_nom_local = $value->nom_local ;
+                                    $donnees[0]->espece_nom_scientifique = $value->nom_scientifique ;
+                                    $donnees[0]->espece_code = $value->code ;
+                                    $donnees[0]->region = "-" ;
+                                    $donnees[0]->mois = $this->affichage_mois($mois) ;
+                                    $donnees[0]->site_embarquement = "-" ;
+                                    $donnees[0]->unite_peche = "-" ;
+                                    $data[$indice] = $donnees[0] ;
+                                    $indice++ ;
+                                }
+                                
                             }
-                            
                         }
                         
                     }
@@ -272,24 +275,27 @@ class Analyse_parametrable extends REST_Controller {
                     $total_capture = 0 ;
                     for ($mois=1; $mois <=12 ; $mois++) 
                     {
-                        foreach ($all_site_embarquement as $key_site => $value_site) 
+                        if ($all_site_embarquement) 
                         {
-                            foreach ($all_unite_peche as $key => $value) 
+                            foreach ($all_site_embarquement as $key_site => $value_site) 
                             {
-                                $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee,$mois, $id_region , $id_district, $value_site->id_site_embarquement, $value->id, $id_espece));
-
-                                if ($donnees[0]->capture != null )
+                                foreach ($all_unite_peche as $key => $value) 
                                 {
-                                    $total_prix = $total_prix + $donnees[0]->prix ;
-                                    $total_capture = $total_capture + $donnees[0]->capture ;
-                                    $donnees[0]->region = "-" ;
-                                    $donnees[0]->mois = $this->affichage_mois($mois) ;
-                                    $donnees[0]->site_embarquement = $value_site->libelle ;
-                                    $donnees[0]->unite_peche = $value->libelle ;
-                                    $data[$indice] = $donnees[0] ;
-                                    $indice++ ;
+                                    $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee,$mois, $id_region , $id_district, $value_site->id_site_embarquement, $value->id, $id_espece));
+
+                                    if ($donnees[0]->capture != null )
+                                    {
+                                        $total_prix = $total_prix + $donnees[0]->prix ;
+                                        $total_capture = $total_capture + $donnees[0]->capture ;
+                                        $donnees[0]->region = "-" ;
+                                        $donnees[0]->mois = $this->affichage_mois($mois) ;
+                                        $donnees[0]->site_embarquement = $value_site->libelle ;
+                                        $donnees[0]->unite_peche = $value->libelle ;
+                                        $data[$indice] = $donnees[0] ;
+                                        $indice++ ;
+                                    }
+                                    
                                 }
-                                
                             }
                         }
                         
@@ -394,29 +400,32 @@ class Analyse_parametrable extends REST_Controller {
                     $indice = 0 ;
                     $total_prix = 0 ;
                     $total_capture = 0 ;
-                    foreach ($all_site_embarquement as $key_site => $value_site) 
+                    if ($all_site_embarquement) 
                     {
-                        
-
-                        foreach ($all_unite_peche as $key => $value) 
+                        foreach ($all_site_embarquement as $key_site => $value_site) 
                         {
-                            $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee,$mois, $id_region , $id_district, $value_site->id_site_embarquement, $value->id, $id_espece));
+                            
 
-                            if ($donnees[0]->capture != null )
+                            foreach ($all_unite_peche as $key => $value) 
                             {
-                                $total_prix = $total_prix + $donnees[0]->prix ;
-                                $total_capture = $total_capture + $donnees[0]->capture ;
-                                $donnees[0]->region = "-";
-                                $donnees[0]->site_embarquement = $value_site->libelle ;
-                                $donnees[0]->unite_peche = $value->libelle ;
-                                $data[$indice] = $donnees[0] ;
-                                $indice++ ;
-                            }
+                                $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee,$mois, $id_region , $id_district, $value_site->id_site_embarquement, $value->id, $id_espece));
 
-                               
+                                if ($donnees[0]->capture != null )
+                                {
+                                    $total_prix = $total_prix + $donnees[0]->prix ;
+                                    $total_capture = $total_capture + $donnees[0]->capture ;
+                                    $donnees[0]->region = "-";
+                                    $donnees[0]->site_embarquement = $value_site->libelle ;
+                                    $donnees[0]->unite_peche = $value->libelle ;
+                                    $data[$indice] = $donnees[0] ;
+                                    $indice++ ;
+                                }
+
+                                   
+                                
+                            }
                             
                         }
-                        
                     }
                    /* $data['total_prix'] = $total_prix ;
                     $data['total_capture'] = $total_capture ;*/
