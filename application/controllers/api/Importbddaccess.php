@@ -447,6 +447,7 @@ class Importbddaccess extends CI_Controller {
 		$iter=0;
 		$u_p_s=0;
 		$f_e_c=0;
+		$id_precedent_enqueteur=null;
 		foreach($rowIterator as $row) {
 			 $ligne = $row->getRowIndex ();
 			if($ligne >=2) {
@@ -487,7 +488,7 @@ class Importbddaccess extends CI_Controller {
 						$nbr_jrs_peche_dernier_sem =$cell->getValue();
 					 }
 				}
-				if(isset($region) && $region >"" && isset($site) && $site >"" && isset($date_peche) && $date_peche >"" && isset($enqueteur) && $enqueteur >"" && isset($engin_canoe) && $engin_canoe >"") {
+				if(isset($unique_code) && $unique_code >"") {
 					$region = strtolower($region);
 					$site = strtolower($site);
 					$remplacer=array("");
@@ -593,80 +594,7 @@ class Importbddaccess extends CI_Controller {
 						$liste_unite_peche_site[$u_p_s]["ajout"]=$ajout;
 						$u_p_s=$u_p_s + 1;
 					}
-				}
-			}		
-		}	
-		// FERMETURE FICHIER : désallocation mémoire
-		unset($Excel);
-		unset($objet_read_write);
-		$lien_vers_mon_document_excel = $chemin . "fiche_echantillonnage_capture.xlsx";
-		if(strpos($lien_vers_mon_document_excel,"xlsx") >0) {
-			// pour mise à jour après : G4 = id_fiche_paiement <=> déjà importé => à ignorer
-			$objet_read_write = PHPExcel_IOFactory::createReader('Excel2007');
-			$excel = $objet_read_write->load($lien_vers_mon_document_excel);			 
-			$sheet = $excel->getSheet(0);
-			// pour lecture début - fin seulement
-			$XLSXDocument = new PHPExcel_Reader_Excel2007();
-		} else {
-			$objet_read_write = PHPExcel_IOFactory::createReader('Excel2007');
-			$excel = $objet_read_write->load($lien_vers_mon_document_excel);			 
-			$sheet = $excel->getSheet(0);
-			$XLSXDocument = new PHPExcel_Reader_Excel5();
-		}
-		$Excel = $XLSXDocument->load($lien_vers_mon_document_excel);
-		// get all the row of my file
-		$rowIterator = $Excel->getActiveSheet()->getRowIterator();
-		$remplacer=array("'");
-		$trouver= array("’");
-		$remplacer=array('&eacute;','e','e','a','o','c','_');
-		$trouver= array('é','è','ê','à','ö','ç',' ');
-		$liste_unite_peche=array();
-		$liste_unite_peche_site=array();
-		$liste_fiche_echantillonnage_capture=array();
-		$iter=0;
-		$u_p_s=0;
-		$f_e_c=0;
-		foreach($rowIterator as $row) {
-			 $ligne = $row->getRowIndex ();
-			if($ligne >=2) {
-				 $cellIterator = $row->getCellIterator();
-				 // Loop all cells, even if it is not set
-				 $cellIterator->setIterateOnlyExistingCells(false);
-				 $rowIndex = $row->getRowIndex ();
-				 $a_inserer =0;
-				foreach ($cellIterator as $cell) {
-					 if('G' == $cell->getColumn()) {
-						$region =$cell->getValue();
-						$region_original =$cell->getValue();
-					 } else if('B' == $cell->getColumn()) {
-						$unique_code =$cell->getValue();
-					 } else if('C' == $cell->getColumn()) {
-						$validation =$cell->getValue();
-					 } else if('D' == $cell->getColumn()) {
-						$date_peche =$cell->getValue();
-						if(isset($date_peche) && $date_peche>"") {
-							if(PHPExcel_Shared_Date::isDateTime($cell)) {
-								 $date_peche = date($format='Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($date_peche)); 
-							}
-						} else {
-							$date_peche=null;
-						}	
-					 } else if('H' == $cell->getColumn()) {
-						$site =$cell->getValue();
-						$site_original =$cell->getValue();
-					 } else if('I' == $cell->getColumn()) {
-						$enqueteur =$cell->getValue();
-					 } else if('J' == $cell->getColumn()) {
-						$engin_canoe =$cell->getValue();
-					 } else if('M' == $cell->getColumn()) {
-						$peche_hier =$cell->getValue();
-					 } else if('N' == $cell->getColumn()) {
-						$peche_avant_hier =$cell->getValue();
-					 } else if('O' == $cell->getColumn()) {
-						$nbr_jrs_peche_dernier_sem =$cell->getValue();
-					 }
-				}
-				if(isset($region) && $region >"" && isset($site) && $site >"" && isset($date_peche) && $date_peche >"" && isset($enqueteur) && $enqueteur >"" && isset($engin_canoe) && $engin_canoe >"") {
+					// ETO
 					$site = strtolower($site);
 					$remplacer=array("");
 					$trouver= array(" ");
@@ -680,7 +608,7 @@ class Importbddaccess extends CI_Controller {
 					$xx  = date($date_peche);
 					$date_code_unique  = date($date_peche);
 					//$date_code_unique= $xx->format("d/m/Y");		
-					$retour=$this->ImportbddaccessManager->AjouterFiche_Echantillonnage_Capture($id_unite_peche,$unique_code,$date_peche,$id_site_embarquement,$enqueteur,$id_region,$validation,$region,$site_original,$peche_hier,$peche_avant_hier,$nbr_jrs_peche_dernier_sem,$date_code_unique,$site,$site_sansespace);
+					$retour=$this->ImportbddaccessManager->AjouterFiche_Echantillonnage_Capture($id_unite_peche,$unique_code,$date_peche,$id_site_embarquement,$enqueteur,$id_region,$validation,$region,$site_original,$peche_hier,$peche_avant_hier,$nbr_jrs_peche_dernier_sem,$date_code_unique,$site,$site_sansespace,$id_precedent_enqueteur,$region_original);
 					foreach($retour as $k=>$v) {
 						if($k==0) {
 							$id=$v->id;
@@ -688,6 +616,7 @@ class Importbddaccess extends CI_Controller {
 							$date=$v->date;
 							$id_site_embarquement=$v->id_site_embarquement;
 							$id_enqueteur=$v->id_enqueteur;
+							$id_precedent_enqueteur=$v->id_enqueteur;
 							$id_region=$v->id_region;
 							$date_creation=$v->date_creation;
 							$validation=$v->validation;
@@ -706,7 +635,8 @@ class Importbddaccess extends CI_Controller {
 						$liste_fiche_echantillonnage_capture[$f_e_c]["validation"]=$validation;
 						$f_e_c=$f_e_c + 1;
 					}				
-				}				
+					// HATRETO
+				}
 			}		
 		}	
 		// FERMETURE FICHIER : désallocation mémoire
@@ -813,9 +743,10 @@ class Importbddaccess extends CI_Controller {
 		$remplacer=array('&eacute;','e','e','a','o','c','_');
 		$trouver= array('é','è','ê','à','ö','ç',' ');
 		$liste_fiche_echantillonnage_capturecab=array();
-		$iter=0;
-		$u_p_s=0;
+		// $iter=0;
+		// $u_p_s=0;
 		$f_e_c=0;
+		$id_precedent_enqueteur=null;
 		foreach($rowIterator as $row) {
 			$ligne = $row->getRowIndex ();
 			if($ligne >=2) {
@@ -854,11 +785,115 @@ class Importbddaccess extends CI_Controller {
 						$validation =$cell->getValue();
 					 } 
 				}
-				if(isset($region) && $region >"" && isset($site) && $site >"" && isset($date_peche) && $date_peche >"" && isset($enqueteur) && $enqueteur >"") {
+				if(isset($unique_code) && $unique_code >"") {
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////					
+					$region = strtolower($region);
 					$site = strtolower($site);
 					$remplacer=array("");
 					$trouver= array(" ");
 					$site_sansespace=str_replace($trouver,$remplacer,$site);
+					$retour=$this->ImportbddaccessManager->AjouterUnitePeche($region,$site,$site_sansespace,$engin_canoe,$site_original,$region_original);
+					$id='néant';
+					$id_site=$site;
+					$id_region=null;
+					$ajout='introuvable';
+					$entre_engin="tsy niditra ENGIN";
+					$entre_canoe="tsy niditra CANOE";
+					if($retour) {
+						foreach($retour as $k=>$v) {
+							if($k==0) {
+								$id=$v->id;
+								$id_type_canoe=$v->id_type_canoe;
+								$id_type_engin=$v->id_type_engin;
+								$id_region=$v->id_region;
+								$id_site_embarquement=$v->id_site_embarquement;
+								$code_canoe=$v->code_canoe;
+								$nom_canoe=$v->nom_canoe;
+								$code_engin=$v->code_engin;
+								$libelle_engin=$v->libelle_engin;
+								$ajout_engin=$v->ajout_engin;
+								$ajout_canoe=$v->ajout_canoe;
+								$ajout=$v->ajout;
+								if($ajout_canoe=="ajout") {
+									$nombre_canoe=count($liste_type_canoe);
+									$liste_type_canoe[$nombre_canoe]["id"]=$id_type_canoe;
+									$liste_type_canoe[$nombre_canoe]["code"]=$code_canoe;
+									$liste_type_canoe[$nombre_canoe]["nom"]=$nom_canoe;
+									$entre_canoe="tao ka";
+								}
+								if($ajout_engin=="ajout") {
+									$nombre_canoe=count($liste_type_engin);
+									$liste_type_engin[$nombre_canoe]["id"]=$id_type_engin;
+									$liste_type_engin[$nombre_canoe]["code"]=$code_engin;
+									$liste_type_engin[$nombre_canoe]["libelle"]=$libelle_engin;
+									$entre_engin="tao izy ka";
+								}
+							}
+						}
+					}	
+					$inexistant=true;
+					if($liste_unite_peche) {
+						foreach($liste_unite_peche as $k=>$v) {
+							if($v["id"]==$id) {
+								$inexistant=false;
+							}
+						}	
+					}
+					if($inexistant==true) {
+						$liste_unite_peche[$iter]["id"]=$id;
+						$liste_unite_peche[$iter]["id_type_canoe"]=$id_type_canoe;
+						$liste_unite_peche[$iter]["id_type_engin"]=$id_type_engin;
+						$liste_unite_peche[$iter]["id_site_embarquement"]=$id_site_embarquement;
+						$liste_unite_peche[$iter]["site"]=$site_original;
+						$liste_unite_peche[$iter]["region"]=$region_original;
+						$liste_unite_peche[$iter]["libelle"]=$engin_canoe;
+						$liste_unite_peche[$iter]["ajout"]=$ajout;
+						$liste_unite_peche[$iter]["ajout_canoe"]=$ajout_canoe;
+						$liste_unite_peche[$iter]["code_canoe"]=$code_canoe;
+						$liste_unite_peche[$iter]["nom_canoe"]=$nom_canoe;
+						$liste_unite_peche[$iter]["ajout_engin"]=$ajout_engin;
+						$liste_unite_peche[$iter]["code_engin"]=$code_engin;
+						$liste_unite_peche[$iter]["libelle_engin"]=$libelle_engin;
+						$liste_unite_peche[$iter]["niditra_engin"]=$entre_engin;
+						$liste_unite_peche[$iter]["niditra_canoe"]=$entre_canoe;					
+						$iter=$iter + 1;
+					}
+					// Table unite_peche_site
+					$id_unite_peche =$id;
+					$retour=$this->ImportbddaccessManager->AjouterUnitePecheSite($id_unite_peche,$id_site_embarquement);
+					$id="néant";
+					$libelle="";
+					$id_unite_peche=null;
+					if($retour) {
+						foreach($retour as $k=>$v) {
+							if($k==0) {
+								$id=$v->id;
+								$id_site_embarquement=$v->id_site_embarquement;
+								$id_unite_peche=$v->id_unite_peche;
+								$libelle=$v->libelle;
+							}
+						}	
+					}	
+					$inexistant=true;
+					if($liste_unite_peche_site) {
+						foreach($liste_unite_peche_site as $k=>$v) {
+							if($v["id"]==$id) {
+								$inexistant=false;
+							}
+						}	
+					}
+					if($inexistant==true) {
+						$liste_unite_peche_site[$u_p_s]["id"]=$id;
+						$liste_unite_peche_site[$u_p_s]["id_unite_peche"]=$id_unite_peche;
+						$liste_unite_peche_site[$u_p_s]["id_site_embarquement"]=$id_site_embarquement;
+						$liste_unite_peche_site[$u_p_s]["site"]=$site_original;
+						$liste_unite_peche_site[$u_p_s]["region"]=$region_original;
+						$liste_unite_peche_site[$u_p_s]["libelle"]=$libelle;
+						$liste_unite_peche_site[$u_p_s]["ajout"]=$ajout;
+						$u_p_s=$u_p_s + 1;
+					}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////					
+					
 					// Table fiche_echantillonnage_capture
 					if($validation=="VRAI") {
 						$validation=1;
@@ -868,7 +903,7 @@ class Importbddaccess extends CI_Controller {
 					$xx  = date($date_peche);
 					$date_code_unique  = date($date_peche);
 					//$date_code_unique= $xx->format("d/m/Y");		
-					$retour=$this->ImportbddaccessManager->AjouterFiche_Echantillonnage_CaptureCAB($id_unite_peche,$unique_code,$date_peche,$enqueteur,$id_region,$validation,$region,$site_original,$bateau_actif,$bateau_total,$date_code_unique,$site,$site_sansespace);
+					$retour=$this->ImportbddaccessManager->AjouterFiche_Echantillonnage_CaptureCAB($id_unite_peche,$unique_code,$date_peche,$enqueteur,$id_region,$validation,$region,$site_original,$bateau_actif,$bateau_total,$date_code_unique,$site,$site_sansespace,$id_precedent_enqueteur,$region_original);
 					foreach($retour as $k=>$v) {
 						if($k==0) {
 							$id=$v->id;
@@ -876,6 +911,7 @@ class Importbddaccess extends CI_Controller {
 							$date=$v->date;
 							$id_site_embarquement=$v->id_site_embarquement;
 							$id_enqueteur=$v->id_enqueteur;
+							$id_precedent_enqueteur=$v->id_enqueteur;
 							$id_region=$v->id_region;
 							$date_creation=$v->date_creation;
 							$validation=$v->validation;
@@ -1104,7 +1140,9 @@ class Importbddaccess extends CI_Controller {
 		$liste_retour[0]["enquete_cadre"] = $liste_enquete_cadre;
 		// FERMETURE FICHIER : désallocation mémoire
 		unset($Excel);
+
 		unset($objet_read_write);		
 		echo json_encode("succès");
+
 	}
 } ?>	
