@@ -196,6 +196,43 @@ class Echantillon_model extends CI_Model {
         
     }*/
 
-
+    public function nbrechantillontotal($requet)
+    {
+       
+        $result =  $this->db->select('COUNT(*) as nombre')
+                            ->from($this->table)
+                            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
+                            ->where($requet)
+                            ->where("fiche_echantillonnage_capture.validation = 0")
+                            ->get()
+                            ->result();
+            if($result)
+            {
+                return $result;
+            }else{
+                return null;
+            }                     
+        
+    }
+     public function nbrechantilonpartiel($date_debut,$date_fin,$id_enqueteur,$id_unite_peche)
+    {
+       
+        $result =  $this->db->select('COUNT(*) as nombre')
+                            ->from($this->table)
+                            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
+                            ->where('date BETWEEN "'.$date_debut.'" AND "'.$date_fin.'"')
+                            ->where('id_enqueteur',$id_enqueteur)
+                            ->where('id_unite_peche',$id_unite_peche)
+                            ->where("fiche_echantillonnage_capture.validation = 0")
+                            ->get()
+                            ->result();
+            if($result)
+            {
+                return $result;
+            }else{
+                return null;
+            }                     
+        
+    }
     
 }
