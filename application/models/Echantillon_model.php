@@ -203,7 +203,7 @@ class Echantillon_model extends CI_Model {
                             ->from($this->table)
                             ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
                             ->where($requet)
-                            ->where("fiche_echantillonnage_capture.validation = 0")
+                            ->where("fiche_echantillonnage_capture.validation = 1")
                             ->get()
                             ->result();
             if($result)
@@ -223,7 +223,7 @@ class Echantillon_model extends CI_Model {
                             ->where('date BETWEEN "'.$date_debut.'" AND "'.$date_fin.'"')
                             ->where('id_enqueteur',$id_enqueteur)
                             ->where('id_unite_peche',$id_unite_peche)
-                            ->where("fiche_echantillonnage_capture.validation = 0")
+                            ->where("fiche_echantillonnage_capture.validation = 1")
                             ->get()
                             ->result();
             if($result)

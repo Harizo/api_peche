@@ -87,11 +87,11 @@ class Rapport_enqueteur extends REST_Controller
 	        	setlocale(LC_TIME, "fr_FR");
 	        	$months=ucfirst(strftime("%B", strtotime($annee."/".$mois."/01")));       	
 	        	$nbrweek = $this->weeks($annee, $mois);
-	        	$week[1]=$annee."-".$mois."-01";
+	        	$week[1]="01-".$mois."-".$annee;
 	        	
 	        	for($k=2; $k<=$nbrweek; $k++)
 	        	{
-	        		$week[$k] = date( "Y-m-d" ,strtotime('next Monday', strtotime( $week[$k-1] ) ) );
+	        		$week[$k] = date( "d-m-Y" ,strtotime('next Monday', strtotime( $week[$k-1] ) ) );
 	        	}
 	        	$nbrDate= count($date);
 
@@ -118,13 +118,11 @@ class Rapport_enqueteur extends REST_Controller
 		    			if($totalechant)
 		    			{
 		    				$data[$value][$key2]['total_echan_mois']=$totalechant[0]->nombre;
-		    				$sum_total=$sum_total+$totalechant[0]->nombre;
-		    				
+		    				$sum_total=$sum_total+$totalechant[0]->nombre;    				
 		    			}
 		    			$data[$value][$key2]['unite_peche']=$value2->libelle;
 		    			
 		    			$data[$value][$key2]['nombre']=$nbrechant[0]->nombre;
-
     				}
 	        	}
 	        	
@@ -136,37 +134,11 @@ class Rapport_enqueteur extends REST_Controller
 	        $menu['nomSite']=$nomSite;
 	        $menu['months']=$months;	 
 	        }
-	        /*foreach ($data as $key4 => $value4) {
-	        	foreach ($value4[$annee."-".$mois."-01"] as $key5 => $value5) {
-	        		if ($key4==$annee."-".$mois."-01") {
-	        			$max[$key4][$key5]=$value5;
-	        		}
-	        		
-	        	}
-	        	
-	        }*/
-	        foreach ($data[$annee."-".$mois."-01"] as $key5 => $value5) {
-	        		
-	        			$max[$key5]=$value5;
-	        		
-	        		
-	        	}
 
-    		/*foreach ($all_unite_peche as $key => $value)
-    		{    		
-    			$nbrmax = $this->Nbr_echantillon_enqueteurManager->max_echantillon_enqueteur($id_enqueteur,$value->id,$site_embarquement[0]->id_site);
-	    			$nbrechant= $this->EchantillonManager->nbrechantillon($this->genererequete($annee,$mois,$id_enqueteur,$value->id));
-	    			if($nbrmax)
-	    			{
-	    				$max[$key]['nbr_max']=$nbrmax[0]->max;	
-	    			}
-	    			else
-	    			{
-	    				$max[$key]['nbr_max']=0;	
-	    			}
-	    			$max[$key]['unite_peche']=$value->libelle;
-	    			$max[$key]['nombre']=$nbrechant[0]->nombre;	
-    		}*/
+	        foreach ($data[$annee."-".$mois."-01"] as $key5 => $value5)
+	        {	        		
+	        	$max[$key5]=$value5;	
+	        }
     		
     	}
     	if (count($data)>0) {
@@ -213,17 +185,20 @@ class Rapport_enqueteur extends REST_Controller
 	        }
 	     return $requete;   
     	}
-    	function weeks($month, $year){
+    
+    public function weeks($month, $year)
+    {
         $num_of_days = date("t", mktime(0,0,0,$month,1,$year)); 
         $lastday = date("t", mktime(0, 0, 0, $month, 1, $year)); 
         $no_of_weeks = 0; 
         $count_weeks = 0; 
-        while($no_of_weeks < $lastday){ 
+        while($no_of_weeks < $lastday)
+        { 
             $no_of_weeks += 7; 
             $count_weeks++; 
         } 
-	return $count_weeks;
-}
+		return $count_weeks;
+	}
     public function genererexcel($menu,$week,$nbrweek,$data,$annee, $mois,$date,$sum_total)
     {	require_once 'Classes/PHPExcel.php';
 		require_once 'Classes/PHPExcel/IOFactory.php';
@@ -549,10 +524,11 @@ class Rapport_enqueteur extends REST_Controller
 			$lignecontenu=$ligne;
 			$c++;
 		}
-		$objPHPExcel->getActiveSheet()->mergeCells("A".$lignefin.":AK".$lignefin);		
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$lignefin, 'TOTAL');
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$lignefin, $sum_total);
-		$objPHPExcel->getActiveSheet()->getStyle("A".$lignefin.":AL".$lignefin)->applyFromArray($stylecontenu);
+		$ligne = intval($lignefin)+1;
+		$objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":AK".$ligne);		
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'TOTAL');
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$ligne, $sum_total);
+		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AL".$ligne)->applyFromArray($stylecontenu);
 
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 		$objWriter->save(dirname(__FILE__) . "/../../../../../../assets/excel/fiche_suivi/"."fiche_suivi".".xlsx");
