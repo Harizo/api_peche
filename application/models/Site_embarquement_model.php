@@ -59,7 +59,8 @@ class Site_embarquement_model extends CI_Model {
         }                 
     }	
 
-    public function findAllByFiche($annee) {
+    public function findAllByFiche($annee) 
+    {
         $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
 
         $result =  $this->db->select('*')
@@ -86,7 +87,7 @@ class Site_embarquement_model extends CI_Model {
            
     }
     public function findByIdtab($id)
-    {   $result =  $this->db->select('*')
+    {   $result =  $this->db->select('id as id_site_embarquement,libelle')
                         ->from($this->table)
                         ->where("id", $id)
                         ->get()

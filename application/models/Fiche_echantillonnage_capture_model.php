@@ -208,36 +208,30 @@ class Fiche_echantillonnage_capture_model extends CI_Model
     {
         $result = $this->db->select_sum('capture')
                             ->select_sum('prix')
-                            /*->select('id_unite_peche,id_region,id_site_embarquement,date')
-                            ->distinct()
-                            ->from('espece_capture')
-                            ->join('echantillon', 'espece_capture.id_echantillon = echantillon.id') 
-                            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')                        
-                            ->where($requete)                          
-                            ->where('fiche_echantillonnage_capture.validation',1)
-                         
-                            ->get()
-                            ->result();*/
-
-                            //->select('id_unite_peche,id_region,id_site_embarquement,date')
-                            
                             ->from('fiche_echantillonnage_capture')
-                            
                             ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
-                            ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                       
-                                                  
+                            ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                                      
                             ->where($requete)                          
-                            ->where('fiche_echantillonnage_capture.validation',1)
-                         
+                            ->where('fiche_echantillonnage_capture.validation',1)                         
                             ->get()
                             ->result();
-           if($result)
-            {
-                return $result;
-            }else{
-                return null;
-            }
-    }            
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+
+    }
+                
+
+
+
+
 
 public function max_id()
 {   

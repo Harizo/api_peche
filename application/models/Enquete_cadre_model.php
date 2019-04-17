@@ -70,13 +70,14 @@ class Enquete_cadre_model extends CI_Model {
         }                 
     }
 
-    public function findByannee_site_unite_peche_region($annee, $id_region, $id_unite_peche) {
+    public function findByannee_site_unite_peche_region($requete) {
         $result =  $this->db->select_sum('nbr_unite_peche')
                         ->from($this->table)
-                        ->where("annee", $annee)
+                        ->where($requete)
+                        /*->where("annee", $annee)
                         ->where("id_region", $id_region)
                        // ->where("id_site_embarquement", $id_site_embarquement)
-                        ->where("id_unite_peche", $id_unite_peche)
+                        ->where("id_unite_peche", $id_unite_peche)*/
                         ->order_by('id')
                         ->get()
                         ->result();

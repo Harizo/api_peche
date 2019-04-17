@@ -363,7 +363,7 @@ class Importbddaccess_model extends CI_Model
 			}	
 		return $id;		
 	}
-	public function AjouterFiche_Echantillonnage_Capture($id_unite_peche,$unique_code,$date_peche,$id_site_embarquement,$enqueteur,$id_region,$validation,$region,$site_original,$peche_hier,$peche_avant_hier,$nbr_jrs_peche_dernier_sem,$date_code_unique,$site,$site_sansespace) {
+	public function AjouterFiche_Echantillonnage_Capture($id_unite_peche,$unique_code,$date_peche,$id_site_embarquement,$enqueteur,$id_region,$validation,$region,$site_original,$peche_hier,$peche_avant_hier,$nbr_jrs_peche_dernier_sem,$date_code_unique,$site,$site_sansespace,$id_precedent_enqueteur,$region_original) {
 		$requete1='select id,libelle from site_embarquement where (lower(libelle)="'.$site.'" or lower(libelle)="'.$site_sansespace.'") and id_region='.$id_region;
 		$query1 = $this->db->query($requete1);
         $retour_site = $query1->result();	
@@ -406,9 +406,18 @@ class Importbddaccess_model extends CI_Model
 					}				
 				}				
 			}
-			$req="select id,count(*) as nombre from fiche_echantillonnage_capture where date='".$date_peche."' and id_site_embarquement=".$id_site_embarquement." and id_region=".$id_region." group by id";
-			$que=$this->db->query($req);
-			$retour_testexistence = $que->result();	
+			if($id_enqueteur==null) {
+				$id_enqueteur=$id_precedent_enqueteur;
+			}
+			if($id_enqueteur!=null) {
+				$req="select id,count(*) as nombre from fiche_echantillonnage_capture where date='".$date_peche."' and id_site_embarquement=".$id_site_embarquement." and id_region=".$id_region." and id_enqueteur=".$id_enqueteur." group by id";
+				$que=$this->db->query($req);
+				$retour_testexistence = $que->result();	
+			} else {	
+				$req="select id,count(*) as nombre from fiche_echantillonnage_capture where date='".$date_peche."' and id_site_embarquement=".$id_site_embarquement." and id_region=".$id_region." group by id";
+				$que=$this->db->query($req);
+				$retour_testexistence = $que->result();	
+			}	
 			$nombre=0;
 			$id_fiche=null;
 			if($retour_testexistence) {
@@ -419,7 +428,7 @@ class Importbddaccess_model extends CI_Model
 					}
 				}
 			}	
-			$code_unique=$region."-".$site_original."-".$date_code_unique;
+			$code_unique=$region_original."-".$site_original."-".$date_code_unique."-".$id_enqueteur;
 			if($nombre==0) {
 				$requete="insert into fiche_echantillonnage_capture (code_unique,date,id_site_embarquement,id_enqueteur,id_region,date_creation,validation) values ('".$code_unique."','".$date_peche."','".$id_site_embarquement."','".$id_enqueteur."','".$id_region."','".$date_peche."','".$validation."')";
 				$query = $this->db->query($requete);
@@ -468,7 +477,7 @@ class Importbddaccess_model extends CI_Model
 			$que=$this->db->query($req);	
 		return $id;		
 	}
-	public function AjouterFiche_Echantillonnage_CaptureCAB($id_unite_peche,$unique_code,$date_peche,$enqueteur,$id_region,$validation,$region,$site_original,$bateau_actif,$bateau_total,$date_code_unique,$site,$site_sansespace) {
+	public function AjouterFiche_Echantillonnage_CaptureCAB($id_unite_peche,$unique_code,$date_peche,$enqueteur,$id_region,$validation,$region,$site_original,$bateau_actif,$bateau_total,$date_code_unique,$site,$site_sansespace,$id_precedent_enqueteur,$region_original) {
 		/*$req="delete from fiche_echantillonnage_capture_temporaire;";
 		$quer = $this->db->query($req);
 		$req="alter table fiche_echantillonnage_capture_temporaire AUTO_INCREMENT =1;";
@@ -515,7 +524,10 @@ class Importbddaccess_model extends CI_Model
 					}				
 				}				
 			}
-			$req="select id,count(*) as nombre from fiche_echantillonnage_capture where date='".$date_peche."' and id_site_embarquement=".$id_site_embarquement." and id_region=".$id_region." group by id";
+			if($id_enqueteur==null) {
+				$id_enqueteur=$id_precedent_enqueteur;
+			}
+			$req="select id,count(*) as nombre from fiche_echantillonnage_capture where date='".$date_peche."' and id_site_embarquement=".$id_site_embarquement." and id_region=".$id_region." and id_enqueteur=".$id_enqueteur." group by id";
 			$que=$this->db->query($req);
 			$retour_testexistence = $que->result();	
 			$nombre=0;
@@ -529,7 +541,7 @@ class Importbddaccess_model extends CI_Model
 				}
 			}	
 
-			$code_unique=$region."-".$site_original."-".$date_code_unique;
+			$code_unique=$region_original."-".$site_original."-".$date_code_unique."-".$id_enqueteur;
 			if($nombre==0) {
 				$requete="insert into fiche_echantillonnage_capture (code_unique,date,id_site_embarquement,id_enqueteur,id_region,date_creation,validation) values ('".$code_unique."','".$date_peche."','".$id_site_embarquement."','".$id_enqueteur."','".$id_region."','".$date_peche."','".$validation."')";
 				$query = $this->db->query($requete);
