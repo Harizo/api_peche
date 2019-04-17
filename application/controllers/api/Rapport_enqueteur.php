@@ -97,6 +97,7 @@ class Rapport_enqueteur extends REST_Controller
 
 	        	$nbrmax=array();
 	        	$totalechant=array();
+	        	$sum_total=0;
 	        	foreach ($date as $key => $value)
 	        	{	        		
 	        		foreach ($all_unite_peche as $key2 => $value2)
@@ -116,7 +117,9 @@ class Rapport_enqueteur extends REST_Controller
 		    			}
 		    			if($totalechant)
 		    			{
-		    				$data[$value][$key2]['total_echan_mois']=$totalechant[0]->nombre;	
+		    				$data[$value][$key2]['total_echan_mois']=$totalechant[0]->nombre;
+		    				$sum_total=$sum_total+$totalechant[0]->nombre;
+		    				
 		    			}
 		    			$data[$value][$key2]['unite_peche']=$value2->libelle;
 		    			
@@ -124,6 +127,7 @@ class Rapport_enqueteur extends REST_Controller
 
     				}
 	        	}
+	        	
 	        $menu=array();
 	        $menu['titre']='FICHE DE SUIVI NOMBRE D\'ECHANTILLON';	
 	        $menu['repertoire']=$repertoire;	
@@ -166,7 +170,7 @@ class Rapport_enqueteur extends REST_Controller
     		
     	}
     	if (count($data)>0) {
-    		$this->genererexcel($menu,$week,$nbrweek,$data,$annee,$mois,$date);
+    		$this->genererexcel($menu,$week,$nbrweek,$data,$annee,$mois,$date,$sum_total);
             $this->response([
                 'status' => TRUE,
                 'response' => $data,
@@ -220,7 +224,7 @@ class Rapport_enqueteur extends REST_Controller
         } 
 	return $count_weeks;
 }
-    public function genererexcel($menu,$week,$nbrweek,$data,$annee, $mois,$date)
+    public function genererexcel($menu,$week,$nbrweek,$data,$annee, $mois,$date,$sum_total)
     {	require_once 'Classes/PHPExcel.php';
 		require_once 'Classes/PHPExcel/IOFactory.php';
 
@@ -476,7 +480,7 @@ class Rapport_enqueteur extends REST_Controller
 		$c=1;
 		$lignecontenu=$ligne;
 		$nbrDate= count($date);
-		
+		$lignefin=0;
 		foreach ($date as $dat => $valuedate) {			
 			foreach ($data[$valuedate] as $key => $valu) {
 				if($valuedate==$annee."-".$mois."-01")
@@ -541,11 +545,15 @@ class Rapport_enqueteur extends REST_Controller
 				$objPHPExcel->getActiveSheet()->getStyle("A".$lignecontenu.":AL".$lignecontenu)->applyFromArray($stylecontenu);
 				$lignecontenu++;				
 			}
+			$lignefin=$lignecontenu;
 			$lignecontenu=$ligne;
 			$c++;
 		}
-			
-	
+		$objPHPExcel->getActiveSheet()->mergeCells("A".$lignefin.":AK".$lignefin);		
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$lignefin, 'TOTAL');
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$lignefin, $sum_total);
+		$objPHPExcel->getActiveSheet()->getStyle("A".$lignefin.":AL".$lignefin)->applyFromArray($stylecontenu);
+
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 		$objWriter->save(dirname(__FILE__) . "/../../../../../../assets/excel/fiche_suivi/"."fiche_suivi".".xlsx");
 
