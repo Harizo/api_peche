@@ -153,7 +153,7 @@ class Utilisateurs extends REST_Controller {
         }
 
         //status success + data
-        if (count($data)>0) {
+        if (($data)) {
             $this->response([
                 'status' => TRUE,
                 'response' => $data,
