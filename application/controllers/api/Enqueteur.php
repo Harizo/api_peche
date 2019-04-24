@@ -31,12 +31,12 @@ class Enqueteur extends REST_Controller {
             {
                 $data = array();
                $site_embarquement = $this->EnqueteurManager->findSiteByEnqueteur($cle_etrangere);
-               $site['id_site']=$site_embarquement[0]->id_site;
-               $site['libelle']=$site_embarquement[0]->libelle;
-               $site['region']=$site_embarquement[0]->region;
+               $site['id_site'] = $site_embarquement[0]->id_site;
+               $site['libelle'] = $site_embarquement[0]->libelle;
+               $site['region'] = $site_embarquement[0]->region;
                $unite_peche=$this->EnqueteurManager->findUniteBySite_embarquement($site_embarquement[0]->id_site);
-               foreach ($unite_peche as $key => $value) {
-
+               foreach ($unite_peche as $key => $value)
+               {
                    $data[$key]['id']=$value->id;
                    $data[$key]['libelle']=$value->libelle;
                }

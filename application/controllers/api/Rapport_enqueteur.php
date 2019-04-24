@@ -28,10 +28,13 @@ class Rapport_enqueteur extends REST_Controller
     	$prenom_enqueteur = $this->get('prenom_enqueteur');
     	$id_unite_peche = $this->get('id_unite_peche');
     	$repertoire = $this->get('repertoire');
+    	$date_fin = $this->get('date_fin');
+    	$date_debut = $this->get('date_debut');
     	$data = array();
     	$max = array();
-    	if($menu=='raportenqueteur')
-    	{	if($id_enqueteur)
+    	if($menu=='fichesuivienqueteur')
+    	{	
+    		if($id_enqueteur)
 	        {
 	            $site_embarquement = $this->EnqueteurManager->findSiteByEnqueteur($id_enqueteur);
 	        }
@@ -84,7 +87,8 @@ class Rapport_enqueteur extends REST_Controller
 		        	}
 		        	$date[$i] = $annee."-".$mois."-".$jour;
 	        	}
-	        	setlocale(LC_TIME, "fr_FR");
+	        	//setlocale(LC_TIME, "fr_FR");
+	        	setlocale(LC_TIME, 'french', 'fr_FR', 'fra');
 	        	$months=ucfirst(strftime("%B", strtotime($annee."/".$mois."/01")));       	
 	        	$nbrweek = $this->weeks($annee, $mois);
 	        	$week[1]="01-".$mois."-".$annee;
@@ -139,24 +143,31 @@ class Rapport_enqueteur extends REST_Controller
 	        {	        		
 	        	$max[$key5]=$value5;	
 	        }
-    		
+    	$this->genererexcel($menu,$week,$nbrweek,$data,$annee,$mois,$date,$sum_total);	
     	}
-    	if (count($data)>0) {
-    		$this->genererexcel($menu,$week,$nbrweek,$data,$annee,$mois,$date,$sum_total);
-            $this->response([
-                'status' => TRUE,
-                'response' => $data,
-                'max' => $max,
-                'message' => 'Get data success',
-            ], REST_Controller::HTTP_OK);
-        } else {
-            $this->response([
-                'status' => FALSE,
-                'response' => array(),
-                'max' => array(),
-                'message' => 'No data were found'
-            ], REST_Controller::HTTP_OK);
-        }
+
+    	/*if($menu=='filtredate')
+    	{	$data=array();
+    		if($id_enqueteur)
+	        {
+	            $site_embarquement = $this->EnqueteurManager->findSiteByEnqueteur($id_enqueteur);
+	        }
+	        if($site_embarquement)
+	        {
+	        	$all_unite_peche=$this->EnqueteurManager->findUniteBySite_embarquement($site_embarquement[0]->id_site);
+	        	$region=strtoupper($site_embarquement[0]->region);
+	        	$nomSite=strtoupper($site_embarquement[0]->libelle);
+	        }
+	        foreach ($all_unite_peche as $key => $value)
+		    { 
+    			$nbrechant= $this->EchantillonManager->nbrechantilonpartiel($date_debut,$date_fin,$id_enqueteur,$value->id);
+    			$data[$key]['unite_peche']=$value;
+    			$data[$key]['nombre']=$nbrechant[0]->nombre;
+    		}
+    		$site =array();
+    		$site['region']=$region;
+    		$site['site_embarquement']= $nomSite; 
+    	}*/
         
 	}
 	public function genererequete($annee,$mois,$id_enqueteur,$id_unite_peche)
@@ -172,7 +183,7 @@ class Rapport_enqueteur extends REST_Controller
 	        }
 	     return $requete;   
     	}
-    public function generequete($dated,$datef,$id_enqueteur,$id_unite_peche)
+    /*public function generequete($dated,$datef,$id_enqueteur,$id_unite_peche)
     	{
     		$requete = "date BETWEEN '".$dated." AND ".$datef."'";
     		if($id_enqueteur)
@@ -184,7 +195,7 @@ class Rapport_enqueteur extends REST_Controller
 	            $requete = $requete." AND id_unite_peche='".$id_unite_peche."'"; 
 	        }
 	     return $requete;   
-    	}
+    	}*/
     
     public function weeks($month, $year)
     {
@@ -203,6 +214,7 @@ class Rapport_enqueteur extends REST_Controller
     {	require_once 'Classes/PHPExcel.php';
 		require_once 'Classes/PHPExcel/IOFactory.php';
 
+		$nom_file='fiche_suivi';
     	$directoryName = dirname(__FILE__) ."/../../../../../../assets/excel/".$menu['repertoire'];
 		
 		//Check if the directory already exists.
@@ -530,8 +542,26 @@ class Rapport_enqueteur extends REST_Controller
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$ligne, $sum_total);
 		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AL".$ligne)->applyFromArray($stylecontenu);
 
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-		$objWriter->save(dirname(__FILE__) . "/../../../../../../assets/excel/fiche_suivi/"."fiche_suivi".".xlsx");
+		try
+		{
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		    $objWriter->save(dirname(__FILE__) . "/../../../../../../assets/excel/fiche_suivi/".$nom_file.".xlsx");
+		    
+		    $this->response([
+                'status' => TRUE,
+                'response' => $nom_file.".xlsx",
+                'message' => 'Get file success',
+            ], REST_Controller::HTTP_OK);
+		  
+		} 
+		catch (PHPExcel_Writer_Exception $e)
+		{
+		    $this->response([
+	              'status' => FALSE,
+	               'response' => array(),
+	               'message' => "Something went wrong: ". $e->getMessage(),
+	            ], REST_Controller::HTTP_OK);
+		}
 
     }
 
