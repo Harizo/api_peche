@@ -59,6 +59,26 @@ class Site_embarquement_model extends CI_Model {
         }                 
     }	
 
+
+    public function findAllByRegion($id_region,$annee) {
+        $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id_site_embarquement = site_embarquement.id')
+                        ->where("site_embarquement.id_region", $id_region)
+                        ->where($requete) 
+                        ->group_by('site_embarquement.id')
+                        ->order_by('libelle')
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }   
+
     public function findAllByFiche($annee) 
     {
         $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;

@@ -227,6 +227,132 @@ class Fiche_echantillonnage_capture_model extends CI_Model
 
 
     }
+
+    public function som_capture_totales_journaliere($requete)
+    {
+        $result = $this->db/*->select_sum('capture')
+                            ->select_sum('capture*2 as s')*/
+                            ->select('unite_peche.libelle as libelle_unite_peche,date,site_embarquement.libelle,SUM(espece_capture.capture ) as capture,SUM(espece_capture.capture/1) as cpue')
+                            ->from('fiche_echantillonnage_capture')
+                            ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
+                            ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                  
+                            ->join('unite_peche', 'echantillon.id_unite_peche = unite_peche.id')                  
+                            ->join('site_embarquement', 'fiche_echantillonnage_capture.id_site_embarquement = site_embarquement.id')                  
+                            ->group_by('id_site_embarquement')                          
+                            ->group_by('id_unite_peche')                          
+                            ->group_by('date')                          
+                            ->where($requete)                          
+                            //->where($requete)                          
+                            ->where('fiche_echantillonnage_capture.validation',1)                         
+                            ->get()
+                            ->result();
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+
+    }
+
+    public function som_capture_totales_average($requete)
+    {
+        
+       // $array = array('fiche_echantillonnage_capture.date >=' => $date, 'fiche_echantillonnage_capture.date <=' => $datef);
+        $result = $this->db/*->select_sum('capture')
+                            ->select_sum('capture*2 as s')*/
+                            ->select('fiche_echantillonnage_capture.id_region as id_region,,unite_peche.libelle as libelle_unite_peche,unite_peche.id as id_unite_peche,espece_capture.capture as xxx,COUNT(*) as nombre,SUM(espece_capture.capture/1) as somme,AVG(espece_capture.capture/1) as moyenne')
+                            ->from('fiche_echantillonnage_capture')
+                            ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
+                            ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                  
+                            ->join('unite_peche', 'echantillon.id_unite_peche = unite_peche.id')                  
+                            //->join('site_embarquement', 'fiche_echantillonnage_capture.id_site_embarquement = site_embarquement.id')                  
+                            ->group_by('fiche_echantillonnage_capture.id_region')                          
+                            ->group_by('id_unite_peche')                          
+                                                
+                            ->where($requete)                          
+                                                  
+                            //->where($requete)                          
+                            ->where('fiche_echantillonnage_capture.validation',1)                         
+                            ->get()
+                            ->result();
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+
+    }
+
+    public function findAll_unite_peche_date($requete,$id_region,$id_unite_peche) {
+        $result = $this->db ->select('capture')
+                            ->from('fiche_echantillonnage_capture')
+                            ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
+                            ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                  
+                            ->join('unite_peche', 'echantillon.id_unite_peche = unite_peche.id')                  
+                                           
+                            //->group_by('fiche_echantillonnage_capture.id_region')                          
+                           // ->group_by('id_unite_peche')                          
+                                                
+                            ->where($requete)                          
+                                                  
+                            //->where($requete)                          
+                            ->where('fiche_echantillonnage_capture.id_region',$id_region)                         
+                            ->where('echantillon.id_unite_peche',$id_unite_peche)                         
+                           // ->where('fiche_echantillonnage_capture.validation',1)                         
+                            ->get()
+                            ->result();
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }               
+    }
+
+    public function ecart_type($requete,$id_region,$id_unite_peche) {
+        $result = $this->db/*->select_sum('capture')*/
+                            ->select('STDDEV(capture) as ecart_type')
+                            ->from('fiche_echantillonnage_capture')
+                            ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
+                            ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                  
+                            ->join('unite_peche', 'echantillon.id_unite_peche = unite_peche.id')                  
+                                           
+                            //->group_by('fiche_echantillonnage_capture.id_region')                          
+                           // ->group_by('id_unite_peche')                          
+                                                
+                            ->where($requete)                          
+                                                  
+                            //->where($requete)                          
+                            ->where('fiche_echantillonnage_capture.id_region',$id_region)                         
+                            ->where('echantillon.id_unite_peche',$id_unite_peche)                         
+                            ->where('fiche_echantillonnage_capture.validation',1)                         
+                            ->get()
+                            ->result();
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }               
+    }
+
+
                 
 
 

@@ -203,10 +203,10 @@ class Reporting extends REST_Controller {
                 $requete = $requete." AND id_region='".$id_region."'" ;
             }
 
-            if (($id_district!='*')&&($id_district!='undefined')) 
+            /*if (($id_district!='*')&&($id_district!='undefined')) 
             {
                 $requete = $requete." AND id_district='".$id_district."'" ;
-            }
+            }*/
 
             if (($id_site_embarquement!='*')&&($id_site_embarquement!='undefined')) 
             {

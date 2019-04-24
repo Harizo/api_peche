@@ -9,7 +9,7 @@ class Analyse_parametrable extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-       // $this->load->model('site_model', 'SiteManager');
+       
         $this->load->model('fiche_echantillonnage_capture_model', 'Fiche_echantillonnage_captureManager');
         $this->load->model('unite_peche_model', 'Unite_pecheManager');
         $this->load->model('region_model', 'RegionManager');
