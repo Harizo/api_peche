@@ -10,11 +10,14 @@ class Enqueteur extends REST_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('enqueteur_model', 'EnqueteurManager');
+        $this->load->model('unite_peche_site_model', 'Unite_peche_siteManager');
         $this->load->model('region_model', 'RegionManager');
     }
 
     public function index_get() {
         $id = $this->get('id');
+        $cle_etrangere = $this->get('cle_etrangere');
+        $site = array();
             if ($id) 
             {
                 $data = array();
@@ -23,6 +26,20 @@ class Enqueteur extends REST_Controller {
                 $data['prenom'] = $enqueteur->prenom;
                 $data['nom'] = $enqueteur->nom;
                 $data['telephone'] = $enqueteur->telephone;
+            }
+            elseif($cle_etrangere)
+            {
+                $data = array();
+               $site_embarquement = $this->EnqueteurManager->findSiteByEnqueteur($cle_etrangere);
+               $site['id_site'] = $site_embarquement[0]->id_site;
+               $site['libelle'] = $site_embarquement[0]->libelle;
+               $site['region'] = $site_embarquement[0]->region;
+               $unite_peche=$this->EnqueteurManager->findUniteBySite_embarquement($site_embarquement[0]->id_site);
+               foreach ($unite_peche as $key => $value)
+               {
+                   $data[$key]['id']=$value->id;
+                   $data[$key]['libelle']=$value->libelle;
+               }
             } 
             else 
             {
@@ -39,6 +56,7 @@ class Enqueteur extends REST_Controller {
                 } 
                 else
                     $data = array();
+
             }
         
         if (count($data)>0) {
@@ -54,6 +72,20 @@ class Enqueteur extends REST_Controller {
                 'message' => 'No data were found'
             ], REST_Controller::HTTP_OK);
         }
+        if (count($site)>0) {
+            $this->response([
+                'status' => TRUE,
+                'site' => $site,
+                'message' => 'Get site success',
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'response' => array(),
+                'message' => 'No site were found'
+            ], REST_Controller::HTTP_OK);
+        }
+
     }
     public function index_post() {
         $id = $this->post('id') ;

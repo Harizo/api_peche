@@ -87,6 +87,26 @@ class Nbr_echantillon_enqueteur_model extends CI_Model
             return $q->row();
         }
         return null;
-    }  
+    }
+    public function max_echantillon_enqueteur($id_enqueteur, $id_unite_peche, $id_site_embarquement)
+    {
+        $result =  $this->db->select('nbr_max_echantillon as max')
+                                ->from($this->table)
+                                ->where("id_enqueteur", $id_enqueteur )
+                                ->where("id_unite_peche", $id_unite_peche)
+                                ->where("id_site_embarquement", $id_site_embarquement )
+                                ->order_by('id_enqueteur')
+                                ->get()
+                                ->result();
+            if($result)
+            {
+                return $result;
+            }
+            else
+            {
+            return null;
+            }                 
+    }
+
 
 }

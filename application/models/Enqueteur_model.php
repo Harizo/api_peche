@@ -59,4 +59,60 @@ class Enqueteur_model extends CI_Model {
             return $q->row();
         } 
     }
+
+    public function rapportenqueteur($date,$id_enqueteur)
+    {               
+        $result =  $this->db->count_all('*')
+                        ->from('echantillon')
+                        ->join('fiche_echantillonnnage_capture','fiche_echantillonnnage_capture.id = echantillon.id_fiche_echantillonnnage_capture')
+                        ->where('date',$date)
+                        ->where('id_enqueteur',$id_enqueteur)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+    public function findSiteByEnqueteur($cle_etranger)
+    {
+        $result =  $this->db->select('site_embarquement.id as id_site, site_embarquement.libelle as libelle, region.nom as region')
+                                ->from('site_enqueteur')
+                                ->join('site_embarquement', 'site_enqueteur.id_site = site_embarquement.id', 'inner')
+                                ->join('region', 'region.id= site_embarquement.id_region', 'inner')
+                                ->where("id_enqueteur", $cle_etranger )
+                                ->order_by('id_enqueteur')
+                                ->get()
+                                ->result();
+            if($result)
+            {
+                return $result;
+            }
+            else
+            {
+            return null;
+            }
+
+    }
+    public function findUniteBySite_embarquement($cle_site)
+    {
+        $result =  $this->db->select('unite_peche.id as id,unite_peche.libelle as libelle')
+                                ->from('unite_peche_site')
+                                ->join('unite_peche', 'unite_peche_site.id_unite_peche = unite_peche.id', 'inner')
+                                ->where("id_site_embarquement", $cle_site )
+                                ->order_by('id_site_embarquement')
+                                ->get()
+                                ->result();
+            if($result)
+            {
+                return $result;
+            }
+            else
+            {
+            return null;
+            }
+    }
+
 }
