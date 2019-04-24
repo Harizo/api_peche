@@ -256,12 +256,12 @@ class Rapport_agent_enqueteur extends REST_Controller
 		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($styleTitre);
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, "MINISTERE DES RESSOURCES HALIEUTIQUES ET DE LA PECHE");
 
-		$ligne++;
+		$ligne=$ligne+2;
 		$objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":D".$ligne);
 		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($styleTitre);
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, "*********************************");
 
-		$ligne++;
+		$ligne=$ligne+2;
 		$objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":D".$ligne);
 		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($styleTitrenumprojet);
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, "Deuxième Projet de Gouvernance des Pêches et de Croissance Partagée dans le Sud-Ouest de l'Océan Indien(SWIOFish2)");
@@ -274,7 +274,7 @@ class Rapport_agent_enqueteur extends REST_Controller
 
 		$ligne=$ligne+2;
 		//$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($stylesousTitre);
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, "Noms des agent:");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, "Noms des agents:");
 
 		$ligne++;
 		$objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":B".$ligne);
@@ -316,6 +316,15 @@ class Rapport_agent_enqueteur extends REST_Controller
 		$ligne++;	
 		}		
 		
+		$ligne++;
+		$objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":B".$ligne);
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, "Problèmes rencontrés et solutions adoptées: ");
+		
+		$ligne=$ligne+4;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, "Visa du superviseur");
+		
+		$ligne++;
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, "Date:");
 		try
 		{
 			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
