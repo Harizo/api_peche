@@ -14,10 +14,12 @@ class Nbr_echantillon_enqueteur extends REST_Controller {
         $this->load->model('unite_peche_model', 'Unite_pecheManager');
         $this->load->model('site_embarquement_model', 'Site_embarquementManager');
         $this->load->model('enqueteur_model', 'EnqueteurManager');
+        $this->load->model('unite_peche_site_model', 'Unite_peche_site_Manager');
     }
     public function index_get()
     {
         $id = $this->get('id');
+        $menus = $this->get('menus');
 	       if ($id)
             {   $data = array();
                 $nbr_echantillon_enqueteur = $this->Nbr_echantillon_enqueteurManager->findById($id);
@@ -33,6 +35,17 @@ class Nbr_echantillon_enqueteur extends REST_Controller {
                 $site_embarquement = $this->Site_embarquementManager->findById($nbr_echantillon_enqueteur->id_site_embarquement);                
                 $data['site_embarquement'] =$site_embarquement;
                 
+            }
+            elseif ($menus=='nbr_echantillon')
+            {
+                $id_unite_pech       = $this->get('id_unite_peche');
+                $id_site_embarquemen = $this->get('id_site_embarquement');
+                
+                $data['nbr_echantillon_enqueteur_predefini'] =0;             
+                   
+                $nbr_echantillon_predefini = $this->Unite_peche_site_Manager->findnbrechantillonBypecheandsite($id_unite_pech,$id_site_embarquemen);
+                
+                $data['nbr_echantillon_predefini'] = $nbr_echantillon_predefini[0]->nbr_echantillon;
             }            
             else
             {	

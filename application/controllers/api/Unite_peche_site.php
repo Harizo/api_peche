@@ -15,6 +15,8 @@ class Unite_peche_site extends REST_Controller {
         $this->load->model('site_embarquement_model', 'Site_embarquementManager');
         $this->load->model('type_canoe_model', 'Type_canoeManager');
         $this->load->model('type_engin_model', 'Type_enginManager');
+        $this->load->model('echantillon_model', 'EchantillonManager');
+        $this->load->model('nbr_echantillon_enqueteur_model', 'Nbr_echantillon_enqueteurManager');
         
     }
     public function index_get()
@@ -22,6 +24,7 @@ class Unite_peche_site extends REST_Controller {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
         $cle_site = $this->get('cle_site');
+        $menus = $this->get('menus');       
 	
         if($cle_etrangere)
         {
@@ -44,61 +47,100 @@ class Unite_peche_site extends REST_Controller {
                     $data = array();
         }
         elseif ($id)
-            {   $data = array();
-                $unite_peche_site = $this->Unite_peche_site_Manager->findById($id);
-                $data['id'] = $unite_peche_site->id;
-                $data['nbr_echantillon'] = $unite_peche->nbr_echantillon;
+        {   $data = array();
+            $unite_peche_site = $this->Unite_peche_site_Manager->findById($id);
+            $data['id'] = $unite_peche_site->id;
+            $data['nbr_echantillon'] = $unite_peche->nbr_echantillon;
             
-                $unite_peche = $this->Unite_pecheManager->findById($unite_peche_site->id_unite_peche);
-                $site_embarquement = $this->Site_embarquementManager->findById($unite_peche_site->id_site_embarquement);
-                $data['unite_peche'] =$unite_peche;
-                $data['site_embarquement'] =$site_embarquement;
+            $unite_peche = $this->Unite_pecheManager->findById($unite_peche_site->id_unite_peche);
+            $site_embarquement = $this->Site_embarquementManager->findById($unite_peche_site->id_site_embarquement);
+            $data['unite_peche'] =$unite_peche;
+            $data['site_embarquement'] =$site_embarquement;
                 
-            }elseif($cle_site){
-                $taiza="findclesite no nataony";
-                $menu = $this->Unite_peche_site_Manager->findAllBySite_embarquementCanoeEngin($cle_site);
-                if ($menu)
-                {   foreach ($menu as $key => $value)
-                    {   $site_embarquement = array();
-                        $type_canoe = array();
-                        $type_engin = array();
-                        $unite_peche = array();
+        }
+        elseif($cle_site)
+        {
+            $taiza="findclesite no nataony";
+            $menu = $this->Unite_peche_site_Manager->findAllBySite_embarquementCanoeEngin($cle_site);
+            if ($menu)
+            {   
+                foreach ($menu as $key => $value)
+                {   $site_embarquement = array();
+                    $type_canoe = array();
+                    $type_engin = array();
+                    $unite_peche = array();
 
-                        $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
-                        $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
-                        $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
+                    $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
+                    $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
+                    $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
                         
-                        $data[$key]['id'] = $value->id;
-                        $data[$key]['nbr_echantillon'] = $value->nbr_echantillon;
-                        $data[$key]['type_canoe'] = $type_canoe;
-                        $data[$key]['type_engin'] = $type_engin;
-                        $data[$key]['unite_peche'] = $unite_peche;
+                    $data[$key]['id'] = $value->id;
+                    $data[$key]['nbr_echantillon'] = $value->nbr_echantillon;
+                    $data[$key]['type_canoe'] = $type_canoe;
+                    $data[$key]['type_engin'] = $type_engin;
+                    $data[$key]['unite_peche'] = $unite_peche;
                           
-                    }
-                } else
-                        $data = array();
+                }
+            } else
+                $data = array();
 
-            }
+        }
+        elseif ($menus=='nbr_echantillon')
+        {   
+            $annee               = $this->get('annee');
+            $id_enqueteur        = $this->get('id_enqueteur');
+            $id_unite_pech       = $this->get('id_unite_peche');
+            $id_site_embarquemen = $this->get('id_site_embarquement');
             
-            else
-            {	
-                $menu = $this->Unite_peche_site_Manager->findAll();
-                if ($menu)
-                {   foreach ($menu as $key => $value)
-                    {   
-                        $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
-                        $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
+            $data['nbr_echantillon_actuel']              = 0; 
+            $data['nbr_echantillon_enqueteur_actuel']    = 0;
+            $data['nbr_echantillon_enqueteur_predefini'] = 0;             
+               
+            $nbr_echantillon_predefini = $this->Unite_peche_site_Manager->findnbrechantillonBypecheandsite($id_unite_pech,$id_site_embarquemen);
 
-                        $data[$key]['id'] =$value->id;
-                        $data[$key]['unite_peche'] =$unite_peche;
-                        $data[$key]['site_embarquement'] =$site_embarquement;
-                        $data[$key]['nbr_echantillon'] =$value->nbr_echantillon;    
-                        
-                    }
-                } else
-                        $data = array();
-                
+            $nbr_echantillon_actuel = $this->EchantillonManager->nbrechantillontotal($this->generer_requete($annee,$id_site_embarquemen,$id_unite_pech));
+            
+            $data['nbr_echantillon_predefini'] = $nbr_echantillon_predefini[0]->nbr_echantillon;
+             
+            if ($nbr_echantillon_actuel)
+            {
+                $data['nbr_echantillon_actuel'] = $nbr_echantillon_actuel[0]->nombre;
             }
+
+            
+            $nbr_echantillon_enqueteur_predefini = $this->Nbr_echantillon_enqueteurManager->max_echantillon_enqueteur($id_enqueteur,$id_unite_pech,$id_site_embarquemen);
+            $nbr_echantillon_enqueteur_actuel = $this->EchantillonManager->nbrechantillontotal($this->generer_requeteenqueteur($annee,$id_site_embarquemen,$id_unite_pech,$id_enqueteur));
+                
+            if ($nbr_echantillon_enqueteur_predefini)
+            {
+                $data['nbr_echantillon_enqueteur_predefini']=$nbr_echantillon_enqueteur_predefini[0]->max;
+            }
+            if ($nbr_echantillon_enqueteur_actuel)
+            {
+                $data['nbr_echantillon_enqueteur_actuel']=$nbr_echantillon_enqueteur_actuel[0]->nombre;
+            }
+        }
+            
+        else
+        {	
+            $menu = $this->Unite_peche_site_Manager->findAll();
+            if ($menu)
+            {   
+                foreach ($menu as $key => $value)
+                {   
+                    $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
+                    $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
+
+                    $data[$key]['id'] =$value->id;
+                    $data[$key]['unite_peche'] =$unite_peche;
+                    $data[$key]['site_embarquement'] =$site_embarquement;
+                    $data[$key]['nbr_echantillon'] =$value->nbr_echantillon;    
+                        
+                }
+            } else
+                    $data = array();
+                
+        }
         
         if (count($data)>0)
         {   $this->response([
@@ -203,6 +245,43 @@ class Unite_peche_site extends REST_Controller {
                     ], REST_Controller::HTTP_OK);
             }
         }      
+    }
+
+     public function generer_requete($annee,$id_site_embarquement, $id_unite_peche)
+    {
+        $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
+          
+            if ($id_site_embarquement) 
+            {
+                $requete = $requete." AND id_site_embarquement='".$id_site_embarquement."'" ;
+            }
+
+            if ($id_unite_peche) 
+            {
+                $requete = $requete." AND id_unite_peche='".$id_unite_peche."'" ;
+            }
+
+        return $requete ;
+    }
+    public function generer_requeteenqueteur($annee,$id_site_embarquement, $id_unite_peche,$id_enqueteur)
+    {
+        $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
+          
+            if ($id_site_embarquement) 
+            {
+                $requete = $requete." AND id_site_embarquement='".$id_site_embarquement."'" ;
+            }
+
+            if ($id_unite_peche) 
+            {
+                $requete = $requete." AND id_unite_peche='".$id_unite_peche."'" ;
+            }
+            if ($id_enqueteur) 
+            {
+                $requete = $requete." AND id_enqueteur='".$id_enqueteur."'" ;
+            }
+
+        return $requete ;
     }
 }
 /* End of file controllername.php */

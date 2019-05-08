@@ -203,7 +203,7 @@ class Echantillon_model extends CI_Model {
                             ->from($this->table)
                             ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
                             ->where($requet)
-                            ->where("fiche_echantillonnage_capture.validation = 1")
+                            ->where("fiche_echantillonnage_capture.validation = 0")
                             ->get()
                             ->result();
             if($result)
