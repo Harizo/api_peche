@@ -55,6 +55,58 @@ class Enquete_cadre_model extends CI_Model {
         }                 
     }
 
+    public function findAllByRequetes_region_site_unite_peche($requete)//requete.php
+    {
+        $result =  $this->db->select('region.nom as nom_region, unite_peche.libelle as libelle_unite_peche, site_embarquement.libelle as libelle,enquete_cadre.nbr_unite_peche as nbr_unite_peche,enquete_cadre.annee as annee')
+                        ->from($this->table)
+                        ->join('site_embarquement', 'site_embarquement.id = enquete_cadre.id_site_embarquement')
+                        ->join('unite_peche', 'unite_peche.id = enquete_cadre.id_unite_peche')
+                        ->join('region', 'region.id = site_embarquement.id_region')
+
+                        ->group_by('id_site_embarquement')                          
+                        ->group_by('id_unite_peche')  
+                        ->group_by('enquete_cadre.id_region')  
+                        ->group_by('enquete_cadre.annee')  
+
+                        ->where($requete)
+                        
+                        //->order_by('id_site_embarquement')
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+//
+    public function findAllByRequetes_region($requete)//requete.php
+    {
+        $result =  $this->db->select('SUM(enquete_cadre.nbr_unite_peche) as nbr_unite_peche,region.nom as nom_region, unite_peche.libelle as libelle_unite_peche ,enquete_cadre.annee as annee')
+                        ->from($this->table)
+                        ->join('site_embarquement', 'site_embarquement.id = enquete_cadre.id_site_embarquement')
+                        ->join('unite_peche', 'unite_peche.id = enquete_cadre.id_unite_peche')
+                        ->join('region', 'region.id = site_embarquement.id_region')
+
+                        //->group_by('id_site_embarquement')                          
+                        ->group_by('id_unite_peche')  
+                        //->group_by('enquete_cadre.id_region')  
+                        ->group_by('enquete_cadre.annee')  
+
+                        ->where($requete)
+                        
+                        //->order_by('id_site_embarquement')
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+
     public function findAllbyannee($annee) {
         $result =  $this->db->select('*')
                         ->from($this->table)
@@ -91,6 +143,17 @@ class Enquete_cadre_model extends CI_Model {
 
     public function findById($id)  {
         $this->db->where("id", $id);
+        $q = $this->db->get($this->table);
+        if ($q->num_rows() > 0) {   
+            return $q->row();
+        }
+           
+    }
+
+    public function findBy_id_site_id_unite_peche_annee($id_site_embarquement, $id_unite_peche, $annee)  {
+        $this->db->where("id_site_embarquement", $id_site_embarquement)
+                 ->where("id_unite_peche", $id_unite_peche)
+                 ->where("annee", $annee);
         $q = $this->db->get($this->table);
         if ($q->num_rows() > 0) {   
             return $q->row();
