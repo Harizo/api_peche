@@ -15,7 +15,6 @@ class Unite_peche_site extends REST_Controller {
         $this->load->model('site_embarquement_model', 'Site_embarquementManager');
         $this->load->model('type_canoe_model', 'Type_canoeManager');
         $this->load->model('type_engin_model', 'Type_enginManager');
-        $this->load->model('echantillon_model', 'EchantillonManager');
         $this->load->model('nbr_echantillon_enqueteur_model', 'Nbr_echantillon_enqueteurManager');
         
     }
@@ -98,7 +97,7 @@ class Unite_peche_site extends REST_Controller {
                
             $nbr_echantillon_predefini = $this->Unite_peche_site_Manager->findnbrechantillonBypecheandsite($id_unite_pech,$id_site_embarquemen);
 
-            $nbr_echantillon_actuel = $this->EchantillonManager->nbrechantillontotal($this->generer_requete($annee,$id_site_embarquemen,$id_unite_pech));
+            $nbr_echantillon_actuel = $this->Unite_peche_site_Manager->nbrechantillontotal($this->generer_requete($annee,$id_site_embarquemen,$id_unite_pech));
             
             $data['nbr_echantillon_predefini'] = $nbr_echantillon_predefini[0]->nbr_echantillon;
              
@@ -109,7 +108,7 @@ class Unite_peche_site extends REST_Controller {
 
             
             $nbr_echantillon_enqueteur_predefini = $this->Nbr_echantillon_enqueteurManager->max_echantillon_enqueteur($id_enqueteur,$id_unite_pech,$id_site_embarquemen);
-            $nbr_echantillon_enqueteur_actuel = $this->EchantillonManager->nbrechantillontotal($this->generer_requeteenqueteur($annee,$id_site_embarquemen,$id_unite_pech,$id_enqueteur));
+            $nbr_echantillon_enqueteur_actuel = $this->Unite_peche_site_Manager->nbrechantillontotal($this->generer_requeteenqueteur($annee,$id_site_embarquemen,$id_unite_pech,$id_enqueteur));
                 
             if ($nbr_echantillon_enqueteur_predefini)
             {

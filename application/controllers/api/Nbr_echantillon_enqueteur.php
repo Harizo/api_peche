@@ -41,11 +41,12 @@ class Nbr_echantillon_enqueteur extends REST_Controller {
                 $id_unite_pech       = $this->get('id_unite_peche');
                 $id_site_embarquemen = $this->get('id_site_embarquement');
                 
-                $data['nbr_echantillon_enqueteur_predefini'] =0;             
-                   
+                $data['nbr_echantillon_predefini'] =0;  
                 $nbr_echantillon_predefini = $this->Unite_peche_site_Manager->findnbrechantillonBypecheandsite($id_unite_pech,$id_site_embarquemen);
-                
-                $data['nbr_echantillon_predefini'] = $nbr_echantillon_predefini[0]->nbr_echantillon;
+                if ($nbr_echantillon_predefini)
+                {
+                   $data['nbr_echantillon_predefini'] = $nbr_echantillon_predefini[0]->nbr_echantillon;
+                } 
             }            
             else
             {	
