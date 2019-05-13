@@ -176,10 +176,13 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                 
         if ($supprimer == 0) {
             if ($id == 0) {
-                 $site_embarquement = $this->Site_embarquementManager->findById($this->post('site_embarquement_id'));
+                $sequence = 1;
+                $site_embarquement = $this->Site_embarquementManager->findById($this->post('site_embarquement_id'));
                 $region   = $this->RegionManager->findById($site_embarquement->id_region);
                 $max_id   =$this->Fiche_echantillonnage_captureManager->max_id();
-                $sequence = intval($max_id[0]->id) + 1;
+                if ($max_id) {
+                   $sequence = $sequence + intval($max_id[0]->id);
+                }                
                 
                 if($sequence < 10)
                 {
@@ -259,6 +262,7 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                     $this->response([
                         'status' => TRUE,
                         'response' => $dataretour,
+                        'resp' => $day,
                         'message' => 'Update data success'
                             ], REST_Controller::HTTP_OK);
                 } else {
