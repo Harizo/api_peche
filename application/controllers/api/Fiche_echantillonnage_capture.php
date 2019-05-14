@@ -171,7 +171,7 @@ class Fiche_echantillonnage_capture extends REST_Controller {
     {  
         $id = $this->post('id') ;
         $supprimer = $this->post('supprimer') ;
-        $date_code_unique  = date('d/m/Y');    
+        $date_code_unique  = date('d-m-Y');    
        
                 
         if ($supprimer == 0) {
@@ -262,7 +262,6 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                     $this->response([
                         'status' => TRUE,
                         'response' => $dataretour,
-                        'resp' => $day,
                         'message' => 'Update data success'
                             ], REST_Controller::HTTP_OK);
                 } else {
