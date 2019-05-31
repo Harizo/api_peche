@@ -137,6 +137,43 @@ class Unite_peche_site_model extends CI_Model
             return null;
             }
     }
+
+  public function findnbrechantillonBypecheandsite($id_unite_peche,$id_site_embarquement)
+  {
+    $result =  $this->db->select('nbr_echantillon')
+                        ->from($this->table)
+                        ->join('unite_peche', 'unite_peche.id = unite_peche_site.id_unite_peche')
+                        ->where("id_site_embarquement", $id_site_embarquement )
+                        ->where("id_unite_peche", $id_unite_peche )
+                        ->get()
+                        ->result();
+            if($result)
+            {
+                return $result;
+            }
+            else
+            {
+            return null;
+            }
+  }
+
+  public function nbrechantillontotal($requet)
+    {
+       
+        $result =  $this->db->select('COUNT(*) as nombre')
+                            ->from('echantillon')
+                            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
+                            ->where($requet)
+                            ->get()
+                            ->result();
+            if($result)
+            {
+                return $result;
+            }else{
+                return null;
+            }                     
+        
+    }
   
 
 }

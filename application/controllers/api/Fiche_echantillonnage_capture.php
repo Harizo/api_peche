@@ -171,13 +171,18 @@ class Fiche_echantillonnage_capture extends REST_Controller {
     {  
         $id = $this->post('id') ;
         $supprimer = $this->post('supprimer') ;
+        $date_code_unique  = date('d-m-Y');    
+       
+                
         if ($supprimer == 0) {
             if ($id == 0) {
-                $date_code_unique  = date('d/m/Y');    
+                $sequence = 1;
                 $site_embarquement = $this->Site_embarquementManager->findById($this->post('site_embarquement_id'));
-                $max_id   =$this->Fiche_echantillonnage_captureManager->max_id();
                 $region   = $this->RegionManager->findById($site_embarquement->id_region);
-                $sequence = intval($max_id[0]->id) + 1;
+                $max_id   =$this->Fiche_echantillonnage_captureManager->max_id();
+                if ($max_id) {
+                   $sequence = $sequence + intval($max_id[0]->id);
+                }                
                 
                 if($sequence < 10)
                 {
@@ -222,8 +227,16 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }         
             } else {
+                $site_embarquement = $this->Site_embarquementManager->findById($this->post('site_embarquement_id'));
+                $region   = $this->RegionManager->findById($site_embarquement->id_region);
+                $sequence = $id;                
+                if($sequence < 10)
+                {
+                    $sequence = '0'.$sequence;
+                }
+                $code_unique = $region->nom."-".$site_embarquement->libelle."-".$date_code_unique."-".$sequence;
                 $data = array(
-                    'code_unique' => $this->post('code_unique'),
+                    'code_unique' =>$code_unique,
                     'date' => $this->post('date'),
                     'latitude' => $this->post('latitude'),
                     'longitude' => $this->post('longitude'),
@@ -244,9 +257,11 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                 }
                 $update = $this->Fiche_echantillonnage_captureManager->update($id, $data);
                 if(!is_null($update)) {
+                    $dataretour=array();
+                    $dataretour['code_unique']=$code_unique;
                     $this->response([
                         'status' => TRUE,
-                        'response' => 1,
+                        'response' => $dataretour,
                         'message' => 'Update data success'
                             ], REST_Controller::HTTP_OK);
                 } else {
