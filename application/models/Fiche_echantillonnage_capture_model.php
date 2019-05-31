@@ -262,7 +262,7 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                             ->group_by('id_unite_peche')                          
                                                 
                             ->where($requete)                            
-                            ->where('fiche_echantillonnage_capture.validation',1)                         
+                         //   ->where('fiche_echantillonnage_capture.validation',1)                         
                             ->get()
                             ->result();
 
@@ -453,7 +453,8 @@ class Fiche_echantillonnage_capture_model extends CI_Model
             ((SUM(((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10)))/(COUNT(echantillon.id))*30.5) as nbr_jrs_peche_mois,
             (sqrt(COUNT(echantillon.id))) as sqrt,
             ((COUNT(echantillon.id))-1) as degree,
-            date
+            date,
+            DATE_FORMAT(fiche_echantillonnage_capture.date,"%c") as mois
 
             ')
                             ->from('echantillon')
@@ -463,7 +464,9 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                             ->join('unite_peche', 'echantillon.id_unite_peche = unite_peche.id')                  
                             ->join('site_embarquement', 'fiche_echantillonnage_capture.id_site_embarquement = site_embarquement.id')
                             ->group_by('echantillon.id_unite_peche')                                                           
-                            ->where($requete)                                                 
+                            ->group_by('mois')                                                           
+                            ->where($requete)        
+                           // ->where('fiche_echantillonnage_capture.validation',1)                                            
                             ->get()
                             ->result();
 
@@ -588,7 +591,7 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                             ->group_by('unite_peche.id')                          
                                                 
                             ->where($requete)                            
-                            ->where('fiche_echantillonnage_capture.validation',1)                         
+                          //  ->where('fiche_echantillonnage_capture.validation',1)            //ESORINA IZAY VAO MITOVY @ACCESS,IZA NORAISINA VALIDER SA IZY REHETRA?????             
                             ->get()
                             ->result();
 
@@ -639,14 +642,20 @@ class Fiche_echantillonnage_capture_model extends CI_Model
     }
 
 
-    public function req_8($requete)
+    /*public function req_8($requete)
     {
         
-        $result = $this->db->select('SUM(espece_capture.capture) as capture_par_espece,unite_peche.libelle as libelle_unite_peche,unite_peche.id as id_unite_peche,
-            espece.code as code,espece.nom_local as nom_local,SUM(espece_capture.prix) as prix_unitaire_total,ROUND(((SUM(espece_capture.prix))/(COUNT(espece_capture.id))),2) as prix_unitaire_moyenne,DATE_FORMAT(fiche_echantillonnage_capture.date,"%c") as mois,fiche_echantillonnage_capture.date,
-                DATE_FORMAT(fiche_echantillonnage_capture.date,"%Y") as annee,fiche_echantillonnage_capture.id_region as id_region,
-                ((SUM(((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10)))/(COUNT(echantillon.id))) as pab_moy,
-                COUNT(echantillon.id) as nbr_echantillon,
+        $result = $this->db->select('SUM(espece_capture.capture) as capture_par_espece,
+            unite_peche.libelle as libelle_unite_peche,unite_peche.id as id_unite_peche,
+            espece.code as code,espece.nom_local as nom_local,
+            SUM(espece_capture.prix) as prix_unitaire_total,
+            ROUND(((SUM(espece_capture.prix))/(COUNT(espece_capture.id))),2) as prix_unitaire_moyenne,
+            DATE_FORMAT(fiche_echantillonnage_capture.date,"%c") as mois,
+            fiche_echantillonnage_capture.date,
+            DATE_FORMAT(fiche_echantillonnage_capture.date,"%Y") as annee,
+            fiche_echantillonnage_capture.id_region as id_region,
+            ((SUM(((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10)))/(COUNT(echantillon.id))) as pab_moy,
+            COUNT(DISTINCT(echantillon.id)) as nbr_echantillon,
             ((SUM(((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10)))/(COUNT(echantillon.id))*30.5) as nbr_jrs_peche_mois,
             (sqrt(COUNT(echantillon.id))) as sqrt,
             ((COUNT(echantillon.id))-1) as degree,
@@ -661,8 +670,9 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                             ->join('site_embarquement', 'fiche_echantillonnage_capture.id_site_embarquement = site_embarquement.id') 
                             ->group_by('fiche_echantillonnage_capture.id_region')                          
                             ->group_by('mois')    //groupe par mois                      
+                            ->group_by('echantillon.id_unite_peche')                          
                             ->group_by('espece.id')                          
-                            ->group_by('fiche_echantillonnage_capture.id_site_embarquement')                          
+                            //->group_by('fiche_echantillonnage_capture.id_site_embarquement')                          
                                                 
                             ->where($requete)                            
                             ->where('fiche_echantillonnage_capture.validation',1)                         
@@ -679,6 +689,292 @@ class Fiche_echantillonnage_capture_model extends CI_Model
         }
 
 
+    }*/
+
+
+    public function req_8($condition)
+    {
+        $requete = "select  
+                    id_espece as es,
+                    espece.code as code_espece,
+                    site_embarquement.id as id_site,
+                    site_embarquement.libelle as l_site,
+                    echantillon.id_unite_peche as i_id_unite , 
+                        unite_peche.libelle as l_id_unite , 
+                        DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') as mois,
+                        DATE_FORMAT(fiche_echantillonnage_capture.date,'%Y') as annee,
+                        
+                    ( ROUND((( 
+                      sum(capture) / 
+                      (select sum(capture) from fiche_echantillonnage_capture,espece_capture,echantillon 
+                        where espece_capture.id_echantillon = echantillon.id 
+                        and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                        and fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                        and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois
+                        ) ) * 100),2)) as composition_espece,
+
+                        (select sum((espece_capture.capture)) from fiche_echantillonnage_capture,espece_capture,echantillon
+                         where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                        
+                        and  echantillon.id = espece_capture.id_echantillon
+                        and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                        and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                        and fiche_echantillonnage_capture.id_site_embarquement = id_site 
+                        
+                        ) as somme_capture_par_unite_peche_site ,
+
+                        (ROUND(((select sum((espece_capture.capture)) from fiche_echantillonnage_capture,espece_capture,echantillon
+                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+
+                            and  echantillon.id = espece_capture.id_echantillon
+                            and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                            and fiche_echantillonnage_capture.id_site_embarquement = id_site 
+
+                            ) * (( ((( 
+                            sum(capture) / 
+                            (select sum(capture) from fiche_echantillonnage_capture,espece_capture,echantillon 
+                            where espece_capture.id_echantillon = echantillon.id 
+                            and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                            and fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois
+                            ) ) ))))),2)) 
+                        as total_capture,
+
+                            (ROUND(((SUM(((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10)))/(COUNT(echantillon.id))),2)) as pab_moy,
+                           
+                            (select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,echantillon
+                                                          where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                                         
+                                                        
+                                                         and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                                                         and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                                         and fiche_echantillonnage_capture.id_site_embarquement = id_site ) 
+                            as nbr_echantillon,
+
+                            (ROUND((sum((prix)) / count(espece_capture.id_espece)),2)) as prix_moyenne ,
+
+                            (ROUND((select sum(espece_capture.capture) from fiche_echantillonnage_capture,espece_capture,echantillon
+                                    where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                   
+                                   and  echantillon.id = espece_capture.id_echantillon
+                                   and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                                   and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                   and fiche_echantillonnage_capture.id_site_embarquement = id_site 
+                                   
+                                   ) * (
+                                                         sum(capture) / 
+                                                         (select sum(capture) from fiche_echantillonnage_capture,espece_capture,echantillon 
+                                                           where espece_capture.id_echantillon = echantillon.id 
+                                                           and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                                                           and fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                                           and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois
+                                                           )  * (sum(prix) / count(espece_capture.id_espece))),2)
+                            ) as prix_espece,
+
+                                    ((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,echantillon
+                                          where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                         and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                                         and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                         and fiche_echantillonnage_capture.id_site_embarquement = id_site ) - 1) 
+                                    as degree,
+
+                                    (ROUND((select PercentFractile90 from distribution_fractile where DegreesofFreedom = ((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,echantillon
+                                    where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                   and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                                   and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                   and fiche_echantillonnage_capture.id_site_embarquement = id_site ) - 1)),2)) as distribution,
+
+                                   ROUND(STDDEV(( 1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10),2) as ecart_type_pab,
+
+
+                                    (ROUND(sqrt((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,echantillon
+                                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                           
+                                          
+                                           and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                                           and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                           and fiche_echantillonnage_capture.id_site_embarquement = id_site )),2)) as sqrt,
+
+(ROUND(((STDDEV(( 1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10)
+    *
+    (select PercentFractile90 from distribution_fractile where DegreesofFreedom = ((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,echantillon
+where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+and fiche_echantillonnage_capture.id_site_embarquement = id_site ) - 1))*
+
+sqrt((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,echantillon
+     where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+    
+   
+    and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+    and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+    and fiche_echantillonnage_capture.id_site_embarquement = id_site ))) * 100 ),2)) as erreur_relative_90                                         
+
+                             
+                             
+
+                    from espece_capture , echantillon , fiche_echantillonnage_capture , unite_peche , espece ,site_embarquement
+                    where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture
+                    and espece_capture.id_echantillon = echantillon.id 
+                    and unite_peche.id = echantillon.id_unite_peche
+                    and espece.id = espece_capture.id_espece
+                    and fiche_echantillonnage_capture.id_site_embarquement = site_embarquement.id
+
+                    and ".$condition."
+                    group by id_unite_peche,id_espece ,mois,annee order by mois" ;
+
+        
+        if ($requete) 
+        {
+            $query= $this->db->query($requete);
+            return $query->result();
+        }
+        else
+            return false;
+    }
+
+
+    public function req_7_3_new($condition)//efa OK ny valiny fa mila verifiena ny resaka annee sy ntariny
+    {
+        
+        $requete = "select  
+                        echantillon.id_unite_peche as i_id_unite , 
+                        unite_peche.libelle as l_id_unite , 
+                        id_espece as es,
+                        espece.code as code,
+                        DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') as mois,
+                        DATE_FORMAT(fiche_echantillonnage_capture.date,'%Y') as annee,
+                        sum(capture) as somme_capture_par_espece,
+
+                        (select sum(capture) from fiche_echantillonnage_capture,espece_capture,echantillon  where espece_capture.id_echantillon = echantillon.id 
+                        and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                        and fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                        and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois
+                        ) as somme_capture_par_unite_peche ,
+
+                        (select count(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,espece_capture,echantillon  where espece_capture.id_echantillon = echantillon.id 
+                        and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                        ) as nombre_echantillon_par_unit_peche ,
+
+                        (select count(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,espece_capture,echantillon  where espece_capture.id_echantillon = echantillon.id 
+                        and espece_capture.id_espece = es and ".$condition." 
+                        ) as nombre_echantillon_par_espece ,
+
+                        (select sum(prix) from fiche_echantillonnage_capture,espece_capture,echantillon  where espece_capture.id_echantillon = echantillon.id 
+                        and espece_capture.id_espece = es and ".$condition." 
+                        and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois
+                        ) as prix_total_par_espece ,
+
+                        (select sum(prix) from fiche_echantillonnage_capture,espece_capture,echantillon  where espece_capture.id_echantillon = echantillon.id 
+                        and espece_capture.id_espece = es and ".$condition." and fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                        and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois
+                        ) / ((select count(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,espece_capture,echantillon  where espece_capture.id_echantillon = echantillon.id 
+                        and espece_capture.id_espece = es and ".$condition." 
+                        )) as prix_moyenne_1 ,
+
+                        (sum(prix) / count(espece_capture.id_espece)) as prix_moyenne ,
+
+                      ( ROUND((( 
+                      sum(capture) / 
+                      (select sum(capture) from fiche_echantillonnage_capture,espece_capture,echantillon  where espece_capture.id_echantillon = echantillon.id 
+                        and echantillon.id_unite_peche = i_id_unite and ".$condition." 
+                        and fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                        and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois
+                        ) ) * 100),2)) as composition_espece
+
+
+
+                    from espece_capture , echantillon , fiche_echantillonnage_capture , unite_peche , espece
+                    where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture
+                    and espece_capture.id_echantillon = echantillon.id 
+                    and unite_peche.id = echantillon.id_unite_peche
+                    and espece.id = espece_capture.id_espece
+
+                    and ".$condition."
+                    group by id_unite_peche,id_espece ,mois,annee order by mois" ;
+
+        
+        if ($requete) 
+        {
+            $query= $this->db->query($requete);
+            return $query->result();
+        }
+        else
+            return false;
+
+
+    }
+
+
+    public function req_9($condition)
+    {
+        $result = $this->db->select('SUM(DISTINCT(enquete_cadre.nbr_unite_peche)) as nbr,
+                                    enquete_cadre.annee as annee,
+                                    unite_peche.libelle as libelle_unite_peche,
+                                    site_embarquement.libelle as libelle_site')
+                            ->from('enquete_cadre')
+                            ->join('site_embarquement', 'enquete_cadre.id_site_embarquement = site_embarquement.id')
+                            ->join('unite_peche', 'enquete_cadre.id_unite_peche = unite_peche.id')                
+                                     
+                            ->group_by('site_embarquement.id')                          
+                            ->group_by('enquete_cadre.annee')    //groupe par mois                      
+                            ->group_by('unite_peche.id')                          
+                                                
+                            ->where($condition)                            
+                            ->order_by('site_embarquement.id')        
+                            ->get()
+                            ->result();
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public function req_10($condition)
+    {
+        $result = $this->db->select('SUM(DISTINCT(enquete_cadre.nbr_unite_peche)) as nbr,
+                                    enquete_cadre.annee as annee,
+                                    unite_peche.libelle as libelle_unite_peche,
+                                    region.nom as libelle_region')
+                            ->from('enquete_cadre')
+                            ->join('region', 'enquete_cadre.id_region = region.id')
+                            ->join('unite_peche', 'enquete_cadre.id_unite_peche = unite_peche.id')                
+                                     
+                            ->group_by('enquete_cadre.id_region')                          
+                            ->group_by('enquete_cadre.annee')    //groupe par mois                      
+                            ->group_by('enquete_cadre.id_unite_peche')                          
+                                                
+                            ->where($condition)                            
+                            ->order_by('region.id')        
+                            ->get()
+                            ->result();
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    public function calcule_pab($mois, $annee, $id_unite_peche, $id_region)
+    {
+        $res = mktime( 0, 0, 0, $mois, 1, $annee ); 
+        $nbr_jour = intval(date("t",$res));
+     
+
+        $debut = $annee."/".$mois."/01" ;
+        $fin = $annee."/".$mois."/".$nbr_jour  ;
     }
 
 
