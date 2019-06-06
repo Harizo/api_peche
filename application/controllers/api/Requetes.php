@@ -133,9 +133,16 @@ class Requetes extends REST_Controller {
             //Fin RQ7.2
 
             //RQ7.3
-                  if (($pivot == 'req_7_3')  )
+                  /*if (($pivot == 'req_7_3')  )
                   {
                     $data = $this->requete_7_3($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
+                  }*/
+            //Fin RQ7.
+
+                  //RQ7.3
+                  if (($pivot == 'req_7_3')  )
+                  {
+                    $data = $this->requete_7_3_new($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ7.3
 
@@ -145,7 +152,19 @@ class Requetes extends REST_Controller {
                     $data = $this->requete_8($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ8
-      
+
+            //RQ9
+                  if (($pivot == 'req_9')  )
+                  {
+                    $data = $this->requete_9($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
+                  }
+            //Fin RQ9
+            //RQ10
+                  if (($pivot == 'req_10')  )
+                  {
+                    $data = $this->requete_10($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
+                  }
+            //Fin RQ10
         //*********************************  Fin *****************************
         if (count($data)>0) {
             $this->response([
@@ -168,7 +187,7 @@ class Requetes extends REST_Controller {
         
         
 
-        if (($pivot == 'req_4_1') || ($pivot == 'req_4_2')) 
+        if (($pivot == 'req_4_1') || ($pivot == 'req_4_2')|| ($pivot == 'req_9')|| ($pivot == 'req_10')) 
         {
           $requete = "annee = '".$annee."' " ;
         }
@@ -190,7 +209,7 @@ class Requetes extends REST_Controller {
 
             if (($id_region!='*')&&($id_region!='undefined')) 
             {
-              if (($pivot == 'req_4_1')||($pivot == 'req_4_2')) 
+              if (($pivot == 'req_4_1')||($pivot == 'req_4_2')|| ($pivot == 'req_9')|| ($pivot == 'req_10')) 
               {
                 $requete = $requete." AND enquete_cadre.id_region=".$id_region ;
               }
@@ -499,10 +518,34 @@ class Requetes extends REST_Controller {
           $data[$key]['capture_total'] = $capture_total ;
           $data[$key]['composition_espece'] = ($value->capture_par_espece / $capture_total) * 100 ;
         }
+
+       
+      }
+      else
+      {
+        $data = array();
       }
 
       return $data ;
     }
+
+    public function requete_7_3_new($site_embarquements, $unite_peches,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece)
+    {
+      $pab = $this->Fiche_echantillonnage_captureManager->req_7_3_new($this->generer_requete($pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece));
+
+      if ($pab) 
+      {
+        
+        $data = $pab ;
+      }
+      else
+      {
+        $data = array();
+      }
+
+      return $data ;
+    }
+
 
     public function requete_8($site_embarquements, $unite_peches,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece)
     {
@@ -510,7 +553,7 @@ class Requetes extends REST_Controller {
 
       if ($pab) 
       {
-        foreach ($pab as $key => $value) 
+        /*foreach ($pab as $key => $value) 
         {
           $data[$key]['capture_par_espece'] = $value->capture_par_espece ;
           $data[$key]['libelle_unite_peche'] = $value->libelle_unite_peche ;
@@ -554,13 +597,52 @@ class Requetes extends REST_Controller {
 
           $distribution = $this->Distribution_fractileManager->findByDegree($value->degree);
           $tdistriburion90 = $distribution[0]->PercentFractile90 ;
-          $data[$indice]['distribution_90'] = $tdistriburion90 ;
+          $data[$key]['distribution_90'] = $tdistriburion90 ;
           
-        }
+        }*/
+      }
+      else
+      {
+        $data = array();
+      }
+
+      return $pab ;
+    }
+
+    public function requete_9($site_embarquements, $unite_peches,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece)
+    {
+      $pab = $this->Fiche_echantillonnage_captureManager->req_9($this->generer_requete($pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece));
+
+      if ($pab) 
+      {
+        
+        $data = $pab ;
+      }
+      else
+      {
+        $data = array();
       }
 
       return $data ;
     }
+
+    public function requete_10($site_embarquements, $unite_peches,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece)
+    {
+      $pab = $this->Fiche_echantillonnage_captureManager->req_10($this->generer_requete($pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece));
+
+      if ($pab) 
+      {
+        
+        $data = $pab ;
+      }
+      else
+      {
+        $data = array();
+      }
+
+      return $data ;
+    }
+
 
     public function affichage_mois($mois_int)
     {
