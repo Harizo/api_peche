@@ -16,6 +16,7 @@ class Analyse_parametrable extends REST_Controller {
         $this->load->model('district_model', 'DistrictManager');
         $this->load->model('site_embarquement_model', 'Site_embarquementManager');
         $this->load->model('Espece_model', 'EspeceManager');
+        $this->load->model('distribution_fractile_model', 'Distribution_fractileManager'); 
     }
    
     public function index_get() 
@@ -91,8 +92,8 @@ class Analyse_parametrable extends REST_Controller {
                     $indice = 0 ;
                     $total_prix = 0 ;
                     $total_capture = 0 ;
-                    $donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee,$mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece));
-
+   // /-talou                 
+                   /*$donnees=$this->Fiche_echantillonnage_captureManager->som_capture_totales($this->generer_requete_analyse($annee,$mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece));
                     if ($donnees[0]->capture != null )
                     {
                         $total_prix = $total_prix + $donnees[0]->prix ;
@@ -104,13 +105,35 @@ class Analyse_parametrable extends REST_Controller {
                         $donnees[0]->unite_peche = "-" ;
                         $data[$indice] = $donnees[0] ;
                         $indice++ ;
-                    }
+                    }*/
 
                     /*$data['total_prix'] = $total_prix ;
                     $data['total_capture'] = $total_capture ;*/
-                        
-                    
+   // talou-/
+
+   // /-vaovao                 
+                
+                    $donnees=$this->Fiche_echantillonnage_captureManager->erreur_relativepivotl1($this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $id_espece));
+
+                    if ($donnees[0]->capture != null )
+                    {
+                        $total_prix = $total_prix + $donnees[0]->prix ;
+                        $total_capture = $total_capture + $donnees[0]->capture ;
+                       
+                        $distribution = $this->Distribution_fractileManager->findByDegree($donnees[0]->degree);
+                       // $tdistriburion90 = $distribution[0]->PercentFractile90 ;
+$re=$this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece);
+                        $donnees[0]->region = "-" ;
+                        $donnees[0]->site_embarquement = "-" ;
+                        $donnees[0]->unite_peche = "-" ;
+                        $data[$indice] = $donnees[0] ;
+                        $d[$indice]=$re;
+                        $indice++ ;
+                    }    
+    // vaovao-/                
+                
                 }
+
             //Pivot * 
 
             //Pivot region 
@@ -479,6 +502,7 @@ class Analyse_parametrable extends REST_Controller {
                 'status' => TRUE,
                 'response' => $data,
                 'total' => $total,
+                'd' => $d,
                 'message' => 'Get data success',
             ], REST_Controller::HTTP_OK);
         } else {
@@ -490,7 +514,7 @@ class Analyse_parametrable extends REST_Controller {
         }
     }
 
-    public function generer_requete_analyse($annee,$mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece)
+    public function generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece)
     {
         
 

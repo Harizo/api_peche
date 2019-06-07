@@ -220,6 +220,39 @@ class Fiche_echantillonnage_capture_model extends CI_Model
 
 
     }
+    //pivot=='*' analyse_parametrable
+    public function erreur_relativepivotl1($requete)
+    {
+         $result = $this->db ->select('SUM(capture) as capture,SUM(prix) as prix,
+            STDDEV(((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10)) as ecart_type,
+
+            ((SUM(((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10)))/(COUNT(echantillon.id))) as pab_moy,
+            (sqrt(COUNT(echantillon.id))) as sqrt,
+            ((COUNT(DISTINCT(echantillon.id)))-1) as degree
+
+            ')
+                            ->from('echantillon')
+                            ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id') 
+                            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture') 
+                            ->join('unite_peche', 'echantillon.id_unite_peche = unite_peche.id')                 
+                            //->join('site_embarquement', 'fiche_echantillonnage_capture.id_site_embarquement = site_embarquement.id')
+                           // ->group_by('echantillon.id_unite_peche')                                                           
+                            ->where($requete)        
+                           ->where('fiche_echantillonnage_capture.validation',1)                                            
+                            ->get()
+                            ->result();
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }               
+    
+    }
+
 
     public function som_capture_totales_journaliere($requete)
     {
@@ -442,6 +475,7 @@ class Fiche_echantillonnage_capture_model extends CI_Model
         }               
     
     }
+    
 
     public function erreur_relative_pab_moy_par_unite_peche($requete)
     {
