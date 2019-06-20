@@ -894,6 +894,81 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                                 and fiche_echantillonnage_capture.id_site_embarquement = id_site ) 
                             as nbr_echantillon_par_unite_peche_espece_selected ", FALSE); 
         //FIN NBR ECHANTILLON PAR UNITE DE PECHE par espece
+
+        //DEGREE DE LIBERTE
+            $this->db->select("((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture, echantillon, espece_capture
+                                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                            and echantillon.id = espece_capture.id_echantillon
+            
+                                            and echantillon.id_unite_peche = id_unite_peche_aff and ".$condition." 
+                                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                            and fiche_echantillonnage_capture.id_site_embarquement = id_site ) - 1) as degree_librtee",FALSE);
+        //DEGREE DE LIBERTE
+
+        //SQRT NBR ECHANTILLON
+            $this->db->select("sqrt((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture, echantillon, espece_capture
+                                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                            and echantillon.id = espece_capture.id_echantillon
+            
+                                            and echantillon.id_unite_peche = id_unite_peche_aff and ".$condition." 
+                                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                            and fiche_echantillonnage_capture.id_site_embarquement = id_site )) as sqrt",FALSE);
+        //SQRT NBR ECHANTILLON
+
+        //PAB MOYENNE PAR UNITE PECHE
+            
+            $this->db->select("((select sum((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10) from fiche_echantillonnage_capture,echantillon 
+                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+            
+                            and echantillon.id_unite_peche = id_unite_peche_aff and ".$condition." 
+                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                            and fiche_echantillonnage_capture.id_site_embarquement = id_site) / (select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture,echantillon
+                                where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                and echantillon.id_unite_peche = id_unite_peche_aff and ".$condition." 
+                                and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                and fiche_echantillonnage_capture.id_site_embarquement = id_site )) as pab_moyenne",FALSE);
+        //PAB MOYENNE PAR UNITE PECHE
+
+        //STDEV PAB
+            
+            $this->db->select("(select STDDEV((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10) from fiche_echantillonnage_capture,echantillon 
+                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+            
+                            and echantillon.id_unite_peche = id_unite_peche_aff and ".$condition." 
+                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                            and fiche_echantillonnage_capture.id_site_embarquement = id_site) as stddev_pab",FALSE);
+        //STDEV PAB
+
+        //t-distribution 90%
+            $this->db->select("(select PercentFractile90 from distribution_fractile where DegreesofFreedom = ((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture, echantillon, espece_capture
+                                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                            and echantillon.id = espece_capture.id_echantillon
+            
+                                            and echantillon.id_unite_peche = id_unite_peche_aff and ".$condition." 
+                                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                            and fiche_echantillonnage_capture.id_site_embarquement = id_site ) - 1)) as fraction_t_distribution",FALSE);
+        //t-distribution 90%
+
+        //ERROR RELATIVE
+            $this->db->select("(select STDDEV((1+echantillon.peche_hier+echantillon.peche_avant_hier+echantillon.nbr_jrs_peche_dernier_sem)/10) from fiche_echantillonnage_capture,echantillon 
+                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+            
+                            and echantillon.id_unite_peche = id_unite_peche_aff and ".$condition." 
+                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                            and fiche_echantillonnage_capture.id_site_embarquement = id_site) * (select PercentFractile90 from distribution_fractile where DegreesofFreedom = ((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture, echantillon, espece_capture
+                                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                            and echantillon.id = espece_capture.id_echantillon
+            
+                                            and echantillon.id_unite_peche = id_unite_peche_aff and ".$condition." 
+                                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                            and fiche_echantillonnage_capture.id_site_embarquement = id_site ) - 1)) * (sqrt((select COUNT(DISTINCT(echantillon.id)) from fiche_echantillonnage_capture, echantillon, espece_capture
+                                            where fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture 
+                                            and echantillon.id = espece_capture.id_echantillon
+            
+                                            and echantillon.id_unite_peche = id_unite_peche_aff and ".$condition." 
+                                            and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
+                                            and fiche_echantillonnage_capture.id_site_embarquement = id_site ))) as error_relative",FALSE);
+        //ERROR RELATIVE
        
         //CAPTURE TOTAL UNITE DE PECHE
             $this->db->select("(select SUM((capture)) from fiche_echantillonnage_capture, echantillon, espece_capture
@@ -904,6 +979,10 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                                 and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
                                 and fiche_echantillonnage_capture.id_site_embarquement = id_site ) 
                             as capture_total_unite_peche ", FALSE); 
+        //FIN CAPTURE TOTAL UNITE DE PECHE
+
+        //CAPTURE TOTAL UNITE DE PECHE
+           // $this->db->select("", FALSE); 
         //FIN CAPTURE TOTAL UNITE DE PECHE
 
         //COMPOSITION ESPECE
