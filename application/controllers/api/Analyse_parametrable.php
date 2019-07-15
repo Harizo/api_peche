@@ -1086,7 +1086,7 @@ class Analyse_parametrable extends REST_Controller {
                     $erreur_relative=0;
 
                     //-talou
-                    if ($all_site_embarquement) 
+                  /*  if ($all_site_embarquement) 
                     {
                         foreach ($all_site_embarquement as $key_site => $value_site) 
                         {
@@ -1114,23 +1114,27 @@ class Analyse_parametrable extends REST_Controller {
                         }
                     }
                     $data['total_prix'] = $total_prix ;
-                    $data['total_capture'] = $total_capture ;
+                    $data['total_capture'] = $total_capture ;*/
                 // talou-/
 
                 // /-vaovao
-               /*  $result =   $this->Fiche_echantillonnage_captureManager->erreur_relativepivotl1(
+                $result =   $this->Fiche_echantillonnage_captureManager->erreur_relativepivotl1(
                             $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $id_espece),
                             $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,'*', $id_unite_peche, '*'));
 
                     if ($result != null )
                     {                        
                         $i=1;
-                        $data=array();
-
+                        $donnees=array();
+                        $tab_mois = array();
+                        
                         foreach ($result as $key => $value)
                         {
                             $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
                                                         $this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece),$value->id_reg,$value->id_unite,$value->mois);
+                            
+                            /*$value->capture_total_par_unite=$this->Fiche_echantillonnage_captureManager->capture_total_par_unite($this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, '*', $id_unite_peche, $id_espece),$value->id_reg,$value->id_unite,$value->mois);*/
+
                             $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
                                           $this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece),$value->id_reg,$value->id_unite,$value->mois,$value->id_site);
 
@@ -1140,7 +1144,7 @@ class Analyse_parametrable extends REST_Controller {
 
                             $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                             
-                            $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne)/1000;                            
+                            $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
                             
                             $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                             $tdistriburion90 = $distribution[0]->PercentFractile90 ;
@@ -1171,6 +1175,8 @@ class Analyse_parametrable extends REST_Controller {
                             $tab_capture_espece_total = array();
                             $prix_espece              = array();
                             $tab_composition          = array();
+                            $ex=false;
+                            
                           
                                 if ($tab_capture_par_espece) 
                                 {
@@ -1182,47 +1188,101 @@ class Analyse_parametrable extends REST_Controller {
                                         $j++;
                                     }
                                 }
-                                                       
                             
                             
                             $som_tab_capture_par_espece=array_sum($tab_capture_espece_total);
-                            $data[$i]['capture'] = $som_tab_capture_par_espece;
+                            $donnees['capture'] = $som_tab_capture_par_espece;
 
                             $total_prix_unite=array_sum($prix_espece);
-                            $data[$i]['prix'] = $total_prix_unite;
+                            $donnees['prix'] = $total_prix_unite/1000;
 
-                            $data[$i]['erreur_relative_capture_total_90'] = $erreur_relative_capture_total_90;
-                            $data[$i]['erreur_relative'] = $erreur_relative;
-                            $data[$i]['unite_peche'] = $value->libelle;
-                            $data[$i]['site_embarquement'] = $value->site_embarquement;
+                            $donnees['erreur_rel_capture'] = $erreur_relative_capture_total_90;
+                            $donnees['erreur_relative'] = $erreur_relative;
+                            $donnees['unite_peche'] = $value->libelle;
+                            $donnees['mois'] = $value->mois;
                             
-                            $data[$i]['captures_t'] = $captures_t;
-                            $data[$i]['tab_composition'] = $tab_composition;
-                            $data[$i]['site'] = $value->id_site;
-                            $data[$i]['tab_capture_par_unit2'] = $value->capture_total_par_unite;
+                            $donnees['captures_t'] = $captures_t;
+                            $donnees['tab_composition'] = $tab_composition;
+                            $donnees['site_embarquement'] = $value->site_embarquement;
+                            //$donnees['nbr_jrs_peche_mensuel_pab'] = $value->pab_moy;
                             
-                            $data[$i]['capture_total_par_espec'] = $tab_capture_par_espece;
-                            $data[$i]['tab_capture_espece_totaldetai'] = $tab_capture_espece_total;
+                            //$donnees['nbr_jrs_peche_mensuel_pab2'] = $pab[0]->pab_moy;         
+                            $donnees['sqrt'] = $value->sqrt;
+                            $donnees['sqrtpab'] = $value->sqrtpab;
+                            $donnees['degree'] = $value->degree;
+                            $donnees['degreepab'] = $value->degreepab;
+                            $donnees['ecart_typepab'] = $value->ecart_typepab;
+                            //$donnees['tab_capture_par_unit'] = $tab_capture_par_unit[0]->capture_total_par_espece;
+                            $donnees['tab_capture_par_unit2'] = $value->capture_total_par_unite;
+                            
+                            $donnees['capture_total_par_espec'] = $tab_capture_par_espece;
+                            $donnees['tab_capture_espece_totaldetai'] = $tab_capture_espece_total;
 
-
+                            $donnees['total_espece'] = $tab_capture_par_espece;
+                            
+                                      
+                                        foreach ($tab_mois as $k => $valueMois)
+                                        {
+                                           if ($valueMois['mois']==$value->mois)
+                                                {                                                    
+                                                    $ex=true;
+                                                }
+                                        }
+                         
+                            if($ex==false)
+                            { 
+                                array_push($tab_mois, array('mois'=>$value->mois),array('site_embarquement'=>$value->site_embarquement));  
+                            }
+                            $donnees['moi'] = $tab_mois;
+                            $datadetail[$i] = $donnees;
+                            
                           $i++;  
                         }
+                        $valu=array();
+                        $n=0;
+                        
+                        foreach ($tab_mois as $keymois => $valuemois) {
+                            $valparmois=array();
+                            $capture=0;
+                            $prix=0;
+                            $erreur_rel=0;
+                            $erreur_rel_capt=0;
+                            $c=0;
+                            foreach ($datadetail as $keyd => $valued) {
+                                if ($valued['mois']==$valuemois['mois']) {
+                                   $valparmois['mois']=$valuemois['mois'];
+                                   $valparmois['site_embarquement']=$valuemois['mois'];
+                                   $capture+=$valued['capture'];
+                                   $prix+=$valued['prix'];
+                                   $erreur_rel+=$valued['erreur_relative'];
+                                   $erreur_rel_capt+=$valued['erreur_rel_capture'];
+                                   $valparmois['capture']=$capture;
+                                   $valparmois['prix']=$prix;
+                                   $c++;
+                                }                                
+                            }
+
+                         $valparmois['erreur_relative'] = number_format ( $erreur_rel/$c,0);
+                         $valparmois['erreur_rel_capture'] = number_format ( $erreur_rel_capt/$c,0);
+                         $data[$n] = $valparmois;
+                         $n++;
+                        }
+                        
                         $Total_captur  = array_column($data, 'capture');
                         $total_capture = array_sum($Total_captur);
 
                         $Total_pri     = array_column($data, 'prix');
                         $total_prix    = array_sum($Total_pri);
 
-                        $erreur_capture = array_column($data, 'erreur_relative_capture_total_90');
-                        $n_capture      = count($erreur_capture);
-                        $erreur_rel_capture = number_format ( array_sum($erreur_capture)/$n_capture ,0);
+                      $erreur_capture = array_column($datadetail, 'erreur_rel_capture');
+                        $n_capture    = count($erreur_capture);
+                        $erreur_rel_capture= number_format ( array_sum($erreur_capture)/$n_capture,0);
 
-                        $erreur = array_column($data, 'erreur_relative');
+                        $erreur = array_column($datadetail, 'erreur_relative');
                         $n      = count($erreur);
                         $erreur_relative = number_format ( array_sum($erreur)/$n,0);
-                        
-                      $indice++ ; 
-                      } */
+                    }
+                // vaovao-/  
                 }
             //Pivot site and unite peche
 
