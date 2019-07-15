@@ -223,7 +223,7 @@ class Fiche_echantillonnage_capture_model extends CI_Model
     //Debut pivot=='*' analyse_parametrable
     public function erreur_relativepivotl1($requete,$reqsansSiteEspece)
     {
-       $this->db->select("DATE_FORMAT(fiche_echantillonnage_capture.date,'%Y') as anee,DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') as mois,fiche_echantillonnage_capture.id_region as id_reg,region.nom as nom_region,fiche_echantillonnage_capture.id as id_fiche,fiche_echantillonnage_capture.id_site_embarquement as id_site,site_embarquement.libelle as site_embarquement,echantillon.id_unite_peche as id_unite,unite_peche.libelle as libelle,date");
+       $this->db->select("DATE_FORMAT(fiche_echantillonnage_capture.date,'%Y') as anee,DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') as mois,fiche_echantillonnage_capture.id_region as id_reg,region.nom as nom_region,fiche_echantillonnage_capture.id as id_fiche,fiche_echantillonnage_capture.id_site_embarquement as id_site,echantillon.id_unite_peche as id_unite,unite_peche.libelle as libelle,date");
         
         $this->db ->select("(select sum(nbr_unite_peche) from enquete_cadre
                                 where  enquete_cadre.id_unite_peche = id_unite and enquete_cadre.id_region = id_reg and enquete_cadre.id_site_embarquement = id_site and ".$requete." and enquete_cadre.annee = anee) as nbr_unit_peche
@@ -296,14 +296,14 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                                 and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
                                ) as capture_total_par_unite",FALSE);
 
-        $result =  $this->db->from('echantillon,fiche_echantillonnage_capture ,espece_capture,unite_peche,region,site_embarquement')
+        $result =  $this->db->from('echantillon,fiche_echantillonnage_capture ,espece_capture,unite_peche,region')
                     ->where($requete)
                     //->where('fiche_echantillonnage_capture.validation = 1')
                     ->where('fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
                      ->where('fiche_echantillonnage_capture.id_region = region.id')
                     ->where('echantillon.id = espece_capture.id_echantillon')
                     ->where('echantillon.id_unite_peche = unite_peche.id')
-                    ->where('site_embarquement.id = fiche_echantillonnage_capture.id_site_embarquement')
+                    //->where('site_embarquement.id = fiche_echantillonnage_capture.id_site_embarquement')
                     ->group_by('mois,id_reg,id_site,id_unite')
                     //->group_by('anee')                   
                     ->get()

@@ -157,12 +157,13 @@ class Analyse_parametrable extends REST_Controller {
                             $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                             $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
 
-                            $cl_captures_totales = $max_captures_totales - $captures_t;
+                            $cl_captures_totales = $max_captures_totales - ($captures_t/1000);
+ // dependre capture_t mila averina                          
                             $erreur_relative_capture_total_90=1;
                             if ($captures_t)
                             {
-                                $erreur_relative_capture_total_90 = ($cl_captures_totales / $captures_t) * 100;
-                            }
+                                $erreur_relative_capture_total_90 = ($cl_captures_totales / ($captures_t/1000)) * 100;
+                            } 
 
                             $j=0;
                             $tab_capture_espece_total = array();
@@ -321,11 +322,11 @@ class Analyse_parametrable extends REST_Controller {
                             $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                             $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
 
-                            $cl_captures_totales = $max_captures_totales - $captures_t;
+                            $cl_captures_totales = $max_captures_totales - ($captures_t/1000);
                             $erreur_relative_capture_total_90=1;
                             if ($captures_t)
                             {
-                                $erreur_relative_capture_total_90 = ($cl_captures_totales / $captures_t) * 100;
+                                $erreur_relative_capture_total_90 = ($cl_captures_totales / ($captures_t/1000)) * 100;
                             }
 
                             $j=0;
@@ -706,11 +707,11 @@ class Analyse_parametrable extends REST_Controller {
                             $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                             $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
 
-                            $cl_captures_totales = $max_captures_totales - $captures_t;
+                            $cl_captures_totales = $max_captures_totales - ($captures_t/1000);
                             $erreur_relative_capture_total_90=1;
                             if ($captures_t)
                             {
-                                $erreur_relative_capture_total_90 = ($cl_captures_totales / $captures_t) * 100;
+                                $erreur_relative_capture_total_90 = ($cl_captures_totales / ($captures_t/1000)) * 100;
                             }
 
                             $j=0;
@@ -947,11 +948,11 @@ class Analyse_parametrable extends REST_Controller {
                             $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                             $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
 
-                            $cl_captures_totales = $max_captures_totales - $captures_t;
+                            $cl_captures_totales = $max_captures_totales - ($captures_t/1000);
                             $erreur_relative_capture_total_90=1;
                             if ($captures_t)
                             {
-                                $erreur_relative_capture_total_90 = ($cl_captures_totales / $captures_t) * 100;
+                                $erreur_relative_capture_total_90 = ($cl_captures_totales / ($captures_t/1000)) * 100;
                             }
 
                             $j=0;
@@ -1086,7 +1087,7 @@ class Analyse_parametrable extends REST_Controller {
                     $erreur_relative=0;
 
                     //-talou
-                  /*  if ($all_site_embarquement) 
+                    if ($all_site_embarquement) 
                     {
                         foreach ($all_site_embarquement as $key_site => $value_site) 
                         {
@@ -1114,11 +1115,11 @@ class Analyse_parametrable extends REST_Controller {
                         }
                     }
                     $data['total_prix'] = $total_prix ;
-                    $data['total_capture'] = $total_capture ;*/
+                    $data['total_capture'] = $total_capture ;
                 // talou-/
 
                 // /-vaovao
-                $result =   $this->Fiche_echantillonnage_captureManager->erreur_relativepivotl1(
+              /*  $result =   $this->Fiche_echantillonnage_captureManager->erreur_relativepivotl1(
                             $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $id_espece),
                             $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,'*', $id_unite_peche, '*'));
 
@@ -1131,11 +1132,12 @@ class Analyse_parametrable extends REST_Controller {
                         foreach ($result as $key => $value)
                         {
                             $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                        $this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece),$value->id_reg,$value->id_unite,$value->mois);
+                                                        $this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece),$value->id_reg,$value->id_unite,$value->mois);*/
                             
                             /*$value->capture_total_par_unite=$this->Fiche_echantillonnage_captureManager->capture_total_par_unite($this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, '*', $id_unite_peche, $id_espece),$value->id_reg,$value->id_unite,$value->mois);*/
 
-                            $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
+                          
+                          /*  $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
                                           $this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece),$value->id_reg,$value->id_unite,$value->mois,$value->id_site);
 
                             $date_t     = explode('-', $value->date) ;
@@ -1168,7 +1170,7 @@ class Analyse_parametrable extends REST_Controller {
                             $erreur_relative_capture_total_90=1;
                             if ($captures_t)
                             {
-                                $erreur_relative_capture_total_90 = ($cl_captures_totales / $captures_t) * 100;
+                                $erreur_relative_capture_total_90 = ($cl_captures_totales / ($captures_t/1000)) * 100;
                             }
 
                             $j=0;
@@ -1281,7 +1283,7 @@ class Analyse_parametrable extends REST_Controller {
                         $erreur = array_column($datadetail, 'erreur_relative');
                         $n      = count($erreur);
                         $erreur_relative = number_format ( array_sum($erreur)/$n,0);
-                    }
+                    }*/
                 // vaovao-/  
                 }
             //Pivot site and unite peche
