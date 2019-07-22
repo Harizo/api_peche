@@ -137,4 +137,25 @@ class Site_embarquement_model extends CI_Model {
             return null;
         }                 
     }
+
+    public function findAllInTable($annee)
+    {   
+        $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
+
+        $result = $this->db->select('fiche_echantillonnage_capture.id_site_embarquement as id, site_embarquement.libelle as libelle')
+                            ->from('fiche_echantillonnage_capture')
+                            ->join('site_embarquement', 'site_embarquement.id = fiche_echantillonnage_capture.id_site_embarquement')
+                            ->where($requete)
+                            ->group_by('site_embarquement.id')                        
+                            ->get()
+                            ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
+    } 
 }
