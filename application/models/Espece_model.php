@@ -84,6 +84,22 @@ class Espece_model extends CI_Model
         }                 
     }
 
+    public function findByIdtable($id)
+    {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where("id", $id)
+                        ->order_by('id')
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+
 
     public function findAllByFiche($annee) 
     {
@@ -117,5 +133,27 @@ class Espece_model extends CI_Model
         }
         return null;
     }
+
+    public function findAllInTable($annee)
+    {   
+        $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
+
+        $result = $this->db->select('espece_capture.id_espece as id, espece.nom_local as nom_local,espece.nom_scientifique as nom_scientifique,espece.code as code')
+                            ->from('espece_capture')
+                            ->join('espece', 'espece.id = espece_capture.id_espece')
+                            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = espece_capture.id_fiche_echantillonnage_capture')
+                            ->where($requete)
+                            ->group_by('espece.code')                        
+                            ->get()
+                            ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
+    } 
 
 }
