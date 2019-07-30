@@ -234,7 +234,6 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                                 and echantillon.id = espece_capture.id_echantillon
                                 and fiche_echantillonnage_capture.id_region = id_reg
                                 
-                                
                                 and echantillon.id_unite_peche = id_unite and ".$reqsansSiteEspece." 
                                 and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois 
                                 ) as pab_moy",FALSE);
@@ -301,9 +300,10 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                     
                     ->where('enquete_cadre.id_unite_peche = echantillon.id_unite_peche')
                     ->where('enquete_cadre.annee',$annee)
+                    ->where('enquete_cadre.id_region = region.id')
                     ->where('enquete_cadre.id_region = fiche_echantillonnage_capture.id_region')
                     ->where('fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
-                     ->where('enquete_cadre.id_region = region.id')
+                     
                     ->where('echantillon.id = espece_capture.id_echantillon')
                     ->where('echantillon.id_unite_peche = unite_peche.id')
                     ->where($reqcadre)

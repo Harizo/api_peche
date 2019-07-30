@@ -183,6 +183,14 @@ class Analyse_parametrable extends REST_Controller {
                             $donnees[$i]['cpares'] = $tab_capture_espece;
                             $donnees[$i]['espece'] = $tab_capture_espece_total;
                            $donnees[$i]['ecart'] = $this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece);
+                           $donnees[$i]['nbr_unit_peche'] = $value->nbr_unit_peche;
+                           $donnees[$i]['cpue_moyenne'] = $value->cpue_moyenne;
+                           $donnees[$i]['ecart_type'] = $ecart_type;
+                           $donnees[$i]['site'] = $value->site_embarquement;
+                            $donnees[$i]['nbr_jrs_peche_mensuel_pab'] = $nbr_jrs_peche_mensuel_pab;
+                            $donnees[$i]['nbr_total_jrs_peche_mensuel'] = $nbr_total_jrs_peche_mensuel;
+                            $donnees[$i]['nbr_jrs'] = $nbr_jour;
+                            $donnees[$i]['pab_moy'] = $value->pab_moy;
                           $i++;  
                         }
                         $Total_captur  = array_column($donnees, 'Total_capture_unite');
@@ -1861,8 +1869,9 @@ class Analyse_parametrable extends REST_Controller {
                                 $donnees[$i]['unite_peche'] = $value->libelle;
                                 $donnees[$i]['unite_pech2'] = $vUnite_peche->libelle;
                                 $donnees[$i]['espece'] = $tab_capture_espece_total;
-                                $donnees[$i]['nbr_jrs_peche_mensuel_pab'] = $nbr_jrs_peche_mensuel_pab_tab;
+                               // $donnees[$i]['nbr_jrs_peche_mensuel_pab'] = $nbr_jrs_peche_mensuel_pab_tab;
                                 $donnees[$i]['tab_date'] = $tab_date;
+                                $donnees[$i]['nbr_total_jrs_peche_mensuel'] = $nbr_total_jrs_peche_mensuel;
 
                               $i++;  
                             }
@@ -1880,7 +1889,7 @@ class Analyse_parametrable extends REST_Controller {
                             $erreurUnite_peche = array_column($donnees, 'erreur_relative');
                             $nUnite_peche      = count($erreurUnite_peche);
                             $erreur_relativeUnite_peche = number_format ( array_sum($erreurUnite_peche)/$nUnite_peche,0);
-                            $tab_nbr_jrs_mensuel=array_column($donnees, 'nbr_jrs_peche_mensuel_pab');
+                            $tab_nbr_jrs_mensuel=array_column($donnees, 'nbr_total_jrs_peche_mensuel');
                             //$data[$indice]['mois'] = $moi;
                             $data[$indice]['unite_peche'] = $vUnite_peche->libelle;
                             $data[$indice]['code']=$vEspece->code;
@@ -1890,7 +1899,7 @@ class Analyse_parametrable extends REST_Controller {
                             $data[$indice]['prix']    = $total_prixUnite_peche;
                             $data[$indice]['erreur_relative']    = $erreur_relativeUnite_peche;
                             $data[$indice]['erreur_rel_capture'] = $erreur_rel_captureUnite_peche;
-                            $data[$indice]['nbr_total_jrs_peche_annuel_moy']=number_format ( array_sum($tab_nbr_jrs_mensuel),0);
+                            $data[$indice]['nbr_total_jrs_peche_annuel_moy']= array_sum($tab_nbr_jrs_mensuel);
                             $data[$indice]['cpue_effort']=number_format ( $total_captureUnite_peche/(array_sum($tab_nbr_jrs_mensuel)),3);
                             $data[$indice]['Donnee'] = $donnees;
                             if($erreur_relativeUnite_peche)
