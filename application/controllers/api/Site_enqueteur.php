@@ -20,46 +20,55 @@ class Site_enqueteur extends REST_Controller {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
         $cle_site = $this->get('cle_site');
-        if($cle_etrangere)
-        {   $data = array();
-            $taiza="findcle_etrangere no nataony";
-            $menu = $this->Site_enqueteurManager->findAllByEnqueteur($cle_etrangere);
-            $si=$menu;
-            if ($menu) 
-            {
-                foreach ($menu as $key => $value) 
-                {   $district = array();
-                    $region   = array();
-                    
-                    $district = $this->DistrictManager->findById($value->id_district);
-                    $region   = $this->RegionManager->findById($value->id_region);                
-                        
-                    //$data[$key]['id']          = $value->id;
-                    $data[$key]['id']          = $value->id_site;
-                    $data[$key]['code']        = $value->code;
-                    $data[$key]['libelle']     = $value->libelle;
-                    $data[$key]['code_unique'] = $value->code_unique;
-                    $data[$key]['latitude']    = $value->latitude;
-                    $data[$key]['longitude']   = $value->longitude;
-                    $data[$key]['altitude']    = $value->altitude;
-                    $data[$key]['region']      = $region;
-                    $data[$key]['district']    = $district;
-                    //$data[$key]['si']    = $si;
-
-                }
-            } 
-            else
-                $data = array();
-            
+        $get_by_site = $this->get('get_by_site');
+        
+        if ($get_by_site) 
+        {
+            $id_site_embarquement = $this->get('id_site_embarquement');
+            $data = $this->Site_enqueteurManager->get_enqueteur_by_site($id_site_embarquement);
         }
-        elseif ($id) {
-                $data = array();
-                $site_enqueteur = $this->Site_enqueteurManager->findById($id);
-                $enqueteur = $this->EnqueteurManager->findById($site_enqueteur->id_enqueteur);
-                $site_embarquement = $this->Site_embarquementManager->findById($site_enqueteur->id_site);
-                $data['id'] = $Site_enqueteur->id;
-                $data['site_embarquement'] = $site_embarquement;
-                $data['enqueteur'] = $enqueteur;
+        else
+        {
+            if($cle_etrangere)
+            {   $data = array();
+                $taiza="findcle_etrangere no nataony";
+                $menu = $this->Site_enqueteurManager->findAllByEnqueteur($cle_etrangere);
+                $si=$menu;
+                if ($menu) 
+                {
+                    foreach ($menu as $key => $value) 
+                    {   $district = array();
+                        $region   = array();
+                        
+                        $district = $this->DistrictManager->findById($value->id_district);
+                        $region   = $this->RegionManager->findById($value->id_region);                
+                            
+                        //$data[$key]['id']          = $value->id;
+                        $data[$key]['id']          = $value->id_site;
+                        $data[$key]['code']        = $value->code;
+                        $data[$key]['libelle']     = $value->libelle;
+                        $data[$key]['code_unique'] = $value->code_unique;
+                        $data[$key]['latitude']    = $value->latitude;
+                        $data[$key]['longitude']   = $value->longitude;
+                        $data[$key]['altitude']    = $value->altitude;
+                        $data[$key]['region']      = $region;
+                        $data[$key]['district']    = $district;
+                        //$data[$key]['si']    = $si;
+
+                    }
+                } 
+                else
+                    $data = array();
+                
+            }
+            elseif ($id) {
+                    $data = array();
+                    $site_enqueteur = $this->Site_enqueteurManager->findById($id);
+                    $enqueteur = $this->EnqueteurManager->findById($site_enqueteur->id_enqueteur);
+                    $site_embarquement = $this->Site_embarquementManager->findById($site_enqueteur->id_site);
+                    $data['id'] = $Site_enqueteur->id;
+                    $data['site_embarquement'] = $site_embarquement;
+                    $data['enqueteur'] = $enqueteur;
 
             }elseif($cle_site){
                  $data = array();
@@ -92,6 +101,7 @@ class Site_enqueteur extends REST_Controller {
                 } else
                     $data = array();
             }
+        }
            
         
         if (count($data)>0) {

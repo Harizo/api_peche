@@ -16,6 +16,14 @@ class District extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
+        $id_region = $this->get('id_region');
+            
+        if ($id_region) 
+        {
+            $data = $this->DistrictManager->findByregion($id_region);
+        }
+        else
+        {
             if ($id) 
             {
                 $data = array();
@@ -44,6 +52,7 @@ class District extends REST_Controller {
                 else
                     $data = array();
             }
+        }
         
         if (count($data)>0) {
             $this->response([

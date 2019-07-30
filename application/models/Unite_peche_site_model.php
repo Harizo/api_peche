@@ -67,6 +67,17 @@ class Unite_peche_site_model extends CI_Model
         }                 
     }
 
+     public function find_by_unite_peche_and_site()
+    {
+        $this->db->where("id_site_embarquement", $id_site_embarquement)
+                 ->where("id_unite_peche", $id_unite_peche);
+        $q = $this->db->get($this->table);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return null;
+    }
+
     public function findAllByRequetes()
     {
         $result =  $this->db->select('region.nom as nom_region, unite_peche.libelle as libelle_unite_peche, site_embarquement.libelle as libelle_site, COUNT(*) as nombre')
