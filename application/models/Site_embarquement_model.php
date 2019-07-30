@@ -137,6 +137,22 @@ class Site_embarquement_model extends CI_Model {
         }                 
     }
 
+    public function findByIdtable($id)
+    {   $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where("id", $id)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
+    }
+
     public function findByregion($id_region)
     {   $result =  $this->db->select('*')
                         ->from($this->table)
@@ -152,4 +168,26 @@ class Site_embarquement_model extends CI_Model {
             return null;
         }                 
     }
+
+    public function findAllInTable($annee)
+    {   
+        //$requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
+
+        $result = $this->db->select('enquete_cadre.id_site_embarquement as id, site_embarquement.libelle as libelle')
+                            ->from('enquete_cadre')
+                            ->join('site_embarquement', 'site_embarquement.id = enquete_cadre.id_site_embarquement')
+                            ->join('echantillon', 'echantillon.id_unite_peche = enquete_cadre.id_unite_peche')
+                            ->where('enquete_cadre.annee',$annee)
+                            ->group_by('site_embarquement.id')                        
+                            ->get()
+                            ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
+    } 
 }

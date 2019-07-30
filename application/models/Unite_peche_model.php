@@ -106,6 +106,28 @@ class Unite_peche_model extends CI_Model {
             return null;
             }
 
+    }
+
+    public function findAllInTable($annee)
+    {   
+        $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
+
+        $result = $this->db->select('echantillon.id_unite_peche as id, unite_peche.libelle as libelle')
+                            ->from('echantillon')
+                            ->join('unite_peche', 'unite_peche.id = echantillon.id_unite_peche')
+                            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
+                            ->where($requete) 
+                            ->group_by('unite_peche.id')                        
+                            ->get()
+                            ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
     }	
     
 }
