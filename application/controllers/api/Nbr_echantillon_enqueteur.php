@@ -20,7 +20,32 @@ class Nbr_echantillon_enqueteur extends REST_Controller {
     {
         $id = $this->get('id');
         $menus = $this->get('menus');
-	       if ($id)
+        $test_existance_up = $this->get('test_existance_up');
+        if ($test_existance_up) 
+        {
+           $id_enqueteur = $this->get('id_enqueteur');
+           $id_unite_peche = $this->get('id_unite_peche');
+
+           $res = $this->Nbr_echantillon_enqueteurManager->findAll_by_enqueteur_unite_peche($id_enqueteur, $id_unite_peche);
+
+           $enqueteur  = $this->EnqueteurManager->findById($id_enqueteur);
+           $data[0]['enqueteur']  = $enqueteur->nom." ".$enqueteur->prenom;
+           $unite_peche  = $this->Unite_pecheManager->findById($id_unite_peche);
+           $data[0]['unite_peche']  = $unite_peche->libelle;
+
+            if ($res) 
+            {
+               $data[0]['res']  = $res;
+            }
+            else
+            {
+                $data[0]['res']  = array() ;
+            }
+           
+        }
+        else
+        {
+            if ($id)
             {   $data = array();
                 $nbr_echantillon_enqueteur = $this->Nbr_echantillon_enqueteurManager->findById($id);
                 $data['id']                = $nbr_echantillon_enqueteur->id;
@@ -49,7 +74,7 @@ class Nbr_echantillon_enqueteur extends REST_Controller {
                 } 
             }            
             else
-            {	
+            {   
                 $menu = $this->Nbr_echantillon_enqueteurManager->findAll();
                 if ($menu)
                 {   foreach ($menu as $key => $value)
@@ -67,9 +92,10 @@ class Nbr_echantillon_enqueteur extends REST_Controller {
                 } else
                         $data = array();
                 
-            }
+            }    
+        }
         
-        if (count($data)>0)
+        if ($data)
         {   $this->response([
                 'status'    => TRUE,
                 'response'  => $data,

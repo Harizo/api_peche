@@ -17,7 +17,15 @@ class Site_embarquement extends REST_Controller {
         $id = $this->get('id');
         $id_district = $this->get('id_district');
         $id_region = $this->get('id_region');
+        $get_by_district = $this->get('get_by_district');
 		$taiza="";
+        
+        if ($get_by_district) 
+        {
+            $data = $this->Site_embarquementManager->findAll_district($id_district);
+        }
+        else
+        {
             if ($id)  {
                 $data = array();
                 $site_embarquement = $this->Site_embarquementManager->findById($id);
@@ -32,7 +40,7 @@ class Site_embarquement extends REST_Controller {
                 $data['district_nom'] = $district->nom;*/
                 $data['district'] = $district;
             }  else {
-				$taiza="findAll no nataony";
+                $taiza="findAll no nataony";
                 $menu = $this->Site_embarquementManager->findAll();
                 if ($menu) {
                     foreach ($menu as $key => $value) {
@@ -55,6 +63,7 @@ class Site_embarquement extends REST_Controller {
                 } else
                     $data = array();
             }
+        }
         
         if (count($data)>0) {
             $this->response([

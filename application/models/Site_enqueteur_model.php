@@ -94,7 +94,7 @@ class Site_enqueteur_model extends CI_Model
             }
 
     }
-        public function findAllBySite($cle_site)
+    public function findAllBySite($cle_site)
     {
         $result =  $this->db->select('enqueteur.id as id_enqueteur, site_enqueteur.id as id')
                                 ->from($this->table)
@@ -112,6 +112,26 @@ class Site_enqueteur_model extends CI_Model
             return null;
             }
 
+    }
+
+    public function get_enqueteur_by_site($id_site_embarquement)
+    {
+        $result =  $this->db->select('enqueteur.id as id, enqueteur.nom as nom, enqueteur.prenom as prenom')
+                                ->from('site_enqueteur,enqueteur,site_embarquement')
+                                ->where("site_enqueteur.id_enqueteur=enqueteur.id")
+                                ->where("site_enqueteur.id_site=site_embarquement.id")
+                                ->where('site_embarquement.id='.$id_site_embarquement)
+                                ->order_by('nom')
+                                ->get()
+                                ->result();
+            if($result)
+            {
+                return $result;
+            }
+            else
+            {
+            return null;
+            }
     }
 
 }

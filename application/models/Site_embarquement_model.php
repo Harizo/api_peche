@@ -59,6 +59,21 @@ class Site_embarquement_model extends CI_Model {
         }                 
     }	
 
+    public function findAll_district($id_district) {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->order_by('code')
+                        ->where("id_district", $id_district)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+
 
     public function findAllByRegion($id_region,$annee) {
         $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;

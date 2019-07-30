@@ -67,6 +67,23 @@ class Nbr_echantillon_enqueteur_model extends CI_Model
         }                 
     }
 
+    public function findAll_by_enqueteur_unite_peche($id_enqueteur, $id_unite_peche)
+    {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->order_by('id_enqueteur')
+                        ->where("id_enqueteur", $id_enqueteur)
+                        ->where("id_unite_peche", $id_unite_peche)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+
     public function findById($id)
     {
         $this->db->where("id", $id);
