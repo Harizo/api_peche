@@ -256,7 +256,7 @@ class Fiche_echantillonnage_capture_model extends CI_Model
                                 and echantillon.id = espece_capture.id_echantillon
                                 and fiche_echantillonnage_capture.id_region = id_reg
                                 and echantillon.id_unite_peche = id_unite 
-                                and ".$requete." 
+                                and ".$reqsansSiteEspece." 
                                 and DATE_FORMAT(fiche_echantillonnage_capture.date,'%c') = mois
                                ) as nombre_echantillon",FALSE);
 
