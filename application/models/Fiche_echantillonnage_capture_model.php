@@ -508,7 +508,7 @@ public function ecartypeAnalyse($requetesanssite)
         if ($sample) {
            --$n;
         }
-        return sqrt($carry / $n);
+        return sqrt($carry / $n-1);
     }
 
 
@@ -543,20 +543,18 @@ public function ecartypeAnalyse($requetesanssite)
         }               
     }
 
-        /*public function ecart_type8METY($requete,$id_fiche,$id_region,$id_unite_peche) {
-        $result = $this->db
-                            ->select('STDDEV(echantillon.total_capture) as ecart_type')
+        public function ecart_type8METY($requete,$id_fiche,$id_region,$id_unite_peche) {
+        $result = $this->db->select('((espece_capture.capture)) as ecart_type')
                             ->from('fiche_echantillonnage_capture')
                             ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
-                                           
+                            ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                 
                             ->join('unite_peche', 'echantillon.id_unite_peche = unite_peche.id')                  
-                                           
+                            ->group_by('echantillon.id')                
                             ->where($requete)                          
                         
                             ->where('fiche_echantillonnage_capture.id_region',$id_region)                         
                             ->where('echantillon.id_unite_peche',$id_unite_peche)                         
-                            ->where('fiche_echantillonnage_capture.id',$id_fiche)                         
-                            //->where('fiche_echantillonnage_capture.validation',1)                         
+                            ->where('fiche_echantillonnage_capture.id',$id_fiche)                          
                             ->get()
                             ->result();
 
@@ -568,7 +566,7 @@ public function ecartypeAnalyse($requetesanssite)
         {
             return null;
         }           
-    }*/
+    }
 
 
     public function get_pab_moy_ecart_nbr_jrs_par_unite_peche($requete)

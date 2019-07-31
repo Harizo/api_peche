@@ -350,7 +350,7 @@ class Requetes extends REST_Controller {
                 $sqrt = sqrt ($value->nombre) ;
                 $data[$indice]['sqrt'] = number_format($sqrt, 2,",",".") ;
               
-                $ecart_type = $this->Fiche_echantillonnage_captureManager->ecart_type($this->generer_requete($pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece),$value->id_fiche,$value->id_region,$value->id_unite_peche); 
+                $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse($this->generer_requete($pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece),$value->id_fiche,$value->id_region,$value->id_unite_peche); 
                 
                 //$ecart_type = $ecart_type_obj[0]->ecart_type ;
                 $data[$indice]['ecart_type'] = number_format($ecart_type, 2,",",".") ; 
