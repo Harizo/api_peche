@@ -45,7 +45,7 @@ class Analyse_parametrable extends REST_Controller
             //initialisation
             if (($id_region!='*')&&($id_region!='undefined')) 
             {
-                $all_region = $this->RegionManager->findByIdtab($id_region);
+                $all_region = $this->RegionManager->findByIdtable($id_region,$annee);
 
             }
             else 
@@ -56,7 +56,7 @@ class Analyse_parametrable extends REST_Controller
 
             if(($id_unite_peche!='*')&&($id_unite_peche!='undefined'))
             {
-                $all_unite_peche = $this->Unite_pecheManager->findByIdtab($id_unite_peche);
+                $all_unite_peche = $this->Unite_pecheManager->findByIdtable($id_unite_peche,$annee);
             }
             else
             {
@@ -67,7 +67,7 @@ class Analyse_parametrable extends REST_Controller
 
             if(($id_site_embarquement!='*')&&($id_site_embarquement!='undefined'))
             {
-                $all_site_embarquement = $this->Site_embarquementManager->findByIdtable($id_site_embarquement);
+                $all_site_embarquement = $this->Site_embarquementManager->findByIdtable($id_site_embarquement,$annee);
             }
             else
             {
@@ -79,7 +79,7 @@ class Analyse_parametrable extends REST_Controller
 
             if(($id_espece!='*')&&($id_espece!='undefined'))
             {
-                $all_espece = $this->EspeceManager->findByIdtable($id_espece);
+                $all_espece = $this->EspeceManager->findByIdtable($id_espece,$annee);
             }
             else
             {
@@ -97,8 +97,8 @@ class Analyse_parametrable extends REST_Controller
                 $erreur_rel_capture=0;
                 $erreur_relative=0;
                 $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                            $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $id_espece),
-                            $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,'*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $id_espece),$annee);
+                            $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $id_unite_peche, $id_espece),
+                            $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $id_unite_peche, $id_espece),$annee);
 
                 if ($result != null )
                 {   
@@ -107,10 +107,10 @@ class Analyse_parametrable extends REST_Controller
 
                     foreach ($result as $key => $value)
                     {
-                        $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece($this->generer_requete_analyse($value->anee,$value->mois, $id_region, $id_district, $id_site_embarquement, $value->id_unite, $id_espece));
+                        $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece($this->generer_requete_analyse($value->anee,$value->mois, $value->id_reg, '*', '*', $value->id_unite, $id_espece));
 
                         $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                          $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, '*',$value->id_unite, $id_espece));
+                                          $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, '*', '*',$value->id_unite, $id_espece));
 
                         $date_t     = explode('-', $value->date) ;
                         $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -184,6 +184,7 @@ class Analyse_parametrable extends REST_Controller
                         $donnees[$i]['capt'] = $captures_t/1000;
                         $donnees[$i]['cpares'] = $tab_capture_espece;
                         $donnees[$i]['espece'] = $tab_capture_espece_total;
+                        $donnees[$i]['result'] = $result;
                         $donnees[$i]['ecart'] = $this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece);
                         $donnees[$i]['nbr_unit_peche'] = $value->nbr_unit_peche;
                         $donnees[$i]['cpue_moyenne'] = $value->cpue_moyenne;
@@ -232,116 +233,116 @@ class Analyse_parametrable extends REST_Controller
                 $erreur_relative=0;
                 if ($all_region!=null)
                 {
-                foreach ($all_region as $kRegion => $vRegion)
-                {
-                   $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                            $this->generer_requete_analyse($annee,$mois,$vRegion->id,$id_district,$id_site_embarquement, $id_unite_peche, $id_espece),
-                            $this->generer_requete_analyse($annee,$mois,$vRegion->id,$id_district,'*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$vRegion->id,$id_district,$id_site_embarquement, $id_unite_peche, $id_espece),$annee);
+                    foreach ($all_region as $kRegion => $vRegion)
+                    {
+                       $result =   $this->Fiche_echantillonnage_captureManager->essai(
+                                $this->generer_requete_analyse($annee,$mois,$vRegion->id,'*',$id_site_embarquement, $id_unite_peche, $id_espece),
+                                $this->generer_requete_analyse($annee,$mois,$vRegion->id,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$vRegion->id,'*',$id_site_embarquement, $id_unite_peche, $id_espece),$annee);
 
-                    if ($result != null )
-                    {                        
-                        $i=1;
-                        $donnees=array();
+                        if ($result != null )
+                        {                        
+                            $i=1;
+                            $donnees=array();
 
-                        foreach ($result as $key => $value)
-                        {
-                            $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                        $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement, $value->id_unite, $id_espece));
-
-                            $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                          $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, '*',$value->id_unite, $id_espece));
-
-                            $date_t     = explode('-', $value->date) ;
-                            $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
-                            $nbr_jour   = intval(date("t",$res));
-
-                            $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
-                            
-                            $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
-                            
-                            $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
-                            $tdistriburion90 = $distribution[0]->PercentFractile90 ;
-                            $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                            if ($value->cpue_moyenne )
+                            foreach ($result as $key => $value)
                             {
-                                $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
-                            }                            
+                                $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
+                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*', $value->id_unite, $id_espece));
 
-                            $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
-                            $clpab           = ($distributionpab[0]->PercentFractile90 * $value->ecart_typepab) / $value->sqrtpab ;
-                           $max_pab          = ($clpab + $value->pab_moy) ;
-                            
-                            if ($max_pab > 1 ) 
-                            {$moy_pax_pab = 1 ;}
-                            else{$moy_pax_pab = $max_pab ;}
-                            
-                            $max_cpue = $clcpue + $value->cpue_moyenne;
+                                $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*', '*',$value->id_unite, $id_espece));
 
-                            $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
-                            $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
+                                $date_t     = explode('-', $value->date) ;
+                                $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
+                                $nbr_jour   = intval(date("t",$res));
 
-                            $cl_captures_totales = $max_captures_totales - ($captures_t/1000);
-                           
-                            $erreur_relative_capture_total_90=1;
-                            if ($captures_t)
-                            {
-                                $erreur_relative_capture_total_90 = ($cl_captures_totales / ($captures_t/1000)) * 100;
-                            } 
-
-                            $j=0;
-                            $tab_capture_espece_total = array();
-                            $prix_espece              = array();
-                            $tab_composition          = array();
-                          
-                            if ($tab_capture_par_espece) 
-                            {
-                                foreach ($tab_capture_par_espece as $val)
+                                $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
+                                
+                                $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                
+                                $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
+                                $tdistriburion90 = $distribution[0]->PercentFractile90 ;
+                                $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
+                                if ($value->cpue_moyenne )
                                 {
-                                    $tab_capture_espece_total[$j]=($val->capture_total_par_espece/$value->capture_total_par_unite)*($captures_t);
-                                    $prix_espece[$j]=(($val->capture_total_par_espece/$value->capture_total_par_unite)*($captures_t))*$val->prix;
-                                    $tab_composition[$j]=($val->capture_total_par_espece/$value->capture_total_par_unite)*100;
-                                    $j++;
+                                    $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                }                            
+
+                                $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
+                                $clpab           = ($distributionpab[0]->PercentFractile90 * $value->ecart_typepab) / $value->sqrtpab ;
+                               $max_pab          = ($clpab + $value->pab_moy) ;
+                                
+                                if ($max_pab > 1 ) 
+                                {$moy_pax_pab = 1 ;}
+                                else{$moy_pax_pab = $max_pab ;}
+                                
+                                $max_cpue = $clcpue + $value->cpue_moyenne;
+
+                                $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
+                                $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
+
+                                $cl_captures_totales = $max_captures_totales - ($captures_t/1000);
+                               
+                                $erreur_relative_capture_total_90=1;
+                                if ($captures_t)
+                                {
+                                    $erreur_relative_capture_total_90 = ($cl_captures_totales / ($captures_t/1000)) * 100;
+                                } 
+
+                                $j=0;
+                                $tab_capture_espece_total = array();
+                                $prix_espece              = array();
+                                $tab_composition          = array();
+                              
+                                if ($tab_capture_par_espece) 
+                                {
+                                    foreach ($tab_capture_par_espece as $val)
+                                    {
+                                        $tab_capture_espece_total[$j]=($val->capture_total_par_espece/$value->capture_total_par_unite)*($captures_t);
+                                        $prix_espece[$j]=(($val->capture_total_par_espece/$value->capture_total_par_unite)*($captures_t))*$val->prix;
+                                        $tab_composition[$j]=($val->capture_total_par_espece/$value->capture_total_par_unite)*100;
+                                        $j++;
+                                    }
                                 }
+                                                           
+                                
+                                
+                                $som_tab_capture_par_espece =array_sum($tab_capture_espece_total);
+                                $donnees[$i]['Total_capture_unite'] = $som_tab_capture_par_espece;
+
+                                $total_prix_unite=array_sum($prix_espece);
+                                $donnees[$i]['total_prix_unite'] = $total_prix_unite;
+                                $donnees[$i]['erreur_relative_capture_total_90'] = $erreur_relative_capture_total_90;
+                                $donnees[$i]['erreur_relative'] = $erreur_relative;
+                                $donnees[$i]['unite_peche'] = $value->libelle;
+
+                                $donnees[$i]['espece'] = $tab_capture_espece_total;
+                              $i++;  
                             }
-                                                       
-                            
-                            
-                            $som_tab_capture_par_espece =array_sum($tab_capture_espece_total);
-                            $donnees[$i]['Total_capture_unite'] = $som_tab_capture_par_espece;
+                            $Total_captureRegion  = array_column($donnees, 'Total_capture_unite');
+                            $total_captureRegion = array_sum($Total_captureRegion);
 
-                            $total_prix_unite=array_sum($prix_espece);
-                            $donnees[$i]['total_prix_unite'] = $total_prix_unite;
-                            $donnees[$i]['erreur_relative_capture_total_90'] = $erreur_relative_capture_total_90;
-                            $donnees[$i]['erreur_relative'] = $erreur_relative;
-                            $donnees[$i]['unite_peche'] = $value->libelle;
+                            $Total_prixRegion     = array_column($donnees, 'total_prix_unite');
+                            $total_prixRegion    = array_sum($Total_prixRegion)/1000;
 
-                            $donnees[$i]['espece'] = $tab_capture_espece_total;
-                          $i++;  
+                            $erreur_captureRegion = array_column($donnees, 'erreur_relative_capture_total_90');
+                            $n_captureRegion      = count($erreur_captureRegion);
+                            $erreur_rel_captureRegion = number_format ( array_sum($erreur_captureRegion)/$n_captureRegion ,0);
+
+                            $erreurRegion = array_column($donnees, 'erreur_relative');
+                            $nRegion      = count($erreurRegion);
+                            $erreur_relativeRegion = number_format ( array_sum($erreurRegion)/$nRegion,0);
+
+                            $data[$indice]['region'] = $vRegion->nom;
+                            $data[$indice]['capture'] = $total_captureRegion;
+                            $data[$indice]['prix']    = $total_prixRegion;
+                            $data[$indice]['erreur_relative']    = $erreur_relativeRegion;
+                            $data[$indice]['erreur_rel_capture'] = $erreur_rel_captureRegion;
+                            $data[$indice]['Donnee'] = $donnees;  
+                            $data[$indice]['Donnee'] = $result;                      
+                            $indice++ ;  
                         }
-                        $Total_captureRegion  = array_column($donnees, 'Total_capture_unite');
-                        $total_captureRegion = array_sum($Total_captureRegion);
-
-                        $Total_prixRegion     = array_column($donnees, 'total_prix_unite');
-                        $total_prixRegion    = array_sum($Total_prixRegion)/1000;
-
-                        $erreur_captureRegion = array_column($donnees, 'erreur_relative_capture_total_90');
-                        $n_captureRegion      = count($erreur_captureRegion);
-                        $erreur_rel_captureRegion = number_format ( array_sum($erreur_captureRegion)/$n_captureRegion ,0);
-
-                        $erreurRegion = array_column($donnees, 'erreur_relative');
-                        $nRegion      = count($erreurRegion);
-                        $erreur_relativeRegion = number_format ( array_sum($erreurRegion)/$nRegion,0);
-
-                        $data[$indice]['region'] = $vRegion->nom;
-                        $data[$indice]['capture'] = $total_captureRegion;
-                        $data[$indice]['prix']    = $total_prixRegion;
-                        $data[$indice]['erreur_relative']    = $erreur_relativeRegion;
-                        $data[$indice]['erreur_rel_capture'] = $erreur_rel_captureRegion;
-                        $data[$indice]['Donnee'] = $donnees;  
-                        $data[$indice]['Donnee'] = $result;                      
-                        $indice++ ;  
                     }
-                }
                 }
                 
                 $Total_capture  = array_column($data, 'capture');
@@ -386,8 +387,8 @@ class Analyse_parametrable extends REST_Controller
                     foreach ($all_unite_peche as $kUnite_peche => $vUnite_peche)
                     {
                        $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $id_espece),
-                                $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,'*', $vUnite_peche->id, '*'), $this->generer_requete_analyse_cadre($annee,$mois,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $id_espece),$annee);
+                                $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),
+                                $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $vUnite_peche->id, '*'), $this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),$annee);
                        
                         if ($result != null )
                         {                        
@@ -396,10 +397,10 @@ class Analyse_parametrable extends REST_Controller
                             foreach ($result as $key => $value)
                             {
                                 $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $id_espece));
+                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                 $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                 $date_t     = explode('-', $value->date) ;
                                 $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -544,8 +545,8 @@ class Analyse_parametrable extends REST_Controller
                         foreach ($all_unite_peche as $kUnite_peche => $vUnite_peche)
                         {
                            $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                    $this->generer_requete_analyse($annee,$mois,$vRegion->id,$id_district,$id_site_embarquement, $vUnite_peche->id, $id_espece),
-                                    $this->generer_requete_analyse($annee,$mois,$vRegion->id,$id_district,'*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$vRegion->id,$id_district,$id_site_embarquement, $vUnite_peche->id, $id_espece),$annee);
+                                    $this->generer_requete_analyse($annee,$mois,$vRegion->id,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),
+                                    $this->generer_requete_analyse($annee,$mois,$vRegion->id,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$vRegion->id,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),$annee);
                            
                             if ($result != null )
                             {                        
@@ -554,10 +555,10 @@ class Analyse_parametrable extends REST_Controller
                                 foreach ($result as $key => $value)
                                 {
                                     $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $id_espece));
+                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                     $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                     $date_t     = explode('-', $value->date) ;
                                     $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -703,9 +704,9 @@ class Analyse_parametrable extends REST_Controller
                         {
                            
                            $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                    $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $id_espece),
-                                    $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,'*', $vUnite_peche->id, '*'),
-                                    $this->generer_requete_analyse_cadre($annee,$mois,$id_region,$id_district,$vSite->id, $vUnite_peche->id, $id_espece),$annee);
+                                    $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),
+                                    $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $vUnite_peche->id, '*'),
+                                    $this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$vSite->id, $vUnite_peche->id, $id_espece),$annee);
 
                            
                             if ($result != null )
@@ -715,10 +716,10 @@ class Analyse_parametrable extends REST_Controller
                                 foreach ($result as $key => $value)
                                 {
                                     $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $id_espece));
+                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                     $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                     $date_t     = explode('-', $value->date) ;
                                     $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -860,8 +861,8 @@ class Analyse_parametrable extends REST_Controller
                 for ($moi=1; $moi <=12 ; $moi++)
                 {
                    $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                            $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $id_espece),
-                            $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,'*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $id_espece),$annee);
+                            $this->generer_requete_analyse($annee,$moi,$id_region,'*',$id_site_embarquement, $id_unite_peche, $id_espece),
+                            $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$id_site_embarquement, $id_unite_peche, $id_espece),$annee);
 
                     if ($result != null )
                     {                        
@@ -870,10 +871,10 @@ class Analyse_parametrable extends REST_Controller
                         foreach ($result as $key => $value)
                         {
                             $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                        $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $id_espece));
+                                                        $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                             $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                          $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, '*',$value->id_unite, $id_espece));
+                                          $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*', '*',$value->id_unite, $id_espece));
 
                             $date_t     = explode('-', $value->date) ;
                             $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -1010,8 +1011,8 @@ class Analyse_parametrable extends REST_Controller
                         foreach ($all_unite_peche as $kUnite_peche => $vUnite_peche)
                         {
                            $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                    $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $id_espece),
-                                    $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,'*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $id_espece),$annee);
+                                    $this->generer_requete_analyse($annee,$moi,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),
+                                    $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),$annee);
 
                            
                             if ($result != null )
@@ -1021,10 +1022,10 @@ class Analyse_parametrable extends REST_Controller
                                 foreach ($result as $key => $value)
                                 {
                                     $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $id_espece));
+                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                     $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                     $date_t     = explode('-', $value->date) ;
                                     $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -1176,8 +1177,8 @@ class Analyse_parametrable extends REST_Controller
                             foreach ($all_unite_peche as $kUnite_peche => $vUnite_peche)
                             {
                                $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                        $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $id_espece),
-                                        $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,'*', $vUnite_peche->id, '*'), $this->generer_requete_analyse_cadre($annee,$moi,$id_region,$id_district,$vSite->id, $vUnite_peche->id, $id_espece),$annee);
+                                        $this->generer_requete_analyse($annee,$moi,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),
+                                        $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'), $this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$vSite->id, $vUnite_peche->id, $id_espece),$annee);
 
                                
                                 if ($result != null )
@@ -1187,10 +1188,10 @@ class Analyse_parametrable extends REST_Controller
                                     foreach ($result as $key => $value)
                                     {
                                         $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                                    $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement, $value->id_unite, $id_espece));
+                                                                    $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*', $value->id_unite, $id_espece));
 
                                         $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                                      $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*', $value->id_unite, $id_espece));
+                                                      $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*', $value->id_unite, $id_espece));
 
                                         $date_t     = explode('-', $value->date) ;
                                         $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -1337,8 +1338,8 @@ class Analyse_parametrable extends REST_Controller
                     foreach ($all_espece as $kEspece => $vEspece)
                     {
                        $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $vEspece->id),
-                                $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,'*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $vEspece->id),$annee);
+                                $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $id_unite_peche, $vEspece->id),
+                                $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $id_unite_peche, $vEspece->id),$annee);
 
                        
                         if ($result != null )
@@ -1348,10 +1349,10 @@ class Analyse_parametrable extends REST_Controller
                             foreach ($result as $key => $value)
                             {
                                 $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                            $this->generer_requete_analyse($value->anee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement, $value->id_unite, $vEspece->id));
+                                                            $this->generer_requete_analyse($value->anee,$value->mois, $value->id_reg,'*','*', $value->id_unite, $vEspece->id));
 
                                 $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois,$value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois,$value->id_reg,'*','*',$value->id_unite, '*'));
 
                                 $date_t     = explode('-', $value->date) ;
                                 $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -1497,8 +1498,8 @@ class Analyse_parametrable extends REST_Controller
                         foreach ($all_espece as $kEspece => $vEspece)
                         {
                            $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                    $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
-                                    $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,'*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $vEspece->id),$annee);
+                                    $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
+                                    $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),$annee);
                            
                             if ($result != null )
                             {                        
@@ -1507,10 +1508,10 @@ class Analyse_parametrable extends REST_Controller
                                 foreach ($result as $key => $value)
                                 {
                                     $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $vEspece->id));
+                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $vEspece->id));
 
                                 $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite,'*'));
 
                                     $date_t     = explode('-', $value->date) ;
                                     $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -1659,8 +1660,8 @@ class Analyse_parametrable extends REST_Controller
                             foreach ($all_espece as $kEspece => $vEspece)
                             {
                                $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                        $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
-                                        $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,'*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,$id_district,$vSite->id, $vUnite_peche->id, $vEspece->id),$annee);
+                                        $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
+                                        $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$vSite->id, $vUnite_peche->id, $vEspece->id),$annee);
                                
                                 if ($result != null )
                                 {                        
@@ -1669,10 +1670,10 @@ class Analyse_parametrable extends REST_Controller
                                     foreach ($result as $key => $value)
                                     {
                                         $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                                $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $vEspece->id));
+                                                                $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $vEspece->id));
 
                                         $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                                  $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));                               
+                                                  $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite,'*'));                               
 
                                         $date_t     = explode('-', $value->date) ;
                                         $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -1821,8 +1822,8 @@ class Analyse_parametrable extends REST_Controller
                         foreach ($all_espece as $kEspece => $vEspece)
                         {   
                            $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                    $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
-                                    $this->generer_requete_analyse($annee,$mois,$id_region,$id_district,'*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $vEspece->id),$annee);
+                                    $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
+                                    $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),$annee);
                            
                             if ($result != null )
                             {                        
@@ -1832,10 +1833,10 @@ class Analyse_parametrable extends REST_Controller
                                 foreach ($result as $key => $value)
                                 {   $nbr_jrs_peche_mensuel_pab_tab=0;
                                     $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $vEspece->id));
+                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $vEspece->id));
 
                                 $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite,'*'));
 
                                     $date_t     = explode('-', $value->date) ;
                                     $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -1997,8 +1998,8 @@ class Analyse_parametrable extends REST_Controller
                         foreach ($all_espece as $kEspece => $vEspece)
                         {
                            $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                    $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,$id_site_embarquement, $id_unite_peche, $vEspece->id),
-                                    $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,'*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,$id_district,$id_site_embarquement, $id_unite_peche,$vEspece->id),$annee);
+                                    $this->generer_requete_analyse($annee,$moi,$id_region,'*',$id_site_embarquement, $id_unite_peche, $vEspece->id),
+                                    $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$id_site_embarquement, $id_unite_peche,$vEspece->id),$annee);
 
                            
                             if ($result != null )
@@ -2008,10 +2009,10 @@ class Analyse_parametrable extends REST_Controller
                                 foreach ($result as $key => $value)
                                 {
                                     $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $vEspece->id));
+                                                            $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $vEspece->id));
 
                                     $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite,'*'));
 
                                     $date_t     = explode('-', $value->date) ;
                                     $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -2160,8 +2161,8 @@ class Analyse_parametrable extends REST_Controller
                             foreach ($all_espece as $kEspece => $vEspece)
                             {
                                $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                        $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
-                                        $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,'*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id,$vEspece->id),$annee);
+                                        $this->generer_requete_analyse($annee,$moi,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
+                                        $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$id_site_embarquement, $vUnite_peche->id,$vEspece->id),$annee);
 
                                
                                 if ($result != null )
@@ -2171,10 +2172,10 @@ class Analyse_parametrable extends REST_Controller
                                     foreach ($result as $key => $value)
                                     {
                                         $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                                $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $vEspece->id));
+                                                                $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $vEspece->id));
 
                                         $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                                  $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                                  $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, '*'));
 
                                         $date_t     = explode('-', $value->date) ;
                                         $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -2326,8 +2327,8 @@ class Analyse_parametrable extends REST_Controller
                                 foreach ($all_espece as $kEspece => $vEspece)
                                 {
                                    $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                                            $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,$id_site_embarquement, $vUnite_peche->id,$vEspece->id),
-                                            $this->generer_requete_analyse($annee,$moi,$id_region,$id_district,'*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,$id_district,$vSite->id, $vUnite_peche->id,$vEspece->id),$annee);
+                                            $this->generer_requete_analyse($annee,$moi,$id_region,'*',$id_site_embarquement, $vUnite_peche->id,$vEspece->id),
+                                            $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$vSite->id, $vUnite_peche->id,$vEspece->id),$annee);
 
                                    
                                     if ($result != null )
@@ -2337,10 +2338,10 @@ class Analyse_parametrable extends REST_Controller
                                         foreach ($result as $key => $value)
                                         {
                                             $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece(
-                                                                    $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district, $id_site_embarquement,$value->id_unite, $vEspece->id));
+                                                                    $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $vEspece->id));
 
                                             $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                                      $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, $id_district,'*',$value->id_unite, $id_espece));
+                                                      $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite,'*'));
 
                                             $date_t     = explode('-', $value->date) ;
                                             $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );

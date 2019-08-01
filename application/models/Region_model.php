@@ -91,6 +91,27 @@ class Region_model extends CI_Model
             return null;
         }                 
     }
+    public function findByIdtable($id,$annee)
+    {   
+        $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
+        
+        $result = $this->db->select('fiche_echantillonnage_capture.id_region as id, region.nom as nom')
+                            ->from('fiche_echantillonnage_capture')
+                            ->join('region', 'region.id = fiche_echantillonnage_capture.id_region')
+                            ->where('fiche_echantillonnage_capture.id_region',$id)
+                            ->where($requete)
+                            ->group_by('region.id')                        
+                            ->get()
+                            ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
+    }
 
     public function findAllInTable($annee)
     {   
