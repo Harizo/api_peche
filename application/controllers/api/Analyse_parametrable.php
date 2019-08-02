@@ -110,7 +110,7 @@ class Analyse_parametrable extends REST_Controller
                         $tab_capture_par_espece =   $this->Fiche_echantillonnage_captureManager->capture_total_par_espece($this->generer_requete_analyse($value->anee,$value->mois, $value->id_reg, '*', '*', $value->id_unite, $id_espece));
 
                         $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                          $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, '*', '*',$value->id_unite, $id_espece));
+                                          $this->generer_requete_analyse($annee,$value->mois, $value->id_reg, '*', '*',$value->id_unite, '*'));
 
                         $date_t     = explode('-', $value->date) ;
                         $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -250,7 +250,7 @@ class Analyse_parametrable extends REST_Controller
                                                             $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*', $value->id_unite, $id_espece));
 
                                 $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*', '*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*', '*',$value->id_unite, '*'));
 
                                 $date_t     = explode('-', $value->date) ;
                                 $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -400,7 +400,7 @@ class Analyse_parametrable extends REST_Controller
                                                             $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                 $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, '*'));
 
                                 $date_t     = explode('-', $value->date) ;
                                 $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -558,7 +558,7 @@ class Analyse_parametrable extends REST_Controller
                                                             $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                     $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, '*'));
 
                                     $date_t     = explode('-', $value->date) ;
                                     $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -719,7 +719,7 @@ class Analyse_parametrable extends REST_Controller
                                                             $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                     $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, '*'));
 
                                     $date_t     = explode('-', $value->date) ;
                                     $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -874,7 +874,7 @@ class Analyse_parametrable extends REST_Controller
                                                         $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                             $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                          $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*', '*',$value->id_unite, $id_espece));
+                                          $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*', '*',$value->id_unite, '*'));
 
                             $date_t     = explode('-', $value->date) ;
                             $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -1025,7 +1025,7 @@ class Analyse_parametrable extends REST_Controller
                                                             $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
 
                                     $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, $id_espece));
+                                              $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*',$value->id_unite, '*'));
 
                                     $date_t     = explode('-', $value->date) ;
                                     $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
@@ -1191,7 +1191,7 @@ class Analyse_parametrable extends REST_Controller
                                                                     $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*', $value->id_unite, $id_espece));
 
                                         $ecart_type = $this->Fiche_echantillonnage_captureManager->ecartypeAnalyse(
-                                                      $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*', $value->id_unite, $id_espece));
+                                                      $this->generer_requete_analyse($annee,$value->mois, $value->id_reg,'*','*', $value->id_unite, '*'));
 
                                         $date_t     = explode('-', $value->date) ;
                                         $res        = mktime( 0, 0, 0, $date_t[1], 1, $date_t[0] );
