@@ -105,14 +105,14 @@ class Requetes extends REST_Controller {
 
             //initialisation Requete_8
             //RQ1
-                  if ($pivot == 'req_1') 
+                  if ($pivot == 'req_1_site_date_unite_capturet_cpues') 
                   {
                     $data = $this->get_cpue_journaliere($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
                   
                   
             //FIN RQ1
-                  if (($pivot == 'req_2') || $pivot == 'req_3') 
+                  if (($pivot == 'req_2_moi_unite_cpuemoy_stdevcpue_nbrechantillon_sqr_degre') || $pivot == 'req_3_moi_unite_cpuemoy_stdevcpue_nbrechantillon_sqr_fractil90_clcpue_erelative_maxcpue') 
                   {
                     $data = $this->get_cpue_moy_par_strate_mineur($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
@@ -120,40 +120,40 @@ class Requetes extends REST_Controller {
             //fin RQ2
 
             //RQ4
-                  if (($pivot == 'req_4_1') || ($pivot == 'req_4_2'))
+                  if (($pivot == 'req_4_1_annee_site_unite_nbrunite') || ($pivot == 'req_4_2_annee_unite_nbrunite'))
                   {
                     $data = $this->nbr_unite_peche($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ4
 
             //RQ5
-                  if (($pivot == 'req_5_1') )
+                  if (($pivot == 'req_5_1_codeteteuniq_site_unite_date_phier_pavanthier_nbrjrssemdern_pabs') )
                   {
                     $data = $this->requete_5_pab($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ5
             //RQ5.2
-                  if (($pivot == 'req_5_2') )
+                  if (($pivot == 'req_5_2_unite_pabmoy_stdevpab_nbrechantilonpab_nbrjrpeche_sqr_degre') )
                   {
                     $data = $this->requete_5_2($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ5.2
 
             //RQ5.2
-                  if (($pivot == 'req_5_3') || ($pivot == 'req_5_4') )
+                  if (($pivot == 'req_5_3_unite_pabmoy_maxpab_stdevpab_sqr_fractil90_erelative_clpab') || ($pivot == 'req_5_4_moi_jrmensuel_unite_pabmoy_jrpechemenspab_moymaxxpab_moynmaxxpabcor_maxjrpechemensupab') )
                   {
                     $data = $this->requete_5_3_et_5_4($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ5.2
 
             //RQ5.2
-                  if (($pivot == 'req_6_1')  )
+                  if (($pivot == 'req_6_1_annee_unite_totalannuel')  )
                   {
                     $data = $this->requete_6_1_acces6_2($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ5.2
             //RQ6.2
-                  if (($pivot == 'req_6_2')  )
+                  if (($pivot == 'req_6_2_moi_jrmensuel_site_unite_nbrunite_jrpechemenspab_jrtotalmensuel_cpuemoy_capturtotal_erelative_nbrechantillon_moymaxxpab_maxcpue_maxcapttot_clcapt_erelcapttot')  )
                   {
                     if ($regionReq_8!=null)
                     {
@@ -167,14 +167,14 @@ class Requetes extends REST_Controller {
             //Fin RQ6.2
 
             //RQ7.1
-                  if (($pivot == 'req_7_1')  )
+                  if (($pivot == 'req_7_1_moi_unite_code3Al_caapture_prixunitmoy')  )
                   {
                     $data = $this->requete_7_1($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ7.1
 
             //RQ7.2
-                  if (($pivot == 'req_7_2')  )
+                  if (($pivot == 'req_7_2_moi_unite_caapture')  )
                   {
                     $data = $this->requete_7_2($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
@@ -188,14 +188,14 @@ class Requetes extends REST_Controller {
             //Fin RQ7.
 
                   //RQ7.3
-                  if (($pivot == 'req_7_3')  )
+                  if (($pivot == 'req_7_3_moi_unite_code3Al_captureespece_captureunite_composi_prixmoy')  )
                   {
                     $data = $this->requete_7_3_new($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ7.3
 
             //RQ8
-                  if (($pivot == 'req_8')  )
+                  if (($pivot == 'req_8_moi_site_unite_jrpechemenspab_jrtotalmensuel_code3Al_erelative_erelcapttot_nbrechantillon_capturtotal_composi_captureespece_prixmoy_pprix')  )
                   {
                     if ($regionReq_8!=null)
                     {
@@ -209,13 +209,13 @@ class Requetes extends REST_Controller {
             //Fin RQ8
 
             //RQ9
-                  if (($pivot == 'req_9')  )
+                  if (($pivot == 'req_9_annee_site_unite_nbrunite')  )
                   {
                     $data = $this->requete_9($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
             //Fin RQ9
             //RQ10
-                  if (($pivot == 'req_10')  )
+                  if (($pivot == 'req_10_annee_region_unite_nbrunite')  )
                   {
                     $data = $this->requete_10($sites_par_region,$all_unite_peche,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece) ;
                   }
@@ -242,7 +242,7 @@ class Requetes extends REST_Controller {
         
         
 
-        if (($pivot == 'req_4_1') || ($pivot == 'req_4_2')|| ($pivot == 'req_9')|| ($pivot == 'req_10')) 
+        if (($pivot == 'req_4_1_annee_site_unite_nbrunite') || ($pivot == 'req_4_2_annee_unite_nbrunite')|| ($pivot == 'req_9_annee_site_unite_nbrunite')|| ($pivot == 'req_10_annee_region_unite_nbrunite')) 
         {
           $requete = "annee = '".$annee."' " ;
         }
@@ -264,7 +264,7 @@ class Requetes extends REST_Controller {
 
             if (($id_region!='*')&&($id_region!='undefined')) 
             {
-              if (($pivot == 'req_4_1')||($pivot == 'req_4_2')|| ($pivot == 'req_9')|| ($pivot == 'req_10')) 
+              if (($pivot == 'req_4_1_annee_site_unite_nbrunite')||($pivot == 'req_4_2_annee_unite_nbrunite')|| ($pivot == 'req_9_annee_site_unite_nbrunite')|| ($pivot == 'req_10_annee_region_unite_nbrunite')) 
               {
                 $requete = $requete." AND enquete_cadre.id_region=".$id_region ;
               }
@@ -367,7 +367,7 @@ class Requetes extends REST_Controller {
                   $data[$indice]['clcpue'] = number_format($clcpue, 2,",",".") ; 
 
                   $erreur_relative = ($clcpue / $value->moyenne ) * 100;
-                  $data[$indice]['erreur_relative'] = number_format($erreur_relative, 0,",",".");
+                  $data[$indice]['erreur_relative_90'] = number_format($erreur_relative, 0,",",".");
 
                   $max_cpue = $clcpue + $value->moyenne ;
                   $data[$indice]['max_cpue'] = number_format($max_cpue, 2,",",".");
@@ -390,7 +390,7 @@ class Requetes extends REST_Controller {
       //$donnees = $this->Unite_peche_site_Manager->findAllByRequetes();
       
 
-      if ($pivot == "req_4_1") 
+      if ($pivot == "req_4_1_annee_site_unite_nbrunite") 
       {
         $enquete_cadre = $this->Enquete_cadreManager->findAllByRequetes_region_site_unite_peche($this->generer_requete($pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece));
       }
@@ -619,9 +619,8 @@ class Requetes extends REST_Controller {
                 foreach ($all_especeReq_8 as $kEspece => $vEspece)
                 {
                   $result =   $this->Fiche_echantillonnage_captureManager->essai(
-                              $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id,$vEspece->id),
+                              $this->generer_requete_analyse($annee,$moi, $id_region,$id_district, $id_site_embarquement,$id_unite_peche, $id_espece),
                               $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$vSite->id, $vUnite_peche->id,$vEspece->id),$annee);
-
                                  
                   if ($result != null )
                   {                        
@@ -694,6 +693,7 @@ class Requetes extends REST_Controller {
 
                       $total_composition=array_sum($tab_composition);
 
+
                       $donnees[$i]['total_prix_unite'] = $total_prix_unite;
                       $donnees[$i]['erreur_relative_capture_total_90'] = $erreur_relative_capture_total_90;
                       $donnees[$i]['erreur_relative'] = $erreur_relative;
@@ -711,6 +711,8 @@ class Requetes extends REST_Controller {
 
                     $Total_prixUnite_peche     = array_column($donnees, 'total_prix_unite');
                     $total_prixUnite_peche    = array_sum($Total_prixUnite_peche)/1000;
+                    //$countprix=count($Total_prixUnite_peche);
+                    //$pr=$total_prixUnite_peche/$countprix;
 
                     $composition_esp = array_column($donnees, 'composition_espece');
                     $composition_espece = array_sum($composition_esp);
@@ -727,21 +729,24 @@ class Requetes extends REST_Controller {
                     $erreurUnite_peche = array_column($donnees, 'erreur_relative');
                     $nUnite_peche      = count($erreurUnite_peche);
                     $erreur_relativeUnite_peche = number_format ( array_sum($erreurUnite_peche)/$nUnite_peche,0);
-                                     
+                    
+                                  
                     $data[$indice]['mois'] = $moi;
-                    $data[$indice]['site_embarquement'] = $vSite->libelle;
-                    $data[$indice]['unite_peche'] = $vUnite_peche->libelle;
+                    $data[$indice]['libelle'] = $vSite->libelle;
+                    $data[$indice]['libelle_unite_peche'] = $vUnite_peche->libelle;
                     $data[$indice]['code']=$vEspece->code;
                     $data[$indice]['nbr_jrs_peche_mensuel_pab']=number_format ($nbr_jrs_peche_mensuel_pab,0,',','.');
                     $data[$indice]['nbr_total_jrs_peche_mensuel']=number_format ($nbr_total_jrs_peche_mensuel,0,',','.');
-                    $data[$indice]['espece_nom_local']=$vEspece->nom_local;
-                    $data[$indice]['capture_espece'] = $total_captureEspece;
+                    //$data[$indice]['espece_nom_local']=$vEspece->nom_local;
+                    $data[$indice]['somme_capture_par_espece'] = $total_captureEspece;
                     $data[$indice]['prix']    = $total_prixUnite_peche;
-                    $data[$indice]['erreur_relative']    = $erreur_relativeUnite_peche;
-                    $data[$indice]['erreur_rel_capture'] = $erreur_rel_captureUnite_peche;
+                    $data[$indice]['prix_moyenne'] = $value->prix_moyenne; 
+                    $data[$indice]['erreur_relative_90']    = $erreur_relativeUnite_peche;
+                    $data[$indice]['erreur_relative_capture_total_90'] = $erreur_rel_captureUnite_peche;
                     $data[$indice]['composition_espece'] = $composition_espece;
-                    $data[$indice]['capture'] = $capture_to;
-                    $data[$indice]['nombre_echantillon'] = $value->nombre_echantillon;
+                    //$data[$indice]['capture'] = $capture_to;captures_totales_t
+                    $data[$indice]['captures_totales_t'] = $capture_to/1000;
+                    $data[$indice]['nombre'] = $value->nombre_echantillon;
                     $data[$indice]['Donnee'] = $donnees;
                         
                     $indice++ ;  
@@ -893,16 +898,22 @@ class Requetes extends REST_Controller {
             
              $data[$i]['mois'] = $value->mois;
              $data[$i]['region'] = $value->nom_region;
-             $data[$i]['site_embarquement'] = $value->site_embarquement;
-             $data[$i]['unite_peche_libelle']= $value->libelle;
+             //$data[$i]['site_embarquement'] = $value->site_embarquement;
+             $data[$i]['libelle'] = $value->site_embarquement;
+             //$data[$i]['unite_peche_libelle']= $value->libelle;
+             $data[$i]['libelle_unite_peche']= $value->libelle;
              $data[$i]['nbr_unite_peche']= $value->nbr_unit_peche;
+            // $data[$i]['nbr_jrs_peche_mensuel_pab']=$nbr_jrs_peche_mensuel_pab;
              $data[$i]['nbr_jrs_peche_mensuel_pab']=$nbr_jrs_peche_mensuel_pab;
              $data[$i]['nbr_total_jrs_peche_mensuel']= $nbr_total_jrs_peche_mensuel;
-             $data[$i]['jrs_mensuel']= $nbr_jour;
-             $data[$i]['cpue_moyenne']= $value->cpue_moyenne;
-             $data[$i]['erreur_relative_90_cpue'] = number_format($erreur_relative, 0);
-             $data[$i]['nombre_echantillon_cpue'] = $value->nombre_echantillon;
-             $data[$i]['moy_pax_pab'] = $moy_pax_pab ;
+             $data[$i]['nbr_jour_mois']= $nbr_jour;
+             $data[$i]['moyenne']= $value->cpue_moyenne;
+             //$data[$i]['erreur_relative_90_cpue'] = number_format($erreur_relative, 0);
+             $data[$i]['erreur_relative_90'] = number_format($erreur_relative, 0);
+             //$data[$i]['nombre_echantillon_cpue'] = $value->nombre_echantillon;
+             $data[$i]['nombre'] = $value->nombre_echantillon;
+             //$data[$i]['moy_pax_pab'] = $moy_pax_pab ;
+             $data[$i]['max_pab'] = $moy_pax_pab ;
              $data[$i]['max_cpue'] = $max_cpue;
              $data[$i]['stDevCPUE'] = $ecart_type;
              $data[$i]['captures_totales_t']= $captures_t;
