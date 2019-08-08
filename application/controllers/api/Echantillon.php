@@ -65,7 +65,9 @@ class Echantillon extends REST_Controller {
                         $data[$key]['total_capture'] = $value->total_capture;
                         $data[$key]['unique_code'] = $value->unique_code;                        
                         $data[$key]['date_creation'] = $value->date_creation;
-                        $data[$key]['date_modification'] = $value->date_modification;                       
+                        $data[$key]['date_modification'] = $value->date_modification;
+                        $data[$key]['duree_mare'] = $value->duree_mare;
+
                         $data[$key]['data_collect'] = $data_collect;
                         $data[$key]['unite_peche'] = $unite_peche;
                         $data[$key]['user'] = $user;
@@ -139,6 +141,7 @@ class Echantillon extends REST_Controller {
                         $data[$key]['fiche_echantillonnage_capture_id'] = $value->id_fiche_echantillonnage_capture;
                        // $data[$key]['fiche_echantillonnage_capture_nom'] = $fiche_echantillonnage_capture->code_unique;                  
                                             
+                        $data[$key]['duree_mare'] = $value->duree_mare;
                         $data[$key]['total_capture'] = $value->total_capture;
                         $data[$key]['unique_code'] = $value->unique_code;
                         $data[$key]['data_collect'] = $data_collect;
@@ -199,7 +202,8 @@ class Echantillon extends REST_Controller {
                         'nbr_bateau_actif' => '0',
                         'total_bateau_ecn' => '0',
                         'id_unite_peche' => $this->post('unite_peche_id'),
-                        'id_user' => $this->post('user_id')
+                        'id_user' => $this->post('user_id'),
+                        'duree_mare' => $this->post('duree_mare')
                     );
                 }
                 else{
@@ -215,7 +219,8 @@ class Echantillon extends REST_Controller {
                         'nbr_bateau_actif' => $this->post('nbr_bateau_actif'),
                         'total_bateau_ecn' => $this->post('total_bateau_ecn'),
                         'id_unite_peche' => $this->post('unite_peche_id'),
-                        'id_user' => $this->post('user_id')
+                        'id_user' => $this->post('user_id'),
+                        'duree_mare' => $this->post('duree_mare')
                     );
                 }
                 if (!$data) {
@@ -258,7 +263,8 @@ class Echantillon extends REST_Controller {
                         'nbr_bateau_actif' => '0',
                         'total_bateau_ecn' => '0',
                         'id_unite_peche' => $this->post('unite_peche_id'),
-                        'id_user' => $this->post('user_id')
+                        'id_user' => $this->post('user_id'),
+                        'duree_mare' => $this->post('duree_mare')
                     );
                 }
                 else{
@@ -274,7 +280,8 @@ class Echantillon extends REST_Controller {
                         'nbr_bateau_actif' => $this->post('nbr_bateau_actif'),
                         'total_bateau_ecn' => $this->post('total_bateau_ecn'),
                         'id_unite_peche' => $this->post('unite_peche_id'),
-                        'id_user' => $this->post('user_id')
+                        'id_user' => $this->post('user_id'),
+                        'duree_mare' => $this->post('duree_mare')
                     );
                 }
                 if (!$data || !$id) {
