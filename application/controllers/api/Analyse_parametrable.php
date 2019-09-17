@@ -3832,8 +3832,6 @@ class Analyse_parametrable extends REST_Controller
         if($id_espece!='*' && $id_espece!="undefined")
         {
             $tmp= $this->EspeceManager->findById($id_espece);
-            $data_filtre['espece_nom_local'] = $tmp->nom_local;
-            $data_filtre['espece_nom_scientifique'] = $tmp->nom_scientifique;
 
             $objPHPExcel->getActiveSheet()->getStyle("A".$ligne)->applyFromArray($style);
             $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":B".$ligne);
