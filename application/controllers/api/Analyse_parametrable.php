@@ -18,6 +18,7 @@ class Analyse_parametrable extends REST_Controller
         $this->load->model('site_embarquement_model', 'Site_embarquementManager');
         $this->load->model('Espece_model', 'EspeceManager');
         $this->load->model('distribution_fractile_model', 'Distribution_fractileManager'); 
+        
     }
    
     public function index_get() 
