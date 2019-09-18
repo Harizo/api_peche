@@ -17,6 +17,7 @@ class Requetes extends REST_Controller {
         $this->load->model('unite_peche_site_model', 'Unite_peche_site_Manager');
         $this->load->model('enquete_cadre_model', 'Enquete_cadreManager');
         $this->load->model('Espece_model', 'EspeceManager'); 
+        
     }
    
     public function index_get() 
