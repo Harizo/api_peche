@@ -1310,14 +1310,14 @@ public function generer_requete_analyse($annee,$mois,$id_region,$id_district,$id
             {
                 $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->applyFromArray($stylecontenu);
 
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value['mois']);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $value['libelle_unite_peche']);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $value['code']);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($value['somme_capture_par_unite_peche'], 2,","," ").' Kg');
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne,number_format($value['composition_espece'], 2,","," ").' %');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value->mois);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $value->libelle_unite_peche);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $value->code);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($value->somme_capture_par_unite_peche, 2,","," ").' Kg');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne,number_format($value->composition_espece, 2,","," ").' %');
                
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($value['captureespece'], 2,","," ").' Kg');
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, number_format($value['prix_moyenne'], 2,","," "));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($value->somme_capture_par_espece, 2,","," ").' Kg');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, number_format($value->prix_moyenne, 2,","," "));
 
                 $ligne++;
             }
