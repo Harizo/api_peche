@@ -17,6 +17,7 @@ class Requetes extends REST_Controller {
         $this->load->model('unite_peche_site_model', 'Unite_peche_site_Manager');
         $this->load->model('enquete_cadre_model', 'Enquete_cadreManager');
         $this->load->model('Espece_model', 'EspeceManager'); 
+        
     }
    
     public function index_get() 
@@ -33,8 +34,8 @@ class Requetes extends REST_Controller {
         $id_district = $this->get('id_district');
         $id_site_embarquement = $this->get('id_site_embarquement');
         $id_unite_peche = $this->get('id_unite_peche');
-
-
+        $menu_excel = $this->get('menu_excel');
+        $repertoire = $this->get('repertoire');
 
         
 
@@ -222,11 +223,18 @@ class Requetes extends REST_Controller {
             //Fin RQ10
         //*********************************  Fin *****************************
         if (count($data)>0) {
-            $this->response([
+          if ($menu_excel=="excel_requetes")
+            {
+                $export=$this->export_excel($repertoire,$data,$pivot,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois);
+            }else {
+                $this->response([
                 'status' => TRUE,
                 'response' => $data,
                 'message' => 'Get data success',
             ], REST_Controller::HTTP_OK);
+           
+            }
+            
         } else {
             $this->response([
                 'status' => FALSE,
@@ -286,11 +294,14 @@ class Requetes extends REST_Controller {
             {
                 $requete = $requete." AND id_unite_peche='".$id_unite_peche."'" ;
             }
-
-            if (($id_espece!='*')&&($id_espece!='undefined')) 
+            if (($pivot != 'req_4_1_annee_site_unite_nbrunite')&&($pivot != 'req_5_1_codeteteuniq_site_unite_date_phier_pavanthier_nbrjrssemdern_pabs')&& ($pivot != 'req_9_annee_site_unite_nbrunite')&& ($pivot != 'req_10_annee_region_unite_nbrunite'))
             {
-                $requete = $requete." AND id_espece='".$id_espece."'" ;
+              if (($id_espece!='*')&&($id_espece!='undefined')) 
+              {
+                  $requete = $requete." AND id_espece='".$id_espece."'" ;
+              }
             }
+            
 
         return $requete ;
     }
@@ -1018,7 +1029,567 @@ public function generer_requete_analyse($annee,$mois,$id_region,$id_district,$id
         return $requete ;
     }
 
-    
+
+    public function export_excel($repertoire,$data,$pivot,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois)
+    {
+        require_once 'Classes/PHPExcel.php';
+        require_once 'Classes/PHPExcel/IOFactory.php';      
+
+        $nom_file='requetes';
+        $directoryName = dirname(__FILE__) ."/../../../../../../assets/excel/".$repertoire;
+            
+            //Check if the directory already exists.
+        if(!is_dir($directoryName))
+        {
+            mkdir($directoryName, 0777,true);
+        }
+            
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("Myexcel")
+                    ->setLastModifiedBy("Me")
+                    ->setTitle("requetes")
+                    ->setSubject("requetes")
+                    ->setDescription("requetes")
+                    ->setKeywords("requetes")
+                    ->setCategory("requetes");
+
+        $ligne=1;            
+            // Set Orientation, size and scaling
+            // Set Orientation, size and scaling
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setFitToHeight(0);
+        $objPHPExcel->getActiveSheet()->getPageMargins()->SetLeft(0.64); //***pour marge gauche
+        $objPHPExcel->getActiveSheet()->getPageMargins()->SetRight(0.64); //***pour marge droite
+        $objPHPExcel->getActiveSheet()->getPageSetup()->setHorizontalCentered(true);
+           
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setAutoSize(true);
+            
+        $objPHPExcel->getActiveSheet()->setTitle("requetes");
+
+        $objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter('&R&11&B Page &P / &N');
+        $objPHPExcel->getActiveSheet()->getHeaderFooter()->setEvenFooter('&R&11&B Page &P / &N');
+
+        $styleTitre = array
+        (
+        'alignment' => array
+            (
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    
+            ),
+        'font' => array
+            (
+                //'name'  => 'Times New Roman',
+                'bold'  => true,
+                'size'  => 14
+            ),
+        );
+        $stylesousTitre = array
+        (
+            'borders' => array
+            (
+                'allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN)
+            ),
+            
+            'alignment' => array
+            (
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    
+            ),
+            'font' => array
+            (
+                    //'name'  => 'Times New Roman',
+                'bold'  => true,
+                'size'  => 12
+            ),
+        );
+        
+        $styleEntete = array
+        (
+            'alignment' => array
+            (
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    
+            ),
+                
+            'font' => array
+            (
+                'name'  => 'Calibri',
+                'bold'  => true,
+                'size'  => 11
+            ),
+        );
+            
+        $stylecontenu = array
+        (
+            'borders' => array
+            (
+                'allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN)
+            ),
+            'alignment' => array
+            (
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            )
+        );
+
+        if ($pivot=='req_1_site_date_unite_capturet_cpues')
+        {
+
+            $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(30);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":E".$ligne);
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->applyFromArray($styleTitre);            
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Req 1 : CPUE journalière / Unité de pêche');                       
+            $ligne++;
+            $ligne_entete= $this->insertion_entete($styleEntete,$ligne,$objPHPExcel,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois);
+            if ($ligne_entete!=$ligne)
+            {
+                $ligne=$ligne_entete+1;
+            }
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->applyFromArray($stylesousTitre);
+            $objPHPExcel-> getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->getNumberFormat()->setFormatCode('00');
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->getAlignment()->setWrapText(true);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Site de débarquement');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Unité de pêche');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Date');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Total capture (Kg)');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'CPUE');
+            $ligne++;
+            foreach ($data as $key => $value)
+            {
+                $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->applyFromArray($stylecontenu);
+
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value->libelle);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $value->libelle_unite_peche);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $value->date);
+               
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $value->capture);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $value->cpue);
+
+                $ligne++;
+            }
+        }
+
+
+        if ($pivot=="req_2_moi_unite_cpuemoy_stdevcpue_nbrechantillon_sqr_degre")
+        {
+            $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(30);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":G".$ligne);
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->applyFromArray($styleTitre);            
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Req 2 : CPUEmoy par strate mineure/mois/année');                       
+            $ligne++;
+            $ligne_entete= $this->insertion_entete($styleEntete,$ligne,$objPHPExcel,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois);
+            if ($ligne_entete!=$ligne)
+            {
+                $ligne=$ligne_entete+1;
+            }
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->applyFromArray($stylesousTitre);
+            $objPHPExcel-> getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->getNumberFormat()->setFormatCode('00');
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->getAlignment()->setWrapText(true);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, ' Mois'.'        ');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Unité de pêche');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'CPUE Moyenne');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'stDev CPUE');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'SQR(n)');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Dégrées Libertés');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Nombre echantillon CPUE');
+            $ligne++;
+            foreach ($data as $key => $value)
+            {
+                $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->applyFromArray($stylecontenu);
+
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value['mois']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $value['libelle_unite_peche']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, number_format($value['moyenne'], 2,","," "));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $value['ecart_type']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne,$value['sqrt']);
+               
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $value['degree']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $value['nombre']);
+
+                $ligne++;
+            }
+          
+        }
+
+
+         if ($pivot=="req_3_moi_unite_cpuemoy_stdevcpue_nbrechantillon_sqr_fractil90_clcpue_erelative_maxcpue")
+        {
+            $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(30);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":J".$ligne);
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":J".$ligne)->applyFromArray($styleTitre);            
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Req 3 : Erreur relative CPUEmoy par strate mineure/mois/année');                       
+            $ligne++;
+            $ligne_entete= $this->insertion_entete($styleEntete,$ligne,$objPHPExcel,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois);
+            if ($ligne_entete!=$ligne)
+            {
+                $ligne=$ligne_entete+1;
+            }
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":J".$ligne)->applyFromArray($stylesousTitre);
+            $objPHPExcel-> getActiveSheet()->getStyle("A".$ligne.":J".$ligne)->getNumberFormat()->setFormatCode('00');
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":J".$ligne)->getAlignment()->setWrapText(true);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Mois');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Unite de pêche');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'CPUE Moyenne');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'stDev CPUE');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'SQR(n)');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, '90% Fractile');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'CLCPUE');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Erreur Relative 90%');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, 'Nombre echantillon CPUE');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J'.$ligne, 'Max CPUE');
+            $ligne++;
+            foreach ($data as $key => $value)
+            {
+                $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":J".$ligne)->applyFromArray($stylecontenu);
+
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value['mois']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne,$value['libelle_unite_peche']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, number_format($value['moyenne'], 2,","," "));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $value['ecart_type']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne,$value['sqrt']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $value['distribution_90']);
+               
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $value['clcpue']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, $value['erreur_relative_90']." %");
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, $value['nombre']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J'.$ligne, $value['max_cpue']);
+                $ligne++;
+            }
+          
+        }
+
+        if ($pivot=="req_7_3_moi_unite_code3Al_captureespece_captureunite_composi_prixmoy")
+        {
+            $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(30);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":G".$ligne);
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->applyFromArray($styleTitre);            
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Req 7.3 : Composition d’espèce par l’unité de pêche');                       
+            $ligne++;
+            $ligne_entete= $this->insertion_entete($styleEntete,$ligne,$objPHPExcel,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois);
+            if ($ligne_entete!=$ligne)
+            {
+                $ligne=$ligne_entete+1;
+            }
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->applyFromArray($stylesousTitre);
+            $objPHPExcel-> getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->getNumberFormat()->setFormatCode('00');
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->getAlignment()->setWrapText(true);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, ' Mois'.'        ');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Unité de pêche');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Code3Alpha');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Capture total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Composition d\'espèce');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Capture total par espèce');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Prix moyen');
+            $ligne++;
+            foreach ($data as $key => $value)
+            {
+                $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":G".$ligne)->applyFromArray($stylecontenu);
+
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value->mois);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $value->libelle_unite_peche);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $value->code);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($value->somme_capture_par_unite_peche, 2,","," ").' Kg');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne,number_format($value->composition_espece, 2,","," ").' %');
+               
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($value->somme_capture_par_espece, 2,","," ").' Kg');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, number_format($value->prix_moyenne, 2,","," "));
+
+                $ligne++;
+            }
+          
+        }
+
+        if ($pivot=="req_8_moi_site_unite_jrpechemenspab_jrtotalmensuel_code3Al_erelative_erelcapttot_nbrechantillon_capturtotal_composi_captureespece_prixmoy_pprix")
+        {
+            $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(30);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":N".$ligne);
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":N".$ligne)->applyFromArray($styleTitre);            
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Req 8 : Prix PAB par espèces par l’unité de pêche/Strate majeure/Strate mineure/Année/Mois');                       
+            $ligne++;
+            $ligne_entete= $this->insertion_entete($styleEntete,$ligne,$objPHPExcel,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois);
+            if ($ligne_entete!=$ligne)
+            {
+                $ligne=$ligne_entete+1;
+            }
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":N".$ligne)->applyFromArray($stylesousTitre);
+            $objPHPExcel-> getActiveSheet()->getStyle("A".$ligne.":N".$ligne)->getNumberFormat()->setFormatCode('00');
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":N".$ligne)->getAlignment()->setWrapText(true);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Mois');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Site de débarquement');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Unite de pêche');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Nombre de jours de'."\n".'pêche mensuel PAB');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Nombre de jours total'."\n".'de pêche mensuel PAB');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Code3Alpha');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Erreur Relative 90%');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Erreur Relative'."\n".'capture tolales 90%');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, 'Nombre echantillon CPUE');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J'.$ligne, 'Captures totales (t)');
+             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K'.$ligne, 'Composition d\'espèce');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('L'.$ligne, 'Capture total '."\n".'par espèce');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('M'.$ligne, 'Prix moyen');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N'.$ligne, 'Prix');
+            $ligne++;
+            foreach ($data as $key => $value)
+            {
+                $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":N".$ligne)->applyFromArray($stylecontenu);
+
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value['mois']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne,$value['libelle']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $value['libelle_unite_peche']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($value['nbr_jrs_peche_mensuel_pab'], 0,","," "));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne,$value['nbr_total_jrs_peche_mensuel']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $value['code']);
+               
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $value['erreur_relative_90']." %");
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, number_format($value['erreur_relative_capture_total_90'], 2,","," ")." %");
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, $value['nombre']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J'.$ligne, number_format($value['captures_totales_t'], 2,","," "));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K'.$ligne, number_format($value['composition_espece'], 2,","," ")." %");
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('L'.$ligne, number_format($value['somme_capture_par_espece'], 2,","," ")." Kg");
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('M'.$ligne, number_format($value['prix_moyenne'], 2,","," "));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N'.$ligne, number_format($value['prix'], 2,","," "));
+                $ligne++;
+            }
+          
+        }
+
+        if ($pivot=='req_9_annee_site_unite_nbrunite')
+        {
+
+            $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(30);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":D".$ligne);
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($styleTitre);            
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Req 10 : Targeted Unité de pêche par strate mineure par Année / Mois');                       
+            $ligne++;
+            $ligne_entete= $this->insertion_entete($styleEntete,$ligne,$objPHPExcel,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois);
+            if ($ligne_entete!=$ligne)
+            {
+                $ligne=$ligne_entete+1;
+            }
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($stylesousTitre);
+            $objPHPExcel-> getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->getNumberFormat()->setFormatCode('00');
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->getAlignment()->setWrapText(true);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, '  Année      ');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Site d\'embarquement');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Unité de pêche');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Nombre d\'unité de pêche');
+            $ligne++;
+            foreach ($data as $key => $value)
+            {
+                $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($stylecontenu);
+
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value->annee);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $value->libelle);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $value->libelle_unite_peche);
+               
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $value->nbr_unite_peche);
+
+                $ligne++;
+            }
+        }
+
+        if ($pivot=='req_10_annee_region_unite_nbrunite')
+        {
+
+            $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(30);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":D".$ligne);
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($styleTitre);            
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Req 10 : Targeted Unité de pêche par strate mineure par Année / Mois');                       
+            $ligne++;
+            $ligne_entete= $this->insertion_entete($styleEntete,$ligne,$objPHPExcel,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois);
+            if ($ligne_entete!=$ligne)
+            {
+                $ligne=$ligne_entete+1;
+            }
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($stylesousTitre);
+            $objPHPExcel-> getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->getNumberFormat()->setFormatCode('00');
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->getAlignment()->setWrapText(true);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, '  Année      ');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, '  Région      ');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Unité de pêche');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Nombre d\'unité de pêche');
+            $ligne++;
+            foreach ($data as $key => $value)
+            {
+                $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($stylecontenu);
+
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value->annee);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $value->libelle_region);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $value->libelle_unite_peche);
+               
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $value->nbr_unite_peche);
+
+                $ligne++;
+            }
+        }
+
+
+
+        try
+        {
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            $objWriter->save(dirname(__FILE__) . "/../../../../../../assets/excel/requetes/".$nom_file.".xlsx");
+            
+            $this->response([
+                'status' => TRUE,
+                'nom_file' =>$nom_file.".xlsx",
+                'message' => 'Get file success',
+            ], REST_Controller::HTTP_OK);
+          
+        } 
+        catch (PHPExcel_Writer_Exception $e)
+        {
+            $this->response([
+                  'status' => FALSE,
+                   'nom_file' => array(),
+                   'message' => "Something went wrong: ". $e->getMessage(),
+                ], REST_Controller::HTTP_OK);
+        }
+    }
+
+   public function insertion_entete($style,$ligne,$objPHPExcel,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece,$annee,$mois)
+    {
+
+        if($id_region!='*' && $id_region!="undefined")
+        {
+            $tmp= $this->RegionManager->findById($id_region);
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne)->applyFromArray($style);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":B".$ligne);
+               
+            $objRichText = new PHPExcel_RichText();
+
+            $titre = $objRichText->createTextRun('Region : ');
+            $titre->getFont()->applyFromArray(array( "bold" => true, "size" => 11, "name" => "Calibri"));
+
+            $contenu = $objRichText->createTextRun($tmp->nom);
+            $contenu->getFont()->applyFromArray(array("size" => 11, "name" => "Calibri"));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$objRichText);
+            $ligne++;
+        }
+        if($id_district!='*' && $id_district!="undefined")
+        {
+            $tmp= $this->DistrictManager->findById($id_district);
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne)->applyFromArray($style);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":B".$ligne);
+               
+            $objRichText = new PHPExcel_RichText();
+
+            $titre = $objRichText->createTextRun('District : ');
+            $titre->getFont()->applyFromArray(array( "bold" => true, "size" => 11, "name" => "Calibri"));
+
+            $contenu = $objRichText->createTextRun($tmp->nom);
+            $contenu->getFont()->applyFromArray(array("size" => 11, "name" => "Calibri"));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$objRichText);
+            $ligne++;
+        }
+        if($id_site_embarquement!='*' && $id_site_embarquement!="undefined")
+        {
+            $tmp= $this->Site_embarquementManager->findById($id_site_embarquement);
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne)->applyFromArray($style);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":B".$ligne);
+            $objRichText = new PHPExcel_RichText();
+
+            $titre = $objRichText->createTextRun('Site de débarquement : ');
+            $titre->getFont()->applyFromArray(array( "bold" => true, "size" => 11, "name" => "Calibri"));
+
+            $contenu = $objRichText->createTextRun($tmp->libelle);
+            $contenu->getFont()->applyFromArray(array("size" => 11, "name" => "Calibri"));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$objRichText);
+
+            $ligne++;
+        }
+        if($id_unite_peche!='*' && $id_unite_peche!="undefined")
+        {
+            $tmp= $this->Unite_pecheManager->findById($id_unite_peche);
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne)->applyFromArray($style);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":B".$ligne);
+             $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":B".$ligne)->getAlignment()->setWrapText(false);  
+            $objRichText = new PHPExcel_RichText();
+
+            $titre = $objRichText->createTextRun('Unite de pêche : ');
+            $titre->getFont()->applyFromArray(array( "bold" => true, "size" => 11, "name" => "Calibri"));
+
+            $contenu = $objRichText->createTextRun($tmp->libelle);
+            $contenu->getFont()->applyFromArray(array("size" => 11, "name" => "Calibri"));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$objRichText);
+            $ligne++;
+        }
+        if($id_espece!='*' && $id_espece!="undefined")
+        {
+            $tmp= $this->EspeceManager->findById($id_espece);
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne)->applyFromArray($style);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":B".$ligne);
+             $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":B".$ligne)->getAlignment()->setWrapText(false);  
+            $objRichText = new PHPExcel_RichText();
+
+            $titre = $objRichText->createTextRun('Espece : ');
+            $titre->getFont()->applyFromArray(array( "bold" => true, "size" => 11, "name" => "Calibri"));
+
+            $contenu = $objRichText->createTextRun($tmp->nom_scientifique." (".$tmp->nom_local.")");
+            $contenu->getFont()->applyFromArray(array("size" => 11, "name" => "Calibri"));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$objRichText);
+            $ligne++;
+        }
+
+        if($annee!='*' && $annee!="undefined")
+        {
+           $month='';
+           if ($mois!='*' && $mois!="undefined") {
+             $month = $this->affichage_mois($mois);
+           }
+
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne)->applyFromArray($style);
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":B".$ligne);
+             $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":B".$ligne)->getAlignment()->setWrapText(false);  
+            $objRichText = new PHPExcel_RichText();
+
+            $titre = $objRichText->createTextRun('Date : ');
+            $titre->getFont()->applyFromArray(array( "bold" => true, "size" => 11, "name" => "Calibri"));
+
+            $contenu = $objRichText->createTextRun($month." ".$annee);
+            $contenu->getFont()->applyFromArray(array("size" => 11, "name" => "Calibri"));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$objRichText);
+            $ligne++;
+        }
+
+        return $ligne;
+    }
+
+
+
+
 
 }
 /* End of file controllername.php */
