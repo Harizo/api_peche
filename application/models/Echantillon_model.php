@@ -98,6 +98,7 @@ class Echantillon_model extends CI_Model {
             'peche_hier'          =>      $echantillon->peche_hier,
             'peche_avant_hier'           =>      $echantillon->peche_avant_hier,
             'nbr_jrs_peche_dernier_sem'     =>      $echantillon->nbr_jrs_peche_dernier_sem ,
+            'duree_mare'     =>      $echantillon->duree_mare ,
             'total_capture'          =>      $echantillon->total_capture,
             'unique_code'           =>      $echantillon->unique_code,
             'id_data_collect'     =>      $echantillon->id_data_collect, 
