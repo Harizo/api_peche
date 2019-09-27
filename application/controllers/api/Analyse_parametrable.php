@@ -102,9 +102,13 @@ class Analyse_parametrable extends REST_Controller
                 $result =   $this->Fiche_echantillonnage_captureManager->essai(
                             $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $id_unite_peche, $id_espece),
                             $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $id_unite_peche, $id_espece),$annee);
-
+                
+                $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                 if ($result != null )
-                {   
+                { 
+                    $cpuecol= array_column($cpue, 'cp');
+                    $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);    
                     $i=1;
                     $donnees=array();
 
@@ -121,15 +125,15 @@ class Analyse_parametrable extends REST_Controller
 
                         $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                             
-                        $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                        $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                             
                         $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                         $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                         $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
                         
-                        if ($value->cpue_moyenne )
+                        if ($cpuemoyenne )
                         {
-                            $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                            $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                         }
                         
                         $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -140,7 +144,7 @@ class Analyse_parametrable extends REST_Controller
                         {$moy_pax_pab = 1 ;}
                         else{$moy_pax_pab = $max_pab ;}
                             
-                        $max_cpue = $clcpue + $value->cpue_moyenne;
+                        $max_cpue = $clcpue + $cpuemoyenne;
 
                         $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                         $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -190,7 +194,7 @@ class Analyse_parametrable extends REST_Controller
                         $donnees[$i]['result'] = $result;
                         $donnees[$i]['ecart'] = $this->generer_requete_analyse($annee,$value->mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece);
                         $donnees[$i]['nbr_unit_peche'] = $value->nbr_unit_peche;
-                        $donnees[$i]['cpue_moyenne'] = $value->cpue_moyenne;
+                        $donnees[$i]['cpue_moyenne'] = $cpuemoyenne;
                         $donnees[$i]['ecart_type'] = $ecart_type;
                         $donnees[$i]['site'] = $value->site_embarquement;
                         $donnees[$i]['nbr_jrs_peche_mensuel_pab'] = $nbr_jrs_peche_mensuel_pab;
@@ -242,8 +246,12 @@ class Analyse_parametrable extends REST_Controller
                                 $this->generer_requete_analyse($annee,$mois,$vRegion->id,'*',$id_site_embarquement, $id_unite_peche, $id_espece),
                                 $this->generer_requete_analyse($annee,$mois,$vRegion->id,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$vRegion->id,'*',$id_site_embarquement, $id_unite_peche, $id_espece),$annee);
 
+                        $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                         if ($result != null )
-                        {                        
+                        { 
+                            $cpuecol= array_column($cpue, 'cp');
+                            $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                        
                             $i=1;
                             $donnees=array();
 
@@ -261,14 +269,14 @@ class Analyse_parametrable extends REST_Controller
 
                                 $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                 
-                                $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                 
                                 $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                 $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                 $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                if ($value->cpue_moyenne )
+                                if ($cpuemoyenne )
                                 {
-                                    $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                    $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                 }                            
 
                                 $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -279,7 +287,7 @@ class Analyse_parametrable extends REST_Controller
                                 {$moy_pax_pab = 1 ;}
                                 else{$moy_pax_pab = $max_pab ;}
                                 
-                                $max_cpue = $clcpue + $value->cpue_moyenne;
+                                $max_cpue = $clcpue + $cpuemoyenne;
 
                                 $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                 $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -393,8 +401,12 @@ class Analyse_parametrable extends REST_Controller
                                 $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),
                                 $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $vUnite_peche->id, '*'), $this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),$annee);
                        
+                        $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                         if ($result != null )
-                        {                        
+                        { 
+                            $cpuecol= array_column($cpue, 'cp');
+                            $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                        
                             $i=1;
                             $donnees=array();
                             foreach ($result as $key => $value)
@@ -411,14 +423,14 @@ class Analyse_parametrable extends REST_Controller
 
                                 $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                 
-                                $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                 
                                 $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                 $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                 $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                if ($value->cpue_moyenne )
+                                if ($cpuemoyenne )
                                 {
-                                    $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                    $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                 }
                                 
 
@@ -430,7 +442,7 @@ class Analyse_parametrable extends REST_Controller
                                 {$moy_pax_pab = 1 ;}
                                 else{$moy_pax_pab = $max_pab ;}
                                 
-                                $max_cpue = $clcpue + $value->cpue_moyenne;
+                                $max_cpue = $clcpue + $cpuemoyenne;
 
                                 $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                 $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -551,9 +563,15 @@ class Analyse_parametrable extends REST_Controller
                                     $this->generer_requete_analyse($annee,$mois,$vRegion->id,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),
                                     $this->generer_requete_analyse($annee,$mois,$vRegion->id,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$vRegion->id,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),$annee);
                            
+                           $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                             if ($result != null )
-                            {                        
+                            { 
+                                $cpuecol= array_column($cpue, 'cp');
+                                $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);  
+
                                 $i=1;
+
                                 $donnees=array();
                                 foreach ($result as $key => $value)
                                 {
@@ -569,14 +587,14 @@ class Analyse_parametrable extends REST_Controller
 
                                     $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                     
-                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                     
                                     $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                     $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                     $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                    if ($value->cpue_moyenne )
+                                    if ($cpuemoyenne )
                                     {
-                                        $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                        $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                     }                                
 
                                     $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -587,7 +605,7 @@ class Analyse_parametrable extends REST_Controller
                                     {$moy_pax_pab = 1 ;}
                                     else{$moy_pax_pab = $max_pab ;}
                                     
-                                    $max_cpue = $clcpue + $value->cpue_moyenne;
+                                    $max_cpue = $clcpue + $cpuemoyenne;
 
                                     $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                     $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -712,8 +730,12 @@ class Analyse_parametrable extends REST_Controller
                                     $this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$vSite->id, $vUnite_peche->id, $id_espece),$annee);
 
                            
+                            $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                             if ($result != null )
-                            {                        
+                            { 
+                                $cpuecol= array_column($cpue, 'cp');
+                                $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                        
                                 $i=1;
                                 $donnees=array();
                                 foreach ($result as $key => $value)
@@ -730,14 +752,14 @@ class Analyse_parametrable extends REST_Controller
 
                                     $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                     
-                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                     
                                     $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                     $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                     $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                    if ($value->cpue_moyenne )
+                                    if ($cpuemoyenne )
                                     {
-                                        $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                        $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                     }
                                     
 
@@ -749,7 +771,7 @@ class Analyse_parametrable extends REST_Controller
                                     {$moy_pax_pab = 1 ;}
                                     else{$moy_pax_pab = $max_pab ;}
                                     
-                                    $max_cpue = $clcpue + $value->cpue_moyenne;
+                                    $max_cpue = $clcpue + $cpuemoyenne;
 
                                     $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                     $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -867,8 +889,12 @@ class Analyse_parametrable extends REST_Controller
                             $this->generer_requete_analyse($annee,$moi,$id_region,'*',$id_site_embarquement, $id_unite_peche, $id_espece),
                             $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$id_site_embarquement, $id_unite_peche, $id_espece),$annee);
 
+                    $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                     if ($result != null )
-                    {                        
+                    { 
+                        $cpuecol= array_column($cpue, 'cp');
+                        $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                       
                         $i=1;
                         $donnees=array();
                         foreach ($result as $key => $value)
@@ -885,14 +911,14 @@ class Analyse_parametrable extends REST_Controller
 
                             $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                             
-                            $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                            $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                             
                             $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                             $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                             $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                            if ($value->cpue_moyenne )
+                            if ($cpuemoyenne )
                             {
-                                $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                             }
                             
 
@@ -909,7 +935,7 @@ class Analyse_parametrable extends REST_Controller
                                     $moy_pax_pab = $max_pab ;
                                 }
                             
-                            $max_cpue = $clcpue + $value->cpue_moyenne;
+                            $max_cpue = $clcpue + $cpuemoyenne;
 
                             $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                             $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -1018,8 +1044,12 @@ class Analyse_parametrable extends REST_Controller
                                     $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),$annee);
 
                            
+                            $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                             if ($result != null )
-                            {                        
+                            { 
+                                $cpuecol= array_column($cpue, 'cp');
+                                $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                        
                                 $i=1;
                                 $donnees=array();
                                 foreach ($result as $key => $value)
@@ -1036,14 +1066,14 @@ class Analyse_parametrable extends REST_Controller
 
                                     $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                     
-                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                     
                                     $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                     $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                     $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                    if ($value->cpue_moyenne )
+                                    if ($cpuemoyenne )
                                     {
-                                        $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                        $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                     }
                                     
 
@@ -1055,7 +1085,7 @@ class Analyse_parametrable extends REST_Controller
                                     {$moy_pax_pab = 1 ;}
                                     else{$moy_pax_pab = $max_pab ;}
                                     
-                                    $max_cpue = $clcpue + $value->cpue_moyenne;
+                                    $max_cpue = $clcpue + $cpuemoyenne;
 
                                     $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                     $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -1183,9 +1213,12 @@ class Analyse_parametrable extends REST_Controller
                                         $this->generer_requete_analyse($annee,$moi,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $id_espece),
                                         $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'), $this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$vSite->id, $vUnite_peche->id, $id_espece),$annee);
 
-                               
+                               $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                                 if ($result != null )
-                                {                        
+                                { 
+                                    $cpuecol= array_column($cpue, 'cp');
+                                    $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                        
                                     $i=1;
                                     $donnees=array();
                                     foreach ($result as $key => $value)
@@ -1202,14 +1235,14 @@ class Analyse_parametrable extends REST_Controller
 
                                         $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                         
-                                        $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                        $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                         
                                         $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                         $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                         $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                        if ($value->cpue_moyenne )
+                                        if ($cpuemoyenne )
                                         {
-                                            $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                            $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                         }
                                         
 
@@ -1221,7 +1254,7 @@ class Analyse_parametrable extends REST_Controller
                                         {$moy_pax_pab = 1 ;}
                                         else{$moy_pax_pab = $max_pab ;}
                                         
-                                        $max_cpue = $clcpue + $value->cpue_moyenne;
+                                        $max_cpue = $clcpue + $cpuemoyenne;
 
                                         $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                         $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -1345,8 +1378,12 @@ class Analyse_parametrable extends REST_Controller
                                 $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $id_unite_peche, $vEspece->id),$annee);
 
                        
+                        $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                         if ($result != null )
-                        {                        
+                        { 
+                            $cpuecol= array_column($cpue, 'cp');
+                            $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                       
                             $i=1;
                             $donnees=array();
                             foreach ($result as $key => $value)
@@ -1363,13 +1400,13 @@ class Analyse_parametrable extends REST_Controller
 
                                 $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                 
-                                $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                 
                                 $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                 $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                 $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                if ($value->cpue_moyenne ) {
-                                    $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                if ($cpuemoyenne ) {
+                                    $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                 }
                                 
 
@@ -1381,7 +1418,7 @@ class Analyse_parametrable extends REST_Controller
                                 {$moy_pax_pab = 1 ;}
                                 else{$moy_pax_pab = $max_pab ;}
                                 
-                                $max_cpue = $clcpue + $value->cpue_moyenne;
+                                $max_cpue = $clcpue + $cpuemoyenne;
 
                                 $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                 $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -1504,8 +1541,12 @@ class Analyse_parametrable extends REST_Controller
                                     $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
                                     $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),$annee);
                            
+                            $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                             if ($result != null )
-                            {                        
+                            { 
+                                $cpuecol= array_column($cpue, 'cp');
+                                $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                       
                                 $i=1;
                                 $donnees=array();
                                 foreach ($result as $key => $value)
@@ -1522,14 +1563,14 @@ class Analyse_parametrable extends REST_Controller
 
                                     $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                     
-                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                     
                                     $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                     $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                     $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                    if ($value->cpue_moyenne )
+                                    if ($cpuemoyenne )
                                     {
-                                        $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                        $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                     }                                
 
                                     $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -1540,7 +1581,7 @@ class Analyse_parametrable extends REST_Controller
                                     {$moy_pax_pab = 1 ;}
                                     else{$moy_pax_pab = $max_pab ;}
                                     
-                                    $max_cpue = $clcpue + $value->cpue_moyenne;
+                                    $max_cpue = $clcpue + $cpuemoyenne;
 
                                     $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                     $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -1666,8 +1707,12 @@ class Analyse_parametrable extends REST_Controller
                                         $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
                                         $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$vSite->id, $vUnite_peche->id, $vEspece->id),$annee);
                                
+                                $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                                 if ($result != null )
-                                {                        
+                                { 
+                                    $cpuecol= array_column($cpue, 'cp');
+                                    $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                        
                                     $i=1;
                                     $donnees=array();
                                     foreach ($result as $key => $value)
@@ -1684,14 +1729,14 @@ class Analyse_parametrable extends REST_Controller
 
                                         $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                         
-                                        $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                        $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                         
                                         $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                         $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                         $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                        if ($value->cpue_moyenne )
+                                        if ($cpuemoyenne )
                                         {
-                                            $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                            $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                         }                                    
 
                                         $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -1702,7 +1747,7 @@ class Analyse_parametrable extends REST_Controller
                                         {$moy_pax_pab = 1 ;}
                                         else{$moy_pax_pab = $max_pab ;}
                                         
-                                        $max_cpue = $clcpue + $value->cpue_moyenne;
+                                        $max_cpue = $clcpue + $cpuemoyenne;
 
                                         $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                         $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -1828,8 +1873,12 @@ class Analyse_parametrable extends REST_Controller
                                     $this->generer_requete_analyse($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),
                                     $this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$mois,$id_region,'*',$id_site_embarquement, $vUnite_peche->id, $vEspece->id),$annee);
                            
+                            $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                             if ($result != null )
-                            {                        
+                            { 
+                                $cpuecol= array_column($cpue, 'cp');
+                                $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                        
                                 $i=1;
                                 $donnees=array();
                                 $tab_date=array();
@@ -1853,13 +1902,13 @@ class Analyse_parametrable extends REST_Controller
                                         $nbr_jrs_peche_mensuel_pab_tab=$nbr_jrs_peche_mensuel_pab;
                                         
                                     }
-                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                     
                                     $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                     $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                     $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                    if ($value->cpue_moyenne ) {
-                                        $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                    if ($cpuemoyenne ) {
+                                        $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                     }
                                     
 
@@ -1871,7 +1920,7 @@ class Analyse_parametrable extends REST_Controller
                                     {$moy_pax_pab = 1 ;}
                                     else{$moy_pax_pab = $max_pab ;}
                                     
-                                    $max_cpue = $clcpue + $value->cpue_moyenne;
+                                    $max_cpue = $clcpue + $cpuemoyenne;
 
                                     $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                     $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -2005,8 +2054,12 @@ class Analyse_parametrable extends REST_Controller
                                     $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $id_unite_peche, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$id_site_embarquement, $id_unite_peche,$vEspece->id),$annee);
 
                            
+                            $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                             if ($result != null )
-                            {                        
+                            { 
+                                $cpuecol= array_column($cpue, 'cp');
+                                $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                        
                                 $i=1;
                                 $donnees=array();
                                 foreach ($result as $key => $value)
@@ -2023,14 +2076,14 @@ class Analyse_parametrable extends REST_Controller
 
                                     $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                     
-                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                    $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                     
                                     $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                     $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                     $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                    if ($value->cpue_moyenne )
+                                    if ($cpuemoyenne )
                                     {
-                                        $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                        $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                     }                                
 
                                     $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -2041,7 +2094,7 @@ class Analyse_parametrable extends REST_Controller
                                     {$moy_pax_pab = 1 ;}
                                     else{$moy_pax_pab = $max_pab ;}
                                     
-                                    $max_cpue = $clcpue + $value->cpue_moyenne;
+                                    $max_cpue = $clcpue + $cpuemoyenne;
 
                                     $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                     $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -2168,8 +2221,12 @@ class Analyse_parametrable extends REST_Controller
                                         $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$id_site_embarquement, $vUnite_peche->id,$vEspece->id),$annee);
 
                                
+                                $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                                 if ($result != null )
-                                {                        
+                                { 
+                                    $cpuecol= array_column($cpue, 'cp');
+                                    $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                        
                                     $i=1;
                                     $donnees=array();
                                     foreach ($result as $key => $value)
@@ -2186,14 +2243,14 @@ class Analyse_parametrable extends REST_Controller
 
                                         $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                         
-                                        $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                        $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                         
                                         $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                         $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                         $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                        if ($value->cpue_moyenne )
+                                        if ($cpuemoyenne )
                                         {
-                                            $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                            $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                         }                                    
 
                                         $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -2204,7 +2261,7 @@ class Analyse_parametrable extends REST_Controller
                                         {$moy_pax_pab = 1 ;}
                                         else{$moy_pax_pab = $max_pab ;}
                                         
-                                        $max_cpue = $clcpue + $value->cpue_moyenne;
+                                        $max_cpue = $clcpue + $cpuemoyenne;
 
                                         $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                         $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -2334,8 +2391,12 @@ class Analyse_parametrable extends REST_Controller
                                             $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$vSite->id, $vUnite_peche->id,$vEspece->id),$annee);
 
                                    
+                                    $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete_analyse($annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                                     if ($result != null )
-                                    {                        
+                                    { 
+                                        $cpuecol= array_column($cpue, 'cp');
+                                        $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                       
                                         $i=1;
                                         $donnees=array();
                                         foreach ($result as $key => $value)
@@ -2352,14 +2413,14 @@ class Analyse_parametrable extends REST_Controller
 
                                             $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                             
-                                            $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                                            $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                             
                                             $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                                             $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                                             $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                                            if ($value->cpue_moyenne )
+                                            if ($cpuemoyenne )
                                             {
-                                                $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                                                $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                                             }                                        
 
                                             $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -2370,7 +2431,7 @@ class Analyse_parametrable extends REST_Controller
                                             {$moy_pax_pab = 1 ;}
                                             else{$moy_pax_pab = $max_pab ;}
                                             
-                                            $max_cpue = $clcpue + $value->cpue_moyenne;
+                                            $max_cpue = $clcpue + $cpuemoyenne;
 
                                             $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                                             $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;

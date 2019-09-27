@@ -633,8 +633,12 @@ class Requetes extends REST_Controller {
                               $this->generer_requete_analyse($annee,$moi, $id_region,$id_district, $id_site_embarquement,$id_unite_peche, $id_espece),
                               $this->generer_requete_analyse($annee,$moi,$id_region,'*','*', $vUnite_peche->id, '*'),$this->generer_requete_analyse_cadre($annee,$moi,$id_region,'*',$vSite->id, $vUnite_peche->id,$vEspece->id),$annee);
                                  
+                  $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete($pivot, $date,$annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
                   if ($result != null )
-                  {                        
+                  { 
+                      $cpuecol= array_column($cpue, 'cp');
+                      $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);                       
                     $i=1;
                     $donnees=array();
                     foreach ($result as $key => $value)
@@ -650,14 +654,14 @@ class Requetes extends REST_Controller {
 
                       $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                                           
-                      $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne);                            
+                      $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne);                            
                                           
                       $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
                       $tdistriburion90 = $distribution[0]->PercentFractile90 ;
                       $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-                      if ($value->cpue_moyenne )
+                      if ($cpuemoyenne )
                       {
-                        $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+                        $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
                       }
                       
                       $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -668,7 +672,7 @@ class Requetes extends REST_Controller {
                       {$moy_pax_pab = 1 ;}
                       else{$moy_pax_pab = $max_pab ;}
                                           
-                      $max_cpue = $clcpue + $value->cpue_moyenne;
+                      $max_cpue = $clcpue + $cpuemoyenne;
 
                       $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
                       $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -856,12 +860,19 @@ class Requetes extends REST_Controller {
     public function requete_6_2($site_embarquements, $unite_peches,$pivot, $date, $annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche,$id_espece)
     { 
       $data = array();
+      $datacpue=array();
       $i=1;
       $result =   $this->Fiche_echantillonnage_captureManager->essai(
                             $this->generer_requete($pivot,$date,$annee,$mois,$id_region,'*',$id_site_embarquement,$id_unite_peche, $id_espece),
                             $this->generer_requete($pivot, $date,$annee,$mois,$id_region,'*','*', $id_unite_peche, '*'),$this->generer_requete($pivot,$date,$annee,$mois,$id_region,'*',$id_site_embarquement,$id_unite_peche, $id_espece),$annee);
+      
+      $cpue = $this->Fiche_echantillonnage_captureManager->cpue($this->generer_requete($pivot, $date,$annee,$mois,$id_region,'*','*', $id_unite_peche, '*'));
+      
       if ($result != null )
-      {
+      { 
+          $cpuecol= array_column($cpue, 'cp');
+          $cpuemoyenne = array_sum($cpuecol)/count($cpuecol);
+        
         for ($j=1; $j <13 ; $j++) { 
         //$donnees=array();
         foreach ($result as $key => $value)
@@ -877,13 +888,13 @@ class Requetes extends REST_Controller {
 
             $nbr_jrs_peche_mensuel_pab = $value->pab_moy * $nbr_jour;
                               
-           $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $value->cpue_moyenne/1000);                            
+           $captures_t = ($value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab * $cpuemoyenne/1000);                            
             $distribution    = $this->Distribution_fractileManager->findByDegree($value->degree);
             $tdistriburion90 = $distribution[0]->PercentFractile90 ;
             $clcpue          = ($tdistriburion90 * $ecart_type) / $value->sqrt ;
-            if ($value->cpue_moyenne )
+            if ($cpuemoyenne )
             {
-               $erreur_relative = ($clcpue / $value->cpue_moyenne ) * 100;
+               $erreur_relative = ($clcpue / $cpuemoyenne ) * 100;
             }
             
             $distributionpab = $this->Distribution_fractileManager->findByDegree($value->degreepab);
@@ -894,7 +905,7 @@ class Requetes extends REST_Controller {
             {$moy_pax_pab = 1 ;}
             else{$moy_pax_pab = $max_pab ;}
                               
-            $max_cpue = $clcpue + $value->cpue_moyenne;
+            $max_cpue = $clcpue + $cpuemoyenne;
 
             $nbr_total_jrs_peche_mensuel = $value->nbr_unit_peche * $nbr_jrs_peche_mensuel_pab;
             $max_captures_totales = ($value->nbr_unit_peche * $moy_pax_pab * $nbr_jour * $max_cpue)/1000;
@@ -907,9 +918,11 @@ class Requetes extends REST_Controller {
               $erreur_relative_capture_total_90 = ($cl_captures_totales / ($captures_t)) * 100;
             }
             
+            
              $data[$i]['mois'] = $value->mois;
              $data[$i]['region'] = $value->nom_region;
-             //$data[$i]['site_embarquement'] = $value->site_embarquement;
+             //$data[$i]['cp'] = $value->cp;
+             $data[$i]['cpp'] = $cpuecol;
              $data[$i]['libelle'] = $value->site_embarquement;
              //$data[$i]['unite_peche_libelle']= $value->libelle;
              $data[$i]['libelle_unite_peche']= $value->libelle;
@@ -918,7 +931,7 @@ class Requetes extends REST_Controller {
              $data[$i]['nbr_jrs_peche_mensuel_pab']=$nbr_jrs_peche_mensuel_pab;
              $data[$i]['nbr_total_jrs_peche_mensuel']= $nbr_total_jrs_peche_mensuel;
              $data[$i]['nbr_jour_mois']= $nbr_jour;
-             $data[$i]['moyenne']= $value->cpue_moyenne;
+             $data[$i]['moyenne']= $cpuemoyenne;
              //$data[$i]['erreur_relative_90_cpue'] = number_format($erreur_relative, 0);
              $data[$i]['erreur_relative_90'] = number_format($erreur_relative, 0);
              //$data[$i]['nombre_echantillon_cpue'] = $value->nombre_echantillon;
