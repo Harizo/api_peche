@@ -23,7 +23,7 @@ class Requetes extends REST_Controller {
     public function index_get() 
     {
         set_time_limit(0);
-        ini_set ('memory_limit', '2048M');
+        ini_set ('memory_limit', '1024M');
         $pivot = $this->get('menu');
         $annee = $this->get('annee');
         $mois = $this->get('mois');
