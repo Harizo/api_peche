@@ -329,6 +329,28 @@ class Fiche_echantillonnage_capture_model extends CI_Model
             return null;
         }               
     
+    }    
+
+    public function cpue($requete)
+    {
+        $result = $this->db->select('((SUM(espece_capture.capture)/echantillon.duree_mare)/(COUNT(DISTINCT(echantillon.id)))) as cp')
+                            ->from('espece_capture')
+                            ->join('echantillon', 'echantillon.id = espece_capture.id_echantillon')
+                            ->join('fiche_echantillonnage_capture', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')
+                            ->where($requete)
+                            ->group_by('echantillon.id')                       
+                            ->get()
+                            ->result();
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
     }
     // req_L1.1   
     public function capture_total_par_espece($requete)
@@ -396,6 +418,40 @@ public function ecartypeAnalyse($requetesanssite)
                             ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
                             ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                  
                             ->join('unite_peche', 'echantillon.id_unite_peche = unite_peche.id')                  
+                            ->join('site_embarquement', 'fiche_echantillonnage_capture.id_site_embarquement = site_embarquement.id')
+                            ->group_by('fiche_echantillonnage_capture.code_unique')
+                            ->group_by('fiche_echantillonnage_capture.id_region')
+                            ->group_by('fiche_echantillonnage_capture.id_district')                    
+                            ->group_by('id_site_embarquement')                          
+                            ->group_by('echantillon.id')                          
+                            ->group_by('fiche_echantillonnage_capture.date')                          
+                            ->where($requete)                          
+                            //->where($requete)                          
+                            ->where('fiche_echantillonnage_capture.validation',1)                         
+                            ->get()
+                            ->result();
+
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+
+    }
+
+  /* requete 1 talou 27/09/2019 
+
+  public function som_capture_totales_journaliere($requete)
+    {
+        $result = $this->db->select('unite_peche.libelle as libelle_unite_peche,date,site_embarquement.libelle,SUM(espece_capture.capture ) as capture,SUM(espece_capture.capture/duree_mare) as cpue')
+                            ->from('fiche_echantillonnage_capture')
+                            ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
+                            ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                  
+                            ->join('unite_peche', 'echantillon.id_unite_peche = unite_peche.id')                  
                             ->join('site_embarquement', 'fiche_echantillonnage_capture.id_site_embarquement = site_embarquement.id')                  
                             ->group_by('id_site_embarquement')                          
                             ->group_by('id_unite_peche')                          
@@ -416,12 +472,12 @@ public function ecartypeAnalyse($requetesanssite)
         }
 
 
-    }
+    }*/
 
     public function som_capture_totales_average($requete)
     {
         
-        $result = $this->db->select('fiche_echantillonnage_capture.id_region as id_region,unite_peche.libelle as libelle_unite_peche,unite_peche.id as id_unite_peche,espece_capture.capture as xxx,COUNT(DISTINCT(echantillon.unique_code)) as nombre,SUM(espece_capture.capture/1) as somme,((SUM(espece_capture.capture/duree_mare))/(COUNT(DISTINCT(echantillon.unique_code)))) as moyenne,AVG(espece_capture.capture/1) as moyenne_par_ecpece, fiche_echantillonnage_capture.id as id_fiche')
+        $result = $this->db->select('fiche_echantillonnage_capture.id_region as id_region,unite_peche.libelle as libelle_unite_peche,unite_peche.id as id_unite_peche,espece_capture.capture as xxx,COUNT(DISTINCT(echantillon.unique_code)) as nombre,SUM(espece_capture.capture/duree_mare) as somme,((SUM(espece_capture.capture/duree_mare))/(COUNT(DISTINCT(echantillon.unique_code)))) as moyenne,AVG(espece_capture.capture/duree_mare) as moyenne_par_ecpece, fiche_echantillonnage_capture.id as id_fiche')
                             ->from('fiche_echantillonnage_capture')
                             ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
                             ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                  
