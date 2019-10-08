@@ -74,11 +74,12 @@ class Fiche_echantillonnage_capture_model extends CI_Model
             }
                
         }
-    public function findByDate($date_debut,$date_fin,$validation) {
+    public function findByDate($date_debut,$date_fin,$validation,$id_region) {
             $result =  $this->db->select('*')
                             ->from($this->table)
                             ->where('date BETWEEN "'.$date_debut.'" AND "'.$date_fin.'"')
                             ->where('validation',$validation)
+                            ->where('id_region',$id_region)
                             ->order_by('date', 'asc')
                             ->get()
                             ->result();

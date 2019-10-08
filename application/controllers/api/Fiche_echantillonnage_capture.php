@@ -22,12 +22,13 @@ class Fiche_echantillonnage_capture extends REST_Controller {
         $date_debut = $this->get('date_debut');
         $validation = $this->get('validation');
         $date_fin = $this->get('date_fin');
+        $id_region = $this->get('id_region');
         $taiza="";
 
-        if($date_debut || $date_fin || $validation)
+        if($date_debut || $date_fin || $validation || $id_region)
         {   
             $data = array();
-            $menu = $this->Fiche_echantillonnage_captureManager->findByDate($date_debut ,$date_fin,$validation);
+            $menu = $this->Fiche_echantillonnage_captureManager->findByDate($date_debut ,$date_fin,$validation,$id_region);
 
             if ($menu)
             {

@@ -210,4 +210,20 @@ class Espece_capture_model extends CI_Model
         }           
     }
 
+    public function nbrespece_capture($id_echantillon)
+    {       
+        $result =  $this->db->select('COUNT(*) as nombre')
+                            ->from($this->table)
+                            ->where("id_echantillon",$id_echantillon)
+                            ->get()
+                            ->result();
+            if($result)
+            {
+                return $result;
+            }else{
+                return null;
+            }                     
+        
+    }
+
 }

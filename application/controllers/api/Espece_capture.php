@@ -19,6 +19,8 @@ class Espece_capture extends REST_Controller {
     public function index_get() {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
+        $id_echantillon = $this->get('id_echantillon');
+        $menus = $this->get('menus');
 
         if ($cle_etrangere) 
         {
@@ -57,9 +59,7 @@ class Espece_capture extends REST_Controller {
                     $data = array();
             
         } 
-        else 
-        {
-            if ($id) 
+        elseif ($id) 
             {
                 $data = array();
                 $espece_capture= $this->Espece_captureManager->findById($id);
@@ -73,6 +73,17 @@ class Espece_capture extends REST_Controller {
                 $data['date_creation'] = $espece_capture->date_creation;
                 $data['date_modification'] = $espece_capture->date_modification;
                 
+            }
+            elseif ($menus=='count')
+            {
+                $data = array();
+                $nbrespece_capture= $this->Espece_captureManager->nbrespece_capture($id_echantillon);
+                if ($nbrespece_capture)
+                {   foreach ($nbrespece_capture as $key => $value) {
+                    $data['count']=$value->nombre;
+                    }
+                    
+                }
             } 
             else 
             {
@@ -97,7 +108,7 @@ class Espece_capture extends REST_Controller {
                 } else
                     $data = array();
             }
-        }
+     
         if (count($data)>0) {
             $this->response([
                 'status' => TRUE,

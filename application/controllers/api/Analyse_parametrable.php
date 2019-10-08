@@ -40,11 +40,16 @@ class Analyse_parametrable extends REST_Controller
         $data = array() ;
         $donnees = array() ;
         $result = array() ;
+        $datajour= array();
+
 
         //*********************************** Nombre echantillon ***************************[0]->nombre
 
         if ($menu == "analyse_parametrable") 
         {
+            $total_jour_peche = 0;
+            $total_cpue = 0;
+
             //initialisation
             if (($id_region!='*')&&($id_region!='undefined')) 
             {
@@ -1863,6 +1868,8 @@ class Analyse_parametrable extends REST_Controller
                 $erreur_relative=0;
                 $n_erreur_relative=0;
                 $n_erreur_capture=0;
+                $nbr_total_jrs_peche_mensuel=0;
+
                 if ($all_unite_peche!=null && $all_espece!=null)
                 {
                     foreach ($all_unite_peche as $kUnite_peche => $vUnite_peche)
@@ -2005,8 +2012,20 @@ class Analyse_parametrable extends REST_Controller
                               $indice++ ;  
                             }
                         }
+
+                        $Jr_peche_esp= array_column($data, 'nbr_total_jrs_peche_annuel_moy');
+                        $jr_peche_unite=array_sum($Jr_peche_esp);
+
+                        $datajour[$kUnite_peche]['jrs_peche_unite']=$jr_peche_unite/count($Jr_peche_esp);
                     }
                 }
+            
+                $Total_jour_peche= array_column($datajour, 'jrs_peche_unite');
+                $total_jour_peche=array_sum($Total_jour_peche)/count($Total_jour_peche);
+
+                $Total_cpue = array_column($data, 'cpue_effort');
+                $total_cpue = array_sum($Total_cpue);
+               
                 
                 $Total_capture  = array_column($data, 'capture');
                 $total_capture = array_sum($Total_capture);
@@ -2538,9 +2557,11 @@ class Analyse_parametrable extends REST_Controller
 //********Fin Requete L4.5 Annee Mois Site unite Espèce Capture Valeur********// 
 
                 $total['total_prix'] = $total_prix ;
-                    $total['total_capture'] = $total_capture ;
-                    $total['erreur_relative_capture_total'] = $erreur_rel_capture ;
-                   $total['erreur_relative_total'] = $erreur_relative ;
+                $total['total_capture'] = $total_capture ;
+                $total['erreur_relative_capture_total'] = $erreur_rel_capture ;
+                $total['erreur_relative_total'] = $erreur_relative ;
+                $total['total_cpue'] = $total_cpue;
+                $total['total_jour_peche'] = $total_jour_peche;
 
         }
         
@@ -2825,7 +2846,7 @@ class Analyse_parametrable extends REST_Controller
             
             'alignment' => array
             (
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
                 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
                     
             ),
@@ -2833,15 +2854,15 @@ class Analyse_parametrable extends REST_Controller
             (
                     //'name'  => 'Times New Roman',
                 'bold'  => true,
-                'size'  => 12
+                'size'  => 11
             ),
         );
 
         if ($pivot=="*")
         {
             $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(30);
-            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":D".$ligne);
-            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($styleTitre);            
+            $objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":E".$ligne);
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->applyFromArray($styleTitre);            
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'L1.1 STRATE MAJEUR');                       
             $ligne++;
             $ligne_entete= $this->insertion_entete($styleEntete,$ligne,$objPHPExcel,$id_region,$id_district,$id_site_embarquement,$id_unite_peche,$id_espece);
@@ -2850,50 +2871,37 @@ class Analyse_parametrable extends REST_Controller
                 $ligne=$ligne_entete+1;
             }
 
-            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($stylesousTitre);
-            $objPHPExcel-> getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->getNumberFormat()->setFormatCode('00');
-            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->getAlignment()->setWrapText(true);
+            $objPHPExcel->getActiveSheet()->getStyle("B".$ligne.":E".$ligne)->applyFromArray($stylesousTitre);
+            $objPHPExcel-> getActiveSheet()->getStyle("B".$ligne.":E".$ligne)->getNumberFormat()->setFormatCode('00');
+            $objPHPExcel->getActiveSheet()->getStyle("B".$ligne.":E".$ligne)->getAlignment()->setWrapText(true);
 
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Captures totales');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Valeurs totales');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Moy Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Moy Erreur Rel Capture 90%');;
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Captures totales');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Valeurs totales');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Moy Erreur Rel PUE 90%');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Moy Erreur Rel Capture 90%');;
             $ligne++;
             foreach ($data as $key => $value)
             {
-                $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":D".$ligne)->applyFromArray($stylecontenu);
+                $objPHPExcel->getActiveSheet()->getStyle("B".$ligne.":E".$ligne)->applyFromArray($stylecontenu);
 
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, $this->conversion_kg_tonne($value['capture']));
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, number_format($value['prix'],0,","," ")." Ar");
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $this->conversion_kg_tonne($value['capture']));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, number_format($value['prix'],0,","," ")." Ar");
                
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $value['erreur_relative']);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $value['erreur_rel_capture']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $value['erreur_relative']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $value['erreur_rel_capture']);
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("C".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("C".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("C".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Erreur Rel PUE 90%');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("C".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Erreur Rel Capture 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $total['erreur_relative_capture_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_capture_total']);
 
         }
 
@@ -2932,28 +2940,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -2995,28 +2989,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("B".$ligne.":F".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3056,28 +3036,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3119,28 +3085,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("B".$ligne.":F".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3180,28 +3132,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":E".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3243,28 +3181,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("B".$ligne.":F".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3308,28 +3232,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+           $objPHPExcel->getActiveSheet()->getStyle("C".$ligne.":G".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3371,28 +3281,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("B".$ligne.":F".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3436,28 +3332,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("C".$ligne.":G".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3503,28 +3385,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne.":H".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-             $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-             $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-             $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3562,7 +3430,7 @@ class Analyse_parametrable extends REST_Controller
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne,$value['unite_peche']);
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne,$value['espece_nom_local']);
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, $value['espece_nom_scientifique']);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $value['nbr_total_jrs_peche_annuel_moy']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($value['nbr_total_jrs_peche_annuel_moy'],0,","," "));
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $this->conversion_kg_tonne($value['capture']));
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($value['prix'],0,","," ")." Ar");
                
@@ -3572,28 +3440,15 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("I".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("C".$ligne.":I".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, number_format($total['total_jour_peche'],0,","," "));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $total['total_cpue']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("I".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("I".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, $total['erreur_relative_total']);
-
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("I".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3637,28 +3492,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("C".$ligne.":G".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("F".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3704,28 +3545,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("D".$ligne.":H".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-             $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-             $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-             $objPHPExcel->getActiveSheet()->getStyle("G".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, $total['erreur_relative_capture_total']);
           
         }
@@ -3772,28 +3599,14 @@ class Analyse_parametrable extends REST_Controller
 
                 $ligne++;
             }
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("I".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Total captures');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
+            $objPHPExcel->getActiveSheet()->getStyle("E".$ligne.":I".$ligne)->applyFromArray($stylepied);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$ligne, 'Total');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$ligne, $this->conversion_kg_tonne($total['total_capture']));
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("I".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Total prix');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$ligne, number_format($total['total_prix'],0,","," ")." Ar /".number_format($total['total_prix']*5,0,","," ")." Fmg");
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("I".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Erreur Rel PUE 90%');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, $total['erreur_relative_total']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, $total['erreur_relative_total']);
 
-            $ligne++;
-            $objPHPExcel->getActiveSheet()->getStyle("H".$ligne)->applyFromArray($stylepied);
-            $objPHPExcel->getActiveSheet()->getStyle("I".$ligne)->applyFromArray($stylecontenu);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$ligne, 'Erreur Rel Capture 90%');
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$ligne, $total['erreur_relative_capture_total']);
           
         }

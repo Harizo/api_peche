@@ -50,6 +50,7 @@ class Utilisateurs extends REST_Controller {
                 $data['token'] = $user->token;
                 $data['email'] = $user->email;
                 $data['enabled'] = $user->enabled;
+                $data['id_region'] = $user->id_region;
       
                 $data['roles'] = unserialize($user->roles);
             }
