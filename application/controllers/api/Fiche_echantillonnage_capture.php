@@ -25,10 +25,10 @@ class Fiche_echantillonnage_capture extends REST_Controller {
         $id_region = $this->get('id_region');
         $taiza="";
 
-        if($date_debut || $date_fin || $validation || $id_region)
+        if($date_debut || $date_fin || $validation)
         {   
             $data = array();
-            $menu = $this->Fiche_echantillonnage_captureManager->findByDate($date_debut ,$date_fin,$validation,$id_region);
+            $menu = $this->Fiche_echantillonnage_captureManager->findByDate($this->generer_where($date_debut ,$date_fin,$id_region),$validation);
 
             if ($menu)
             {
@@ -295,6 +295,19 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                         ], REST_Controller::HTTP_OK);
             }
         }      
+    }
+
+    public function generer_where($date_debut ,$date_fin,$id_region)
+    {
+     
+        $requete = "date BETWEEN '".$date_debut."' AND '".$date_fin."' " ;
+            
+            if (($id_region!='*')&&($id_region!='undefined')) 
+            {
+                $requete = $requete." AND id_region='".$id_region."'" ;
+            }
+            
+        return $requete ;
     }
 }
 /* End of file controllername.php */
