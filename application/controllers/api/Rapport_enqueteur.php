@@ -127,7 +127,6 @@ class Rapport_enqueteur extends REST_Controller
 		    			$data[$value][$key2]['unite_peche']=$value2->libelle;
 		    			
 		    			$data[$value][$key2]['nombre']=$nbrechant[0]->nombre;
-		    			$data[$value][$key2]['date']=$week;
     				}
 	        	}
 	        	
