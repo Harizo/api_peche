@@ -22,7 +22,15 @@ class Site_embarquement extends REST_Controller {
         
         if ($get_by_district) 
         {
-            $data = $this->Site_embarquementManager->findAll_district($id_district);
+            $tmp = $this->Site_embarquementManager->findAll_district($id_district);
+            if ($tmp) 
+            {
+               $data=$tmp;
+            } else
+            {
+                $data = array();
+            }
+            
         }
         else
         {

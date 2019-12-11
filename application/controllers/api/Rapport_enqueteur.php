@@ -127,6 +127,7 @@ class Rapport_enqueteur extends REST_Controller
 		    			$data[$value][$key2]['unite_peche']=$value2->libelle;
 		    			
 		    			$data[$value][$key2]['nombre']=$nbrechant[0]->nombre;
+		    			$data[$value][$key2]['date']=$week;
     				}
 	        	}
 	        	
@@ -482,8 +483,11 @@ class Rapport_enqueteur extends REST_Controller
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$lignecontenu, $max_echantillon);
 					setlocale(LC_TIME, "fr_FR");
 				    $d= strftime("%A", strtotime($annee."-".$mois."-01"));
-					if($valu['nombre']>0)
-					{
+				    if ($valu['nombre']==0) {
+				    	$valu['nombre']='';
+				    }
+					/*if($valu['nombre']>0)
+					{*/
 						switch ($d)
 						{
 							case 'lundi':
@@ -514,7 +518,7 @@ class Rapport_enqueteur extends REST_Controller
 								$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colonne[$c].$lignecontenu, $valu['nombre']);
 								break;
 						}
-					}	
+					//}	
 				
 				}
 				if($valuedate!=$annee."-".$mois."-01")
@@ -550,6 +554,7 @@ class Rapport_enqueteur extends REST_Controller
 		    $this->response([
                 'status' => TRUE,
                 'response' => $nom_file.".xlsx",
+                'resp' => $data,
                 'message' => 'Get file success',
             ], REST_Controller::HTTP_OK);
 		  
