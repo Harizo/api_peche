@@ -57,7 +57,7 @@ class Espece_model extends CI_Model
     {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('id')
+                        ->order_by('nom_local')
                         ->get()
                         ->result();
         if($result)
