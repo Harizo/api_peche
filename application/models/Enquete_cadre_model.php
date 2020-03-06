@@ -203,4 +203,37 @@ class Enquete_cadre_model extends CI_Model {
             return false;
     }
 
+    public function get_last_year_by_site($id_site_embarquement)
+    {
+
+        $max_annee = $this->get_last_year();
+        $sql =  "
+
+                    select 
+                        unite_peche.id as id,
+                        unite_peche.libelle as libelle,
+                        type_canoe.id as id_type_canoe,
+                        type_engin.id as id_type_engin,
+                        ".$id_site_embarquement." as id_site_embarquement
+                        
+
+                    from 
+                        enquete_cadre,
+                        unite_peche,
+                        type_engin,
+                        type_canoe
+                    where
+                        annee = ".$max_annee->annee."
+                        and enquete_cadre.id_site_embarquement = ".$id_site_embarquement."
+                        and unite_peche.id = enquete_cadre.id_unite_peche
+                        and type_canoe.id = unite_peche.id_type_canoe
+                        and type_engin.id = unite_peche.id_type_engin
+                    group by id_unite_peche
+
+
+                " ;
+
+        return $this->db->query($sql)->result();
+    }
+
 }

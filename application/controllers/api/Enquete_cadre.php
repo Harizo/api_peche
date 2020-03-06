@@ -14,79 +14,107 @@ class Enquete_cadre extends REST_Controller {
         $this->load->model('district_model', 'DistrictManager');
         $this->load->model('site_embarquement_model', 'Site_embarquementManager');
         $this->load->model('unite_peche_model', 'Unite_pecheManager');
+        $this->load->model('type_canoe_model', 'Type_canoeManager');
+        $this->load->model('type_engin_model', 'Type_enginManager');
 
     }
     public function index_get() {
         $id = $this->get('id');
         $annee = $this->get('annee');
+        $id_site_embarquement = $this->get('id_site_embarquement');
  
-            if ($id)  
+            if ($id_site_embarquement) 
             {
-                $data = array();
-                $enquete_cadre = $this->Enquete_cadreManager->findById($id);
-                $district = $this->DistrictManager->findById($enquete_cadre->district_id);
-                $region = $this->RegionManager->findById($enquete_cadre->region_id);
-                $site_embarquement = $this->site_embarquementManager->findById($enquete_cadre->site_embarquement_id);
-                $unite_peche = $this->unite_pecheManager->findById($enquete_cadre->unite_peche_id);
-                $data['id'] = $enquete_cadre->id;                
-                $data['annee'] = $enquete_cadre->annee;
-                $data['region'] = $region;
-                $data['district'] = $district;
-                $data['site_embarquement'] = $site_embarquement;
-                $data['nbr_unite_peche'] = $enquete_cadre->nbr_unite_pecher;
+                $taiza="get_last_year_by_site";
+                $d = $this->Enquete_cadreManager->get_last_year_by_site($id_site_embarquement);
 
-            } 
-            else 
-            {
-                if ($annee) 
+                if ($d) 
                 {
-                    $taiza="findAll by annee";
-                    $menu = $this->Enquete_cadreManager->findAllbyannee($annee);
-                    if ($menu) {
-                        foreach ($menu as $key => $value) {
-                            $district = array();
-                            $region = array();
-                            $site_embarquement = array();
-                            $unite_peche = array();
-                            $district = $this->DistrictManager->findById($value->id_district);
-                            $region = $this->RegionManager->findById($value->id_region);
-                            $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
-                            $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
-                            $data[$key]['id'] = $value->id;
-                            $data[$key]['district'] = $district;
-                            $data[$key]['annee'] = $value->annee;
-                            $data[$key]['region'] = $region;
-                            $data[$key]['site_embarquement'] = $site_embarquement;
-                            $data[$key]['unite_peche'] = $unite_peche;
-                            $data[$key]['nbr_unite_peche'] = $value->nbr_unite_peche;
-                        }
-                    } else
-                        $data = array();
+                    foreach ($d as $key => $value) 
+                    {
+                        $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
+                        $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
+                            
+                        $data[$key]['id'] = $value->id;
+                        $data[$key]['libelle'] = $value->libelle;
+                        //$data[$key]['nbr_echantillon'] = $value->nbr_echantillon;
+                        $data[$key]['type_canoe'] = $type_canoe;
+                        $data[$key]['type_engin'] = $type_engin;
+                    }
                 }
+                else
+                    $data = array();
+            }
+            else
+            {
+                if ($id)  
+                {
+                    $data = array();
+                    $enquete_cadre = $this->Enquete_cadreManager->findById($id);
+                    $district = $this->DistrictManager->findById($enquete_cadre->district_id);
+                    $region = $this->RegionManager->findById($enquete_cadre->region_id);
+                    $site_embarquement = $this->site_embarquementManager->findById($enquete_cadre->site_embarquement_id);
+                    $unite_peche = $this->unite_pecheManager->findById($enquete_cadre->unite_peche_id);
+                    $data['id'] = $enquete_cadre->id;                
+                    $data['annee'] = $enquete_cadre->annee;
+                    $data['region'] = $region;
+                    $data['district'] = $district;
+                    $data['site_embarquement'] = $site_embarquement;
+                    $data['nbr_unite_peche'] = $enquete_cadre->nbr_unite_pecher;
+
+                } 
                 else 
                 {
-                    $taiza="findAll no nataony";
-                    $menu = $this->Enquete_cadreManager->findAll();
-                    if ($menu) {
-                        foreach ($menu as $key => $value) {
-                            $district = array();
-                            $region = array();
-                            $site_embarquement = array();
-                            $unite_peche = array();
-                            $district = $this->DistrictManager->findById($value->id_district);
-                            $region = $this->RegionManager->findById($value->id_region);
-                            $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
-                            $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
-                            $data[$key]['id'] = $value->id;
-                            $data[$key]['district'] = $district;
-                            $data[$key]['annee'] = $value->annee;
-                            $data[$key]['region'] = $region;
-                            $data[$key]['site_embarquement'] = $site_embarquement;
-                            $data[$key]['unite_peche'] = $unite_peche;
-                            $data[$key]['nbr_unite_peche'] = $value->nbr_unite_peche;
-                        }
-                    } else
-                        $data = array();
+                    if ($annee) 
+                    {
+                        $taiza="findAll by annee";
+                        $menu = $this->Enquete_cadreManager->findAllbyannee($annee);
+                        if ($menu) {
+                            foreach ($menu as $key => $value) {
+                                $district = array();
+                                $region = array();
+                                $site_embarquement = array();
+                                $unite_peche = array();
+                                $district = $this->DistrictManager->findById($value->id_district);
+                                $region = $this->RegionManager->findById($value->id_region);
+                                $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
+                                $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
+                                $data[$key]['id'] = $value->id;
+                                $data[$key]['district'] = $district;
+                                $data[$key]['annee'] = $value->annee;
+                                $data[$key]['region'] = $region;
+                                $data[$key]['site_embarquement'] = $site_embarquement;
+                                $data[$key]['unite_peche'] = $unite_peche;
+                                $data[$key]['nbr_unite_peche'] = $value->nbr_unite_peche;
+                            }
+                        } else
+                            $data = array();
+                    }
+                    else 
+                    {
+                        $taiza="findAll no nataony";
+                        $menu = $this->Enquete_cadreManager->findAll();
+                        if ($menu) {
+                            foreach ($menu as $key => $value) {
+                                $district = array();
+                                $region = array();
+                                $site_embarquement = array();
+                                $unite_peche = array();
+                                $district = $this->DistrictManager->findById($value->id_district);
+                                $region = $this->RegionManager->findById($value->id_region);
+                                $site_embarquement = $this->Site_embarquementManager->findById($value->id_site_embarquement);
+                                $unite_peche = $this->Unite_pecheManager->findById($value->id_unite_peche);
+                                $data[$key]['id'] = $value->id;
+                                $data[$key]['district'] = $district;
+                                $data[$key]['annee'] = $value->annee;
+                                $data[$key]['region'] = $region;
+                                $data[$key]['site_embarquement'] = $site_embarquement;
+                                $data[$key]['unite_peche'] = $unite_peche;
+                                $data[$key]['nbr_unite_peche'] = $value->nbr_unite_peche;
+                            }
+                        } else
+                            $data = array();
+                    }
                 }
             }
         

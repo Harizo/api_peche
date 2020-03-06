@@ -84,8 +84,10 @@ class Utilisateurs extends REST_Controller {
                     $data[$key]['token'] = $value->token;
                     $data[$key]['email'] = $value->email;
                     $data[$key]['enabled'] = $value->enabled;
+                    $id_region = $value->id_region;
               
-           
+                    $region = $this->RegionManager->findById($id_region);
+                    $data[$key]['region'] = $region->nom;
                     $data[$key]['roles'] = unserialize($value->roles);
 
 

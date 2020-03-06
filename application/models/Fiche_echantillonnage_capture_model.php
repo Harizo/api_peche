@@ -17,7 +17,7 @@ class Fiche_echantillonnage_capture_model extends CI_Model
         }                    
     }
     public function update($id, $fiche_echantillonnage_capture) {
-        $this->db->set($this->_set($fiche_echantillonnage_capture))
+        $this->db->set($this->_set_update($fiche_echantillonnage_capture))
                             ->set('date_modification', 'NOW()', false)
                             ->where('id', (int) $id)
                             ->update($this->table);
@@ -30,6 +30,23 @@ class Fiche_echantillonnage_capture_model extends CI_Model
     public function _set($fiche_echantillonnage_capture) {
         return array(
             'code_unique'             =>      $fiche_echantillonnage_capture['code_unique'],
+            'date'                    =>      $fiche_echantillonnage_capture['date'],
+           // 'date_creation'           =>      $fiche_echantillonnage_capture['date_creation'],
+            //'date_modification'       =>      $fiche_echantillonnage_capture['date_modification'],
+            'id_region'               =>      $fiche_echantillonnage_capture['id_region'],
+            'id_district'             =>      $fiche_echantillonnage_capture['id_district'],
+            'id_site_embarquement'    =>      $fiche_echantillonnage_capture['id_site_embarquement'],
+            'id_enqueteur'            =>      $fiche_echantillonnage_capture['id_enqueteur'],
+            'id_user'                 =>      $fiche_echantillonnage_capture['id_user'],
+            'latitude'                =>      $fiche_echantillonnage_capture['latitude'],
+            'longitude'               =>      $fiche_echantillonnage_capture['longitude'],
+            'altitude'                =>      $fiche_echantillonnage_capture['altitude'],
+            'validation'                =>      $fiche_echantillonnage_capture['validation']                      
+        );
+    }
+    public function _set_update($fiche_echantillonnage_capture) {
+        return array(
+           // 'code_unique'             =>      $fiche_echantillonnage_capture['code_unique'],
             'date'                    =>      $fiche_echantillonnage_capture['date'],
            // 'date_creation'           =>      $fiche_echantillonnage_capture['date_creation'],
             //'date_modification'       =>      $fiche_echantillonnage_capture['date_modification'],
@@ -478,7 +495,7 @@ public function ecartypeAnalyse($requetesanssite)
     public function som_capture_totales_average($requete)
     {
         
-        $result = $this->db->select('fiche_echantillonnage_capture.id_region as id_region,unite_peche.libelle as libelle_unite_peche,unite_peche.id as id_unite_peche,espece_capture.capture as xxx,COUNT(DISTINCT(echantillon.unique_code)) as nombre,SUM(espece_capture.capture/duree_mare) as somme,((SUM(espece_capture.capture/duree_mare))/(COUNT(DISTINCT(echantillon.unique_code)))) as moyenne,AVG(espece_capture.capture/duree_mare) as moyenne_par_ecpece, fiche_echantillonnage_capture.id as id_fiche')
+        $result = $this->db->select('fiche_echantillonnage_capture.id_region as id_region,unite_peche.libelle as libelle_unite_peche,unite_peche.id as id_unite_peche,espece_capture.capture as xxx,COUNT(DISTINCT(echantillon.unique_code)) as nombre,SUM(espece_capture.capture/duree_mare) as somme,((SUM(espece_capture.capture/duree_mare))/(COUNT(DISTINCT(echantillon.id)))) as moyenne,AVG(espece_capture.capture/duree_mare) as moyenne_par_ecpece, fiche_echantillonnage_capture.id as id_fiche')
                             ->from('fiche_echantillonnage_capture')
                             ->join('echantillon', 'fiche_echantillonnage_capture.id = echantillon.id_fiche_echantillonnage_capture')  
                             ->join('espece_capture', 'espece_capture.id_echantillon = echantillon.id')                  

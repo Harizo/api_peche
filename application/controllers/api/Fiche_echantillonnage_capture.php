@@ -237,7 +237,7 @@ class Fiche_echantillonnage_capture extends REST_Controller {
                 }
                 $code_unique = $region->nom."-".$site_embarquement->libelle."-".$date_code_unique."-".$sequence;
                 $data = array(
-                    'code_unique' =>$code_unique,
+                   // 'code_unique' =>$code_unique,
                     'date' => $this->post('date'),
                     'latitude' => $this->post('latitude'),
                     'longitude' => $this->post('longitude'),
