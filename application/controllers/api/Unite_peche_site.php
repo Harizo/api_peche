@@ -87,6 +87,7 @@ class Unite_peche_site extends REST_Controller {
         elseif ($menus=='nbr_echantillon')
         {   
             $annee               = $this->get('annee');
+            $mois                = $this->get('mois');
             $id_enqueteur        = $this->get('id_enqueteur');
             $id_unite_pech       = $this->get('id_unite_peche');
             $id_site_embarquemen = $this->get('id_site_embarquement');
@@ -108,7 +109,7 @@ class Unite_peche_site extends REST_Controller {
 
             
             $nbr_echantillon_enqueteur_predefini = $this->Nbr_echantillon_enqueteurManager->max_echantillon_enqueteur($id_enqueteur,$id_unite_pech,$id_site_embarquemen);
-            $nbr_echantillon_enqueteur_actuel = $this->Unite_peche_site_Manager->nbrechantillontotal($this->generer_requeteenqueteur($annee,$id_site_embarquemen,$id_unite_pech,$id_enqueteur));
+            $nbr_echantillon_enqueteur_actuel = $this->Unite_peche_site_Manager->nbrechantillontotal($this->generer_requeteenqueteur($annee, $mois, $id_site_embarquemen, $id_unite_pech, $id_enqueteur));
                 
             if ($nbr_echantillon_enqueteur_predefini)
             {
@@ -262,9 +263,11 @@ class Unite_peche_site extends REST_Controller {
 
         return $requete ;
     }
-    public function generer_requeteenqueteur($annee,$id_site_embarquement, $id_unite_peche,$id_enqueteur)
+    public function generer_requeteenqueteur($annee, $mois, $id_site_embarquement, $id_unite_peche,$id_enqueteur)
     {
-        $requete = "date BETWEEN '".$annee."-01-01' AND '".$annee."-12-31' " ;
+
+        $j = cal_days_in_month(CAL_GREGORIAN, $mois, $annee);
+        $requete = "date BETWEEN '".$annee."-".$mois."-01' AND '".$annee."-".$mois."-".$j."' " ;
           
             if ($id_site_embarquement) 
             {

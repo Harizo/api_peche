@@ -482,6 +482,7 @@ class Rapport_enqueteur extends REST_Controller
 					$objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$lignecontenu, $max_echantillon);
 					setlocale(LC_TIME, "fr_FR");
 				    $d= strftime("%A", strtotime($annee."-".$mois."-01"));
+				    $d = strtolower($d);
 				    if ($valu['nombre']==0) {
 				    	$valu['nombre']='';
 				    }
@@ -516,7 +517,36 @@ class Rapport_enqueteur extends REST_Controller
 								$c=7;
 								$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colonne[$c].$lignecontenu, $valu['nombre']);
 								break;
+							case 'monday':
+								$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colonne[$c].$lignecontenu, $valu['nombre']);
+								break;
+							case 'tuesday':
+								$c=2;
+								$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colonne[$c].$lignecontenu, $valu['nombre']);
+								break;
+							case 'wednesday':
+								$c=3;
+								$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colonne[$c].$lignecontenu, $valu['nombre']);
+								break;
+							case 'thursday':
+								$c=4;
+								$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colonne[$c].$lignecontenu, $valu['nombre']);
+								break;
+							case 'friday':
+								$c=5;
+								$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colonne[$c].$lignecontenu, $valu['nombre']);
+								break;
+							case 'saturday':
+								$c=6;
+								$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colonne[$c].$lignecontenu, $valu['nombre']);
+								break;
+							case 'sunday':
+								$c=7;
+								$objPHPExcel->setActiveSheetIndex(0)->setCellValue($colonne[$c].$lignecontenu, $valu['nombre']);
+								break;
 						}
+
+						
 					//}	
 				
 				}
