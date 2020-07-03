@@ -1,9 +1,9 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class sip_espece_model extends CI_Model {
-    protected $table = 'sip_espece';
-    public function add($sip_espece)
-    {   $this->db->set($this->_set($sip_espece))
+class SIP_navire_model extends CI_Model {
+    protected $table = 'sip_navire';
+    public function add($sip_navire)
+    {   $this->db->set($this->_set($sip_navire))
                             ->insert($this->table);
         if($this->db->affected_rows() === 1)
         {
@@ -14,8 +14,8 @@ class sip_espece_model extends CI_Model {
             return null;
         }                     
     }
-    public function update($id, $sip_espece)
-    {   $this->db->set($this->_set($sip_espece))
+    public function update($id, $sip_navire)
+    {   $this->db->set($this->_set($sip_navire))
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -27,12 +27,19 @@ class sip_espece_model extends CI_Model {
             return null;
         }                      
     }
-    public function _set($sip_espece)
+    public function _set($sip_navire)
     {   return array(
-            'id'           =>      $sip_espece['id'],        
-            'code'         =>      $sip_espece['code'],
-            'nom'          =>      $sip_espece['nom'],                       
-            'type_espece'  =>      $sip_espece['typ_esp_id']
+            'id'                =>      $sip_navire['id'],        
+            'immatricule'       =>      $sip_navire['immatricule'],
+            'nom'               =>      $sip_navire['nom'],                       
+            'pavillon'          =>      $sip_navire['pavillon'],
+            'armateur'          =>      $sip_navire['armateur'],        
+            'adresse'           =>      $sip_navire['adresse'],
+            'tonnage_brute'     =>      $sip_navire['tonnage_brute'],                       
+            'lht'               =>      $sip_navire['lht'],
+            'capacite_cale'     =>      $sip_navire['capacite_cale'],        
+            'indication_ratio'  =>      $sip_navire['indication_ratio'],
+            'type_navire'       =>      $sip_navire['type_navire']
         );
     }
     public function delete($id)
@@ -63,8 +70,8 @@ class sip_espece_model extends CI_Model {
     }
 
     
-    public function findById($id_type_espece)  {
-        $this->db->where("id", $id_type_espece);
+    public function findById($id_type_navire)  {
+        $this->db->where("id", $id_type_navire);
         $q = $this->db->get($this->table);
         if ($q->num_rows() > 0) {
             return $q->row();
@@ -92,8 +99,8 @@ class sip_espece_model extends CI_Model {
     public function findFils($cle_etrangere)
     {
          $result =  $this->db->select('*')
-                             ->from('sip_espece')
-                             ->where('sip_espece.type_espece='.$cle_etrangere)
+                             ->from('sip_navire')
+                             ->where('sip_navire.type_navire='.$cle_etrangere)
                              ->get()
                              ->result();
          if($result)
@@ -105,25 +112,5 @@ class sip_espece_model extends CI_Model {
         return null;
         }
     }
-   /* public function DeleteFK($clef)
-    {
-        $sql = " delete
-            FROM sip_espece
-            WHERE sip_espece.type_espece = ".$clef."
-        ";
-
-        return $this->db->query($sql)->result();
-                                
-            if($result)
-            {
-                return $result;
-            }
-            else
-            {
-            return null;
-            }
-    }
-    */
-  
          
 }

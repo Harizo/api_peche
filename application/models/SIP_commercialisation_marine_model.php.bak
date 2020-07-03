@@ -50,7 +50,7 @@ class SIP_commercialisation_marine_model extends CI_Model {
             'lieu_exped'                        =>      $SIP_commercialisation_marine['lieu_exped'],
             'moyen_transport'                   =>      $SIP_commercialisation_marine['moyen_transport']
         );
-    } 
+    }
     public function delete($id) {
         $this->db->where('id', (int) $id)->delete($this->table);
         if($this->db->affected_rows() === 1)
@@ -130,92 +130,11 @@ class SIP_commercialisation_marine_model extends CI_Model {
         " ;
         return $this->db->query($sql)->result();
     }
-    
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
         if ($q->num_rows() > 0) {
             return $q->row();
         }  
-    }
-
-     public function findAllClefCommercialisation_marine($cle_etranger)
-    {
-        $sql = " select *
-            FROM sip_commercialisation_marine
-            WHERE sip_commercialisation_marine.id_presentation = ".$cle_etranger."
-            OR sip_commercialisation_marine.id_conservation = ".$cle_etranger."
-            OR sip_commercialisation_marine.id_permis = ".$cle_etranger."
-        ";
-
-        return $this->db->query($sql)->result();
-                                
-            if($result)
-            {
-                return $result;
-            }
-            else
-            {
-            return null;
-            }
-
-    }
-
-    public function findClePresentation($id_presentation)
-    {
-        $sql = " select *
-            FROM sip_commercialisation_marine
-            WHERE sip_commercialisation_marine.id_presentation = ".$id_presentation."
-        ";
-
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-        {
-            return $result;
-        }
-        else
-        {
-            return null;
-        }
-
-    }
-    public function findCleConservation($id_conservation)
-    {
-        $sql = " select *
-            FROM sip_commercialisation_marine
-            WHERE sip_commercialisation_marine.id_conservation = ".$id_conservation."
-        ";
-
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-        {
-            return $result;
-        }
-        else
-        {
-            return null;
-        }
-
-    }
-    public function findClePermis($id_permis)
-    {
-        $sql = " select *
-            FROM sip_commercialisation_marine
-            WHERE sip_commercialisation_marine.id_permis = ".$id_permis."
-        ";
-
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-        {
-            return $result;
-        }
-        else
-        {
-            return null;
-        }
-
     }
 }

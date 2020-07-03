@@ -100,11 +100,91 @@ class SIP_saisie_collecte_halieutique_model extends CI_Model {
         " ;
         return $this->db->query($sql)->result();
     }
+
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
         if ($q->num_rows() > 0) {
             return $q->row();
         }  
+    }
+
+    public function findAllClefSaisie_collecte_halieutique($cle_etranger)
+    {
+        $sql = " select *
+            FROM sip_saisie_collecte_halieutique
+            WHERE sip_saisie_collecte_halieutique.id_presentation = ".$cle_etranger."
+            OR sip_saisie_collecte_halieutique.id_conservation = ".$cle_etranger."
+            OR sip_saisie_collecte_halieutique.id_permis = ".$cle_etranger."
+        ";
+
+        return $this->db->query($sql)->result();
+                                
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+    public function findClePresentation($id_presentation)
+    {
+        $sql = " select *
+            FROM sip_saisie_collecte_halieutique
+            WHERE sip_saisie_collecte_halieutique.id_presentation = ".$id_presentation."
+        ";
+
+        return $this->db->query($sql)->result();
+                                
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+    public function findCleConservation($id_conservation)
+    {
+        $sql = " select *
+            FROM sip_saisie_collecte_halieutique
+            WHERE sip_saisie_collecte_halieutique.id_conservation = ".$id_conservation."
+        ";
+
+        return $this->db->query($sql)->result();
+                                
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+    public function findClePermis($id_permis)
+    {
+        $sql = " select *
+            FROM sip_saisie_collecte_halieutique
+            WHERE sip_saisie_collecte_halieutique.id_permis = ".$id_permis."
+        ";
+
+        return $this->db->query($sql)->result();
+                                
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
     }
 }

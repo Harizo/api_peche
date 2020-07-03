@@ -11,7 +11,7 @@ class SIP_presentation_model extends CI_Model {
         }else{
             return null;
         }                    
-    }
+    } 
     public function update($id, $SIP_presentation) {
         $this->db->set($this->_set($SIP_presentation))
                             ->where('id', (int) $id)
@@ -25,7 +25,8 @@ class SIP_presentation_model extends CI_Model {
     }
     public function _set($SIP_presentation) {
         return array(
-            'libelle'                  	=>      $SIP_presentation['libelle']
+            'id'                   =>      $SIP_presentation['id'],
+            'libelle'              =>      $SIP_presentation['libelle']
 
         );
     }
@@ -58,5 +59,23 @@ class SIP_presentation_model extends CI_Model {
         if ($q->num_rows() > 0) {
             return $q->row();
         }  
+    }
+
+     public function findByIdtab($id)
+    {   
+        $result =  $this->db->select('id as id_sip_presentation, libelle')
+                        ->from($this->table)
+                        ->where("id", $id)
+                        ->order_by('id')
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }                 
     }
 }

@@ -1,19 +1,19 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class SIP_conservation_model extends CI_Model {
-    protected $table = 'sip_conservation';
+class sip_autorisation_navire_model extends CI_Model {
+    protected $table = 'sip_autorisation_navire';
 
-    public function add($SIP_conservation) {
-        $this->db->set($this->_set($SIP_conservation))
+    public function add($sip_autorisation_navire) {
+        $this->db->set($this->_set($sip_autorisation_navire))
                             ->insert($this->table);
         if($this->db->affected_rows() === 1) {
             return $this->db->insert_id();
         }else{
             return null;
         }                    
-    } 
-    public function update($id, $SIP_conservation) {
-        $this->db->set($this->_set($SIP_conservation))
+    }
+    public function update($id, $sip_autorisation_navire) {
+        $this->db->set($this->_set($sip_autorisation_navire))
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,11 +23,12 @@ class SIP_conservation_model extends CI_Model {
             return null;
         }                      
     }
-    public function _set($SIP_conservation) {
+    public function _set($sip_autorisation_navire) {
         return array(
-            'id'                 =>      $SIP_conservation['id'],
-            'libelle'            =>      $SIP_conservation['libelle']
-
+            'id_navire'           => $sip_autorisation_navire['id_navire'],              
+            'zone_autorisee'     => $sip_autorisation_navire['zone_autorisee'],              
+            'espece_1_autorisee' => $sip_autorisation_navire['espece_1_autorisee'],              
+            'espece_2_autorisee' => $sip_autorisation_navire['espece_2_autorisee']
         );
     }
     public function delete($id) {
@@ -43,7 +44,7 @@ class SIP_conservation_model extends CI_Model {
                
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('libelle')
+                        ->order_by('zone_autorisee')
                         ->get()
                         ->result();
         if($result)
@@ -53,6 +54,7 @@ class SIP_conservation_model extends CI_Model {
             return null;
         }                 
     }
+
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
@@ -61,14 +63,15 @@ class SIP_conservation_model extends CI_Model {
         }  
     }
 
-     public function findByIdtab($id)
-    {   
-        $result =  $this->db->select('id as id_sip_conservation, libelle')
-                        ->from($this->table)
-                        ->where("id", $id)
-                        ->order_by('id')
-                        ->get()
-                        ->result();
+    public function findCleNavire($id_navire)
+    {
+        $sql = " select *
+            FROM sip_autorisation_navire
+            WHERE sip_autorisation_navire.id_navire = ".$id_navire."
+        ";
+
+        return $this->db->query($sql)->result();
+                                
         if($result)
         {
             return $result;
@@ -76,6 +79,7 @@ class SIP_conservation_model extends CI_Model {
         else
         {
             return null;
-        }                 
+        }
+
     }
 }

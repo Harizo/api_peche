@@ -5,29 +5,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_exportation_crevette extends REST_Controller {
+class SIP_production_crevette extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_exportation_crevette_model', 'SIP_exportation_crevetteManager');
+        $this->load->model('SIP_production_crevette_model', 'SIP_production_crevetteManager');
     }
 
     public function index_get() 
     {
         $id = $this->get('id');
-        $id_societe_crevette = $this->get('id_societe_crevette');
+        $id_bateau_crevette = $this->get('id_bateau_crevette');
             $data = array();
             if ($id) 
             {
                 
-                $SIP_exportation_crevette = $this->SIP_exportation_crevetteManager->findById($id);
-                $data['id'] = $SIP_exportation_crevette->id;
-                $data['code'] = $SIP_exportation_crevette->code;
-                $data['nom'] = $SIP_exportation_crevette->nom;
+                $data = $this->SIP_production_crevetteManager->findById($id);
+                
             } 
             else 
             {
-                $response = $this->SIP_exportation_crevetteManager->find_all_join($id_societe_crevette);
+                $response = $this->SIP_production_crevetteManager->findAllbybateau($id_bateau_crevette);
                 if ($response) 
                 {
                     $data = $response ;
@@ -61,22 +59,15 @@ class SIP_exportation_crevette extends REST_Controller {
             {
                 $data = array(
                  
-                    'id_societe_crevette'      =>      $this->post('id_societe_crevette'),
-                    'annee'                    =>      $this->post('annee'),      
-                    'mois'                     =>      $this->post('mois'),      
-                    'date_visa'                =>      $this->post('date_visa'),      
-                    'numero_visa'              =>      $this->post('numero_visa'),      
-                    'date_cos'                 =>      $this->post('date_cos'),      
-                    'numero_cos'               =>      $this->post('numero_cos'),      
-                    'date_edrd'                =>      $this->post('date_edrd'),      
-                    'id_presentation'          =>      $this->post('id_presentation'),      
-                    'id_conservation'          =>      $this->post('id_conservation'),      
-                    'quantite'                 =>      $this->post('quantite'),      
-                    'valeur_ar'                =>      $this->post('valeur_ar'),      
-                    'valeur_euro'              =>      $this->post('valeur_euro'),  
-                    'valeur_usd'               =>      $this->post('valeur_usd'),  
-                    'destination'              =>      $this->post('destination')  
+                    'id_bateau_crevette'     =>      $this->post('id_bateau_crevette'),
+                    'zone_peche'             =>      $this->post('zone_peche'),      
+                    'annee'                  =>      $this->post('annee'),      
+                    'num_maree'              =>      $this->post('num_maree'),      
+                    'maree'                  =>      $this->post('maree'),      
+                    'qte_crevette'           =>      $this->post('qte_crevette'),      
+                    'nbr_fiche'              =>      $this->post('nbr_fiche')
                 );
+
                 if (!$data) {
                     $this->response([
                         'status' => FALSE,
@@ -84,7 +75,7 @@ class SIP_exportation_crevette extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_exportation_crevetteManager->add($data);
+                $dataId = $this->SIP_production_crevetteManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -102,21 +93,13 @@ class SIP_exportation_crevette extends REST_Controller {
             else 
             {
                 $data = array(
-                    'id_societe_crevette'      =>      $this->post('id_societe_crevette'),
-                    'annee'                    =>      $this->post('annee'),      
-                    'mois'                     =>      $this->post('mois'),      
-                    'date_visa'                =>      $this->post('date_visa'),      
-                    'numero_visa'              =>      $this->post('numero_visa'),      
-                    'date_cos'                 =>      $this->post('date_cos'),      
-                    'numero_cos'               =>      $this->post('numero_cos'),      
-                    'date_edrd'                =>      $this->post('date_edrd'),      
-                    'id_presentation'          =>      $this->post('id_presentation'),      
-                    'id_conservation'          =>      $this->post('id_conservation'),      
-                    'quantite'                 =>      $this->post('quantite'),      
-                    'valeur_ar'                =>      $this->post('valeur_ar'),      
-                    'valeur_euro'              =>      $this->post('valeur_euro'),  
-                    'valeur_usd'               =>      $this->post('valeur_usd'),  
-                    'destination'              =>      $this->post('destination')
+                    'id_bateau_crevette'     =>      $this->post('id_bateau_crevette'),
+                    'zone_peche'             =>      $this->post('zone_peche'),      
+                    'annee'                  =>      $this->post('annee'),      
+                    'num_maree'              =>      $this->post('num_maree'),      
+                    'maree'                  =>      $this->post('maree'),      
+                    'qte_crevette'           =>      $this->post('qte_crevette'),      
+                    'nbr_fiche'              =>      $this->post('nbr_fiche')
                 );
 
                 if (!$data || !$id) {
@@ -126,7 +109,7 @@ class SIP_exportation_crevette extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_exportation_crevetteManager->update($id, $data);
+                $update = $this->SIP_production_crevetteManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -150,7 +133,7 @@ class SIP_exportation_crevette extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_exportation_crevetteManager->delete($id);         
+            $delete = $this->SIP_production_crevetteManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,
