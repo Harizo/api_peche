@@ -17,24 +17,19 @@ class Update_id_commune_in_fokontany extends REST_Controller {
         set_time_limit(0);
         ini_set ('memory_limit', '2048M');
        
-        $dist_tmp = $this->Upm->findAlldistrict();
+        $dist_tmp = $this->Upm->findAlldistrict();//district_tmp
 
         $nbr = 0 ;
 
         foreach ($dist_tmp as $key => $value) 
         {
-            $dist = $this->Upm->findBy_dist_by_nom(($value->nom));
+            $dist = $this->Upm->findBy_dist_by_code($value->code);//district
 
             if ($dist) 
             {
-                $datas = array(
-                    'id' => $dist->id ,
-                    'id_region' => $dist->id_region 
-                ); 
+                
 
-               // $data[$nbr] = $this->Upm->update_district_tmp($value->id_pgsql, $dist->id_region);
-
-              //  $data[$nbr] = $this->Upm->update_commune_tmp($value->id_pgsql, $dist->id);
+               $data[$nbr] = $this->Upm->update_commune_tmp($value->id, $dist->id);
                 $nbr++;
                    
                 

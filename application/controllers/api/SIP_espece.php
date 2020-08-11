@@ -27,10 +27,17 @@ class SIP_espece extends REST_Controller {
             } 
             else 
             {
-                $response = $this->SIP_especeManager->find_all_by_type($id_type_espece);
-                if ($response) 
+                if ($id_type_espece) 
                 {
-                    $data = $response ;
+                    $response = $this->SIP_especeManager->find_all_by_type($id_type_espece);
+                    if ($response) 
+                    {
+                        $data = $response ;
+                    }
+                }
+                else
+                {
+                    $data = $this->SIP_especeManager->findAll();
                 }
 
             }

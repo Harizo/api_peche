@@ -17,10 +17,10 @@ class Update_id_commune_in_fokontany_model extends CI_Model {
         }                      
     }
 
-    public function update_commune_tmp($id_district_pgsql, $id_district) {
+    public function update_commune_tmp($id_district_tmp, $id_district) {
                     $this->db->set('id_district', $id_district, false)
-                            ->where('id_district_pgsql', (int) $id_district_pgsql)
-                            ->update($this->com_tmp);
+                            ->where('id_district_tmp',  $id_district_tmp)
+                            ->update("commune");
         if($this->db->affected_rows() === 1) {
             return true;
         }else{
@@ -37,7 +37,7 @@ class Update_id_commune_in_fokontany_model extends CI_Model {
  
     public function findAlldistrict() {
         $result =  $this->db->select('*')
-                        ->from($this->dist_tmp)
+                        ->from("district_tmp")
                         ->order_by('nom')
                         ->get()
                         ->result();
@@ -52,6 +52,16 @@ class Update_id_commune_in_fokontany_model extends CI_Model {
     {
         $this->db->where("nom", $nom);
         $q = $this->db->get($this->dist);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return null;
+    }
+
+    public function findBy_dist_by_code($code)
+    {
+        $this->db->where("code", $code);
+        $q = $this->db->get("district");
         if ($q->num_rows() > 0) {
             return $q->row();
         }

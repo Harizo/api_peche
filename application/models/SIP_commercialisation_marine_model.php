@@ -26,6 +26,7 @@ class SIP_commercialisation_marine_model extends CI_Model {
     public function _set($SIP_commercialisation_marine) {
         return array(
             'id_permis'                  	    =>      $SIP_commercialisation_marine['id_permis'],              
+            'id_espece'                         =>      $SIP_commercialisation_marine['id_espece'],              
             'numero_visa'                       =>      $SIP_commercialisation_marine['numero_visa'],              
             'numero_cos'                        =>      $SIP_commercialisation_marine['numero_cos'],              
             'annee'               				=>      $SIP_commercialisation_marine['annee'],                 
@@ -42,6 +43,12 @@ class SIP_commercialisation_marine_model extends CI_Model {
             'exp_prix_par_kg'                   =>      $SIP_commercialisation_marine['exp_prix_par_kg'],
             'exp_poids_vif'                     =>      $SIP_commercialisation_marine['exp_poids_vif'],
             'exp_destination'                   =>      $SIP_commercialisation_marine['exp_destination'],
+
+            'export_qte'                        =>      $SIP_commercialisation_marine['export_qte'],
+            'export_prix_par_kg'                =>      $SIP_commercialisation_marine['export_prix_par_kg'],
+            'export_poids_vif'                  =>      $SIP_commercialisation_marine['export_poids_vif'],
+            'export_destination'                =>      $SIP_commercialisation_marine['export_destination'],
+
             'date_expedition'                   =>      $SIP_commercialisation_marine['date_expedition'],
 
             'nbr_colis'                         =>      $SIP_commercialisation_marine['nbr_colis'],
@@ -92,6 +99,12 @@ class SIP_commercialisation_marine_model extends CI_Model {
                 pres.libelle as libelle_presentation,
                 sch.coefficiant_conservation,
 
+                esp.id as id_espece,
+                esp.nom as nom,
+                esp.nom_local as nom_local,
+                esp.nom_francaise as nom_francaise,
+                esp.nom_scientifique as nom_scientifique,
+
                 sch.numero_visa,
                 sch.numero_cos,
                 sch.annee,
@@ -105,6 +118,11 @@ class SIP_commercialisation_marine_model extends CI_Model {
                 sch.exp_prix_par_kg,
                 sch.exp_poids_vif,
                 sch.exp_destination,
+
+                sch.export_qte,
+                sch.export_prix_par_kg,
+                sch.export_poids_vif,
+                sch.export_destination,
                 
                 sch.date_expedition,
                 sch.nbr_colis,
@@ -118,10 +136,11 @@ class SIP_commercialisation_marine_model extends CI_Model {
                 sip_commercialisation_marine as sch,
                 sip_permis as cm,
                 sip_presentation as pres,
-                sip_conservation as cons
+                sip_conservation as cons,
+                sip_espece as esp
             where
                 sch.id_permis = cm.id
-                
+                and sch.id_espece = esp.id
                 and sch.id_presentation = pres.id
                 and sch.id_conservation = cons.id
                 and cm.id = ".$id_permis." 
@@ -129,6 +148,170 @@ class SIP_commercialisation_marine_model extends CI_Model {
 
         " ;
         return $this->db->query($sql)->result();
+    }
+
+    public function compte_nbr_fiche($id_permis)
+    {
+        $sql =  "
+                    select 
+                        scm.annee as annee_pple,
+
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 1
+
+                        ) as nbr_janvier,
+
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 2
+
+                        ) as nbr_fevrier,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 3
+
+                        ) as nbr_mars,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 4
+
+                        ) as nbr_avril,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 5
+
+                        ) as nbr_mai,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 6
+
+                        ) as nbr_juin,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 7
+
+                        ) as nbr_juillet,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 8
+
+                        ) as nbr_aout,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 9
+
+                        ) as nbr_septembre,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 10
+
+                        ) as nbr_octobre,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 11
+
+                        ) as nbr_novembre,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 12
+
+                        ) as nbr_decembre,
+                        (
+                            select 
+                                count(scm_fils.id) 
+                            from 
+                                sip_commercialisation_marine as scm_fils
+                            where 
+                                scm_fils.id_permis = ".$id_permis."
+                                and scm_fils.annee = annee_pple
+                                and scm_fils.mois = 1
+
+                        ) as nbr_janvier
+                    from 
+                        sip_commercialisation_marine as scm
+                    where
+                        id_permis=".$id_permis."
+                    group by 
+                        annee
+
+                " ;
+
+                
+        return $this->db->query($sql)->result();
+
     }
     
     public function findById($id)  {

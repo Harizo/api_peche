@@ -73,7 +73,12 @@ class SIP_commercialisation_crevette extends REST_Controller {
                     'qte_exp'                  =>      $this->post('qte_exp'),      
                     'pum_exp'                  =>      $this->post('pum_exp'),      
                     'val_exp'                  =>      $this->post('val_exp'),      
-                    'dest_exp'                 =>      $this->post('dest_exp')
+                    'dest_exp'                 =>      $this->post('dest_exp'),
+
+                    'qte_export'               =>      $this->post('qte_export'),      
+                    'pum_export'               =>      $this->post('pum_export'),      
+                    'val_export'               =>      $this->post('val_export'),      
+                    'dest_export'              =>      $this->post('dest_export')
                 );
                 if (!$data) {
                     $this->response([
@@ -112,7 +117,12 @@ class SIP_commercialisation_crevette extends REST_Controller {
                     'qte_exp'                  =>      $this->post('qte_exp'),      
                     'pum_exp'                  =>      $this->post('pum_exp'),      
                     'val_exp'                  =>      $this->post('val_exp'),      
-                    'dest_exp'                 =>      $this->post('dest_exp') 
+                    'dest_exp'                 =>      $this->post('dest_exp') ,
+
+                    'qte_export'               =>      $this->post('qte_export'),      
+                    'pum_export'               =>      $this->post('pum_export'),      
+                    'val_export'               =>      $this->post('val_export'),      
+                    'dest_export'              =>      $this->post('dest_export')
                 );
 
                 if (!$data || !$id) {

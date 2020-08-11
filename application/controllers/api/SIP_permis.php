@@ -61,7 +61,7 @@ class SIP_permis extends REST_Controller {
             {
                 $data = array(
                     'id_collecteur_mareyeur'            => $this->post('id_collecteur_mareyeur'),
-                    'id_espece'                         => $this->post('id_espece'),
+                    //'id_espece'                         => $this->post('id_espece'),
                     'id_district'                       => $this->post('id_district'),
                     'numero_permis'                     => $this->post('numero_permis'),
                     'date_quittance'                    => $this->post('date_quittance')
@@ -92,7 +92,7 @@ class SIP_permis extends REST_Controller {
             {
                 $data = array(
                     'id_collecteur_mareyeur'            => $this->post('id_collecteur_mareyeur'),
-                    'id_espece'                         => $this->post('id_espece'),
+                    //'id_espece'                         => $this->post('id_espece'),
                     'id_district'                       => $this->post('id_district'),
                     'numero_permis'                     => $this->post('numero_permis'),
                     'date_quittance'                    => $this->post('date_quittance')

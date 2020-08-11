@@ -29,7 +29,7 @@ class sip_espece_model extends CI_Model {
     }
     public function _set($sip_espece)
     {   return array(
-            'id'           =>      $sip_espece['id'],        
+            //'id'           =>      $sip_espece['id'],        
             'code'         =>      $sip_espece['code'],
             'nom'          =>      $sip_espece['nom'],                       
             'type_espece'  =>      $sip_espece['typ_esp_id']
@@ -124,6 +124,21 @@ class sip_espece_model extends CI_Model {
             }
     }
     */
+    public function find_all_by_type($type_espece) {
+               
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->order_by('nom')
+                        ->where("type_espece", $type_espece)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
   
          
 }

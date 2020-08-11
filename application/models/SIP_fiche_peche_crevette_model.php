@@ -57,6 +57,20 @@ class SIP_fiche_peche_crevette_model extends CI_Model {
         }                 
     }
 
+    public function count_data_year($annee)
+    {
+        $debut = $annee."/01/01" ;
+        $fin = $annee."/12/31"  ;
+        $array = array('date_depart >=' => $debut, 'date_depart <=' => $fin);
+
+        $this->db->select('COUNT(*) as nbr')
+                 ->where($array);
+        $q = $this->db->get($this->table);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }  
+    }
+
     public function findAllbybateau($id_bateau_crevette) {
                
         $result =  $this->db->select('*')

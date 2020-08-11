@@ -62,6 +62,7 @@ class SIP_exportation_crevette extends REST_Controller {
                 $data = array(
                  
                     'id_societe_crevette'      =>      $this->post('id_societe_crevette'),
+                    'id_espece'                =>      $this->post('id_espece'),
                     'annee'                    =>      $this->post('annee'),      
                     'mois'                     =>      $this->post('mois'),      
                     'date_visa'                =>      $this->post('date_visa'),      
@@ -103,6 +104,7 @@ class SIP_exportation_crevette extends REST_Controller {
             {
                 $data = array(
                     'id_societe_crevette'      =>      $this->post('id_societe_crevette'),
+                    'id_espece'                =>      $this->post('id_espece'),
                     'annee'                    =>      $this->post('annee'),      
                     'mois'                     =>      $this->post('mois'),      
                     'date_visa'                =>      $this->post('date_visa'),      

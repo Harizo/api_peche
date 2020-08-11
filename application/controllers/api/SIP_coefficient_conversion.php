@@ -5,32 +5,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_saisie_collecte_halieutique extends REST_Controller {
+class SIP_coefficient_conversion extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_saisie_collecte_halieutique_model', 'SIP_saisie_collecte_halieutiqueManager');
+        $this->load->model('SIP_coefficient_conversion_model', 'SIP_coefficient_conversionManager');
     }
 
     public function index_get() 
     {
         $id = $this->get('id');
-        $id_permis = $this->get('id_permis');
+        $etat_get_by_pres_cons = $this->get('etat_get_by_pres_cons');
+
+        $id_espece = $this->get('id_espece');
+        $id_presentation = $this->get('id_presentation');
+        $id_conservation = $this->get('id_conservation');
+
             $data = array();
             if ($id) 
             {
                 
-                $SIP_saisie_collecte_halieutique = $this->SIP_saisie_collecte_halieutiqueManager->findById($id);
-                $data['id'] = $SIP_saisie_collecte_halieutique->id;
-                $data['code'] = $SIP_saisie_collecte_halieutique->code;
-                $data['nom'] = $SIP_saisie_collecte_halieutique->nom;
+                $data = $this->SIP_coefficient_conversionManager->findById($id);
+                
             } 
             else 
             {
-                $response = $this->SIP_saisie_collecte_halieutiqueManager->find_all_join($id_permis);
-                if ($response) 
+                if ($etat_get_by_pres_cons) 
                 {
-                    $data = $response ;
+                    $data = $this->SIP_coefficient_conversionManager->find_coeff($this->generer_requete($id_espece, $id_presentation, $id_conservation));
+                }
+                else
+                {
+                    $response = $this->SIP_coefficient_conversionManager->findAll();
+                    if ($response) 
+                    {
+                        $data = $response ;
+                    }
                 }
 
             }
@@ -61,15 +71,9 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
             {
                 $data = array(
                     'id_espece'                    => $this->post('id_espece'),
-                    'id_permis'                    => $this->post('id_permis'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+                    'id_presentation'              => $this->post('id_presentation'),
+                    'id_conservation'              => $this->post('id_conservation'),
+                    'coefficient'                  => $this->post('coefficient')
                 );
                 if (!$data) {
                     $this->response([
@@ -78,11 +82,12 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_saisie_collecte_halieutiqueManager->add($data);
+                $dataId = $this->SIP_coefficient_conversionManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
                         'response' => $dataId,
+                        'responsessss' => $data,
                         'message' => 'Data insert success'
                             ], REST_Controller::HTTP_OK);
                 } else {
@@ -96,15 +101,10 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
             else 
             {
                 $data = array(
-                    'id_permis'                    => $this->post('id_permis'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+                    'id_espece'                    => $this->post('id_espece'),
+                    'id_presentation'              => $this->post('id_presentation'),
+                    'id_conservation'              => $this->post('id_conservation'),
+                    'coefficient'                  => $this->post('coefficient')
                 );
 
                 if (!$data || !$id) {
@@ -114,7 +114,7 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_saisie_collecte_halieutiqueManager->update($id, $data);
+                $update = $this->SIP_coefficient_conversionManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -138,7 +138,7 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_saisie_collecte_halieutiqueManager->delete($id);         
+            $delete = $this->SIP_coefficient_conversionManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,
@@ -153,6 +153,25 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
                         ], REST_Controller::HTTP_OK);
             }
         }        
+    }
+
+
+    public function generer_requete($id_espece, $id_presentation, $id_conservation)
+    {
+        $requete = "id_espece = ".$id_espece ;
+            
+
+            if (($id_presentation!='*')&&($id_presentation!='undefined')) 
+            {
+                $requete = $requete." AND id_presentation='".$id_presentation."'" ;
+            }
+
+            if (($id_conservation!='*')&&($id_conservation!='undefined')) 
+            {
+                $requete = $requete." AND id_conservation='".$id_conservation."'" ;
+            }
+
+        return $requete ;
     }
 }
 /* End of file controllername.php */

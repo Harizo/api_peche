@@ -37,7 +37,12 @@ class SIP_commercialisation_crevette_model extends CI_Model {
             'qte_exp'                  =>      $SIP_commercialisation_crevette['qte_exp'],      
             'pum_exp'                  =>      $SIP_commercialisation_crevette['pum_exp'],      
             'val_exp'                  =>      $SIP_commercialisation_crevette['val_exp'],      
-            'dest_exp'                 =>      $SIP_commercialisation_crevette['dest_exp']  
+            'dest_exp'                 =>      $SIP_commercialisation_crevette['dest_exp'],
+
+            'qte_export'               =>      $SIP_commercialisation_crevette['qte_export'],      
+            'pum_export'               =>      $SIP_commercialisation_crevette['pum_export'],      
+            'val_export'               =>      $SIP_commercialisation_crevette['val_export'],      
+            'dest_export'              =>      $SIP_commercialisation_crevette['dest_export']   
 
         );
     }
@@ -93,7 +98,12 @@ class SIP_commercialisation_crevette_model extends CI_Model {
                 sch.qte_exp,
                 sch.pum_exp,
                 sch.val_exp,
-                sch.dest_exp
+                sch.dest_exp,
+
+                sch.qte_export,
+                sch.pum_export,
+                sch.val_export,
+                sch.dest_export
 
            
             from

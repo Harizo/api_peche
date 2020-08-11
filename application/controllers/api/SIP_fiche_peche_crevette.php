@@ -16,6 +16,7 @@ class SIP_fiche_peche_crevette extends REST_Controller {
     {
         $id = $this->get('id');
         $id_bateau_crevette = $this->get('id_bateau_crevette');
+        $annee = $this->get('annee');
             $data = array();
             if ($id) 
             {
@@ -25,10 +26,21 @@ class SIP_fiche_peche_crevette extends REST_Controller {
             } 
             else 
             {
-                $response = $this->SIP_fiche_peche_crevetteManager->findAllbybateau($id_bateau_crevette);
-                if ($response) 
+                if ($annee) 
                 {
-                    $data = $response ;
+                    $response = $this->SIP_fiche_peche_crevetteManager->count_data_year($annee);
+                    if ($response) 
+                    {
+                        $data = $response ;
+                    }
+                }
+                else
+                {
+                    $response = $this->SIP_fiche_peche_crevetteManager->findAllbybateau($id_bateau_crevette);
+                    if ($response) 
+                    {
+                        $data = $response ;
+                    }
                 }
 
             }

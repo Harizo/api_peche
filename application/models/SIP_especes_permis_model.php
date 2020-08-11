@@ -1,19 +1,19 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class SIP_espece_model extends CI_Model {
-    protected $table = 'sip_espece';
+class SIP_especes_permis_model extends CI_Model {
+    protected $table = 'sip_especes_permis';
 
-    public function add($SIP_espece) {
-        $this->db->set($this->_set($SIP_espece))
+    public function add($SIP_especes_permis) {
+        $this->db->set($this->_set($SIP_especes_permis))
                             ->insert($this->table);
         if($this->db->affected_rows() === 1) {
             return $this->db->insert_id();
         }else{
             return null;
         }                    
-    }
-    public function update($id, $SIP_espece) {
-        $this->db->set($this->_set($SIP_espece))
+    } 
+    public function update($id, $SIP_especes_permis) {
+        $this->db->set($this->_set($SIP_especes_permis))
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,13 +23,10 @@ class SIP_espece_model extends CI_Model {
             return null;
         }                      
     }
-    public function _set($SIP_espece) {
+    public function _set($SIP_especes_permis) {
         return array(
-            'id_collecteurs'                  	=>      $SIP_espece['id_collecteurs'],
-            'id_espece'                   		=>      $SIP_espece['id_espece'],                 
-            'id_district'            			=>      $SIP_espece['id_district'],                 
-            'numero_espece'               		=>      $SIP_espece['numero_espece'],                 
-            'date_quittance'      				=>      $SIP_espece['date_quittance']
+            'id_permis'                 =>      $SIP_especes_permis['id_permis'],
+            'id_espece'            =>      $SIP_especes_permis['id_espece']
 
         );
     }
@@ -46,7 +43,7 @@ class SIP_espece_model extends CI_Model {
                
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('id_collecteur_mareyeur')
+                        ->order_by('libelle')
                         ->get()
                         ->result();
         if($result)
@@ -57,25 +54,33 @@ class SIP_espece_model extends CI_Model {
         }                 
     }
 
+    public function findAllby_permis($id_permis) 
+    {
+        $sql =  "
+                    select
 
-    public function find_all_by_type($type_espece) {
+                        sep.id as id,
+                        se.id as id_espece,
+                        se.code as code,
+                        se.nom as nom,
+                        se.nom_scientifique as nom_scientifique,
+                        se.nom_francaise as nom_francaise,
+                        se.nom_local as nom_local
+
+                    from
+                        sip_especes_permis as sep,
+                        sip_espece as se
+                    where
+                        sep.id_espece = se.id
+                        and sep.id_permis = ".$id_permis."
+
+                ";
+
                
-        $result =  $this->db->select('*')
-                        ->from($this->table)
-                        ->order_by('nom')
-                        ->where("type_espece", $type_espece)
-                        ->get()
-                        ->result();
-        if($result)
-        {
-            return $result;
-        }else{
-            return null;
-        }                 
+        return $this->db->query($sql)->result();              
     }
 
 
-    
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
@@ -83,4 +88,6 @@ class SIP_espece_model extends CI_Model {
             return $q->row();
         }  
     }
+
+    
 }

@@ -16,22 +16,32 @@ class SIP_commercialisation_eau_douce extends REST_Controller {
     {
         $id = $this->get('id');
         $id_permis = $this->get('id_permis');
+        $compte_nbr_fiche = $this->get('compte_nbr_fiche');
             $data = array();
-            if ($id) 
-            {
-                
-                $data = $this->SIP_commercialisation_eau_douceManager->findById($id);
-               
-            } 
-            else 
-            {
-                $response = $this->SIP_commercialisation_eau_douceManager->find_all_join($id_permis);
-                if ($response) 
-                {
-                    $data = $response ;
-                }
 
+            if ($compte_nbr_fiche) 
+            {
+                $data = $this->SIP_commercialisation_eau_douceManager->compte_nbr_fiche($id_permis);
             }
+            else
+            {
+                if ($id) 
+                {
+                    
+                    $data = $this->SIP_commercialisation_eau_douceManager->findById($id);
+                   
+                } 
+                else 
+                {
+                    $response = $this->SIP_commercialisation_eau_douceManager->find_all_join($id_permis);
+                    if ($response) 
+                    {
+                        $data = $response ;
+                    }
+
+                }
+            }
+            
         if (count($data)>0) 
         {
             $this->response([
@@ -60,6 +70,7 @@ class SIP_commercialisation_eau_douce extends REST_Controller {
                 $data = array(
                    
                     'id_permis'                         =>      $this->post('id_permis'),              
+                    'id_espece'                         =>      $this->post('id_espece'),              
                     'numero_visa'                       =>      $this->post('numero_visa'),              
                     'numero_cos'                        =>      $this->post('numero_cos'),              
                     'annee'                             =>      $this->post('annee'),                 
@@ -97,7 +108,8 @@ class SIP_commercialisation_eau_douce extends REST_Controller {
             else 
             {
                 $data = array(
-                    'id_permis'                         =>      $this->post('id_permis'),              
+                    'id_permis'                         =>      $this->post('id_permis'),             
+                    'id_espece'                         =>      $this->post('id_espece'),                
                     'numero_visa'                       =>      $this->post('numero_visa'),              
                     'numero_cos'                        =>      $this->post('numero_cos'),              
                     'annee'                             =>      $this->post('annee'),                 

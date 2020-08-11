@@ -5,29 +5,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_saisie_collecte_halieutique extends REST_Controller {
+class SIP_especes_permis extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_saisie_collecte_halieutique_model', 'SIP_saisie_collecte_halieutiqueManager');
+        $this->load->model('SIP_especes_permis_model', 'SIP_especes_permisManager');
     }
 
     public function index_get() 
     {
-        $id = $this->get('id');
         $id_permis = $this->get('id_permis');
             $data = array();
-            if ($id) 
+            if ($id_permis) 
             {
                 
-                $SIP_saisie_collecte_halieutique = $this->SIP_saisie_collecte_halieutiqueManager->findById($id);
-                $data['id'] = $SIP_saisie_collecte_halieutique->id;
-                $data['code'] = $SIP_saisie_collecte_halieutique->code;
-                $data['nom'] = $SIP_saisie_collecte_halieutique->nom;
+                $especes_permis = $this->SIP_especes_permisManager->findAllby_permis($id_permis);
+                if ($especes_permis) 
+                {
+                    $data = $especes_permis ;
+                }
+                
             } 
             else 
             {
-                $response = $this->SIP_saisie_collecte_halieutiqueManager->find_all_join($id_permis);
+                $response = $this->SIP_especes_permisManager->findAll();
                 if ($response) 
                 {
                     $data = $response ;
@@ -60,16 +61,8 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
             if ($id == 0) 
             {
                 $data = array(
-                    'id_espece'                    => $this->post('id_espece'),
                     'id_permis'                    => $this->post('id_permis'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+                    'id_espece'                         => $this->post('id_espece')
                 );
                 if (!$data) {
                     $this->response([
@@ -78,7 +71,7 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_saisie_collecte_halieutiqueManager->add($data);
+                $dataId = $this->SIP_especes_permisManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -97,14 +90,7 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
             {
                 $data = array(
                     'id_permis'                    => $this->post('id_permis'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+                    'id_espece'                         => $this->post('id_espece')
                 );
 
                 if (!$data || !$id) {
@@ -114,7 +100,7 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_saisie_collecte_halieutiqueManager->update($id, $data);
+                $update = $this->SIP_especes_permisManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -138,7 +124,7 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_saisie_collecte_halieutiqueManager->delete($id);         
+            $delete = $this->SIP_especes_permisManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,

@@ -25,7 +25,8 @@ class SIP_saisie_collecte_halieutique_model extends CI_Model {
     }
     public function _set($SIP_saisie_collecte_halieutique) {
         return array(
-            'id_permis'                  	    =>      $SIP_saisie_collecte_halieutique['id_permis'],              
+            'id_espece'                  	    =>      $SIP_saisie_collecte_halieutique['id_espece'],              
+            'id_permis'                         =>      $SIP_saisie_collecte_halieutique['id_permis'],              
             'annee'               				=>      $SIP_saisie_collecte_halieutique['annee'],                 
             'mois'      						=>      $SIP_saisie_collecte_halieutique['mois'],                 
             'id_conservation'     				=>      $SIP_saisie_collecte_halieutique['id_conservation'],                 
@@ -71,6 +72,13 @@ class SIP_saisie_collecte_halieutique_model extends CI_Model {
 
                 sch.id as id,
 
+                esp.id as id_espece,
+                esp.nom as nom,
+                esp.nom_local as nom_local,
+                esp.nom_francaise as nom_francaise,
+                esp.nom_scientifique as nom_scientifique,
+
+
                 cons.id as id_conservation,
                 cons.libelle as libelle_conservation,
 
@@ -88,9 +96,12 @@ class SIP_saisie_collecte_halieutique_model extends CI_Model {
                 sip_saisie_collecte_halieutique as sch,
                 sip_permis as cm,
                 sip_presentation as pres,
-                sip_conservation as cons
+                sip_conservation as cons,
+                sip_espece as esp
             where
                 sch.id_permis = cm.id
+
+                and esp.id = sch.id_espece
                 
                 and sch.id_presentation = pres.id
                 and sch.id_conservation = cons.id
