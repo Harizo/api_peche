@@ -1,10 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
 class SIP_poisson_demersaux_model extends CI_Model {
     protected $table = 'sip_sortie_peche_artisanale';
 
     public function add($SIP_poisson_demersaux) {
         $this->db->set($this->_set($SIP_poisson_demersaux))
+
+
                             ->insert($this->table);
         if($this->db->affected_rows() === 1) {
             return $this->db->insert_id();
@@ -12,8 +15,10 @@ class SIP_poisson_demersaux_model extends CI_Model {
             return null;
         }                    
     }
-    public function update($id, $SIP_poisson_demersaux) {
-        $this->db->set($this->_set($SIP_poisson_demersaux))
+
+    public function update($id, $sip_sortie_peche_artisanale) {
+        $this->db->set($this->_set($sip_sortie_peche_artisanale))
+
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,18 +28,21 @@ class SIP_poisson_demersaux_model extends CI_Model {
             return null;
         }                      
     }
- public function _set($SIP_poisson_demersaux) {
+
+    public function _set($sip_sortie_peche_artisanale) {
         return array(
-            'id_navire'	            => $SIP_poisson_demersaux['id_navire'],              
-            'nom_capitaine'	        => $SIP_poisson_demersaux['nom_capitaine'],              
-            'port'              	=> $SIP_poisson_demersaux['port'],              
-            'num_maree'	            => $SIP_poisson_demersaux['num_maree'],              
-            'date_depart'	        => $SIP_poisson_demersaux['date_depart'],              
-            'date_arrive'	        => $SIP_poisson_demersaux['date_arrive'],              
-            'annee'	                => $SIP_poisson_demersaux['annee'],              
-            'mois'	                => $SIP_poisson_demersaux['mois'],              
-            'id_espece'	            => $SIP_poisson_demersaux['id_espece'],              
-            'quantite'	            => $SIP_poisson_demersaux['quantite'],              
+            'id_navire'      =>      $sip_sortie_peche_artisanale['id_navire'],              
+            'nom_capitaine'  =>      $sip_sortie_peche_artisanale['nom_capitaine'],              
+            'port'           =>      $sip_sortie_peche_artisanale['port'],
+            'num_maree'      =>      $sip_sortie_peche_artisanale['num_maree'],                 
+            'date_depart'    =>      $sip_sortie_peche_artisanale['date_depart'],                 
+            'date_arrive'    =>      $sip_sortie_peche_artisanale['date_arrive'],
+            'annee'          =>      $sip_sortie_peche_artisanale['annee'],
+            'mois'           =>      $sip_sortie_peche_artisanale['mois'],
+            'id_espece'   	 =>      $sip_sortie_peche_artisanale['id_espece'],                 
+            'quantite'       =>      $sip_sortie_peche_artisanale['quantite']        
+
+
         );
     }
     public function delete($id) {
@@ -47,6 +55,7 @@ class SIP_poisson_demersaux_model extends CI_Model {
         }  
     }
     public function findAll() {
+
         $requete="select pthe.id,pthe.id_navire,n.immatricule,n.nom as nom_navire,pthe.nom_capitaine,pthe.port,             
              pthe.num_maree,pthe.date_depart,pthe.date_arrive,pthe.annee,pthe.mois,pthe.id_espece,              
             pthe.quantite,e.nom as nom_espece,e.code as code_espece   
@@ -54,7 +63,7 @@ class SIP_poisson_demersaux_model extends CI_Model {
 			  join sip_navire as n on n.id=pthe.id_navire  
 			  join sip_espece as e on e.id=pthe.id_espece";
 		return $this->db->query($requete)->result();			  
-    }
+
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
@@ -62,4 +71,46 @@ class SIP_poisson_demersaux_model extends CI_Model {
             return $q->row();
         }  
     }
+
+
+    public function findCleNavire($id_navire)
+    {
+        $sql = " select *
+            FROM sip_sortie_peche_artisanale
+            WHERE sip_sortie_peche_artisanale.id_navire = ".$id_navire."
+        ";
+
+        return $this->db->query($sql)->result();
+                                
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+    public function findCleEspecce($id_espece)
+    {
+        $sql = " select *
+            FROM sip_sortie_peche_artisanale
+            WHERE sip_sortie_peche_artisanale.id_espece = ".$id_espece."
+        ";
+
+        return $this->db->query($sql)->result();
+                                
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
 }

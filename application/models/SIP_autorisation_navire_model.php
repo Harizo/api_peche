@@ -1,19 +1,22 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
 class SIP_autorisation_navire_model extends CI_Model {
     protected $table = 'sip_autorisation_navire';
 
     public function add($SIP_autorisation_navire) {
         $this->db->set($this->_set($SIP_autorisation_navire))
+
                             ->insert($this->table);
         if($this->db->affected_rows() === 1) {
             return $this->db->insert_id();
         }else{
             return null;
         }                    
-    }
+   
     public function update($id, $SIP_autorisation_navire) {
         $this->db->set($this->_set($SIP_autorisation_navire))
+
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,12 +26,14 @@ class SIP_autorisation_navire_model extends CI_Model {
             return null;
         }                      
     }
+
  public function _set($SIP_autorisation_navire) {
         return array(
             'id_navire'	            => $SIP_autorisation_navire['id_navire'],
             'zone_autorisee'	    => $SIP_autorisation_navire['zone_autorisee'],
             'espece_1_autorisee'   	=> $SIP_autorisation_navire['espece_1_autorisee'],        
             'espece_2_autorisee'    => $SIP_autorisation_navire['espece_2_autorisee'],  
+
         );
     }
     public function delete($id) {

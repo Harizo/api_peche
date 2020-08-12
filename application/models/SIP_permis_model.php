@@ -26,7 +26,7 @@ class SIP_permis_model extends CI_Model {
     public function _set($SIP_permis) {
         return array(
             'id_collecteur_mareyeur'            =>      $SIP_permis['id_collecteur_mareyeur'],
-            'id_espece'                   		=>      $SIP_permis['id_espece'],                 
+            //'id_espece'                   		=>      $SIP_permis['id_espece'],                 
             'id_district'            			=>      $SIP_permis['id_district'],                 
             'numero_permis'               		=>      $SIP_permis['numero_permis'],                 
             'date_quittance'      				=>      $SIP_permis['date_quittance']
@@ -70,8 +70,8 @@ class SIP_permis_model extends CI_Model {
                 cm.id as id_collecteurs,
                 cm.nom as nom_collecteurs,
 
-                e.id as id_espece,
-                e.nom as nom_espece,
+                
+                
 
                 d.id as id_district,
                 d.nom as nom_district,
@@ -88,12 +88,12 @@ class SIP_permis_model extends CI_Model {
             from
                 sip_permis as sch,
                 sip_collecteurs_mareyeur as cm,
-                sip_espece as e,
+
                 district as d,
                 region as reg
             where
                 sch.id_collecteur_mareyeur = cm.id
-                and sch.id_espece = e.id
+              
                 and sch.id_district = d.id
                 and d.id_region = reg.id
                 and sch.id_collecteur_mareyeur = ".$id_collecteurs." 

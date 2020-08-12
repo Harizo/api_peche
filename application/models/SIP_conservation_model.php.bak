@@ -11,7 +11,7 @@ class SIP_conservation_model extends CI_Model {
         }else{
             return null;
         }                    
-    } 
+    }
     public function update($id, $SIP_conservation) {
         $this->db->set($this->_set($SIP_conservation))
                             ->where('id', (int) $id)
@@ -25,8 +25,7 @@ class SIP_conservation_model extends CI_Model {
     }
     public function _set($SIP_conservation) {
         return array(
-            'id'                 =>      $SIP_conservation['id'],
-            'libelle'            =>      $SIP_conservation['libelle']
+            'libelle'                  	=>      $SIP_conservation['libelle']
 
         );
     }
@@ -59,23 +58,5 @@ class SIP_conservation_model extends CI_Model {
         if ($q->num_rows() > 0) {
             return $q->row();
         }  
-    }
-
-     public function findByIdtab($id)
-    {   
-        $result =  $this->db->select('id as id_sip_conservation, libelle')
-                        ->from($this->table)
-                        ->where("id", $id)
-                        ->order_by('id')
-                        ->get()
-                        ->result();
-        if($result)
-        {
-            return $result;
-        }
-        else
-        {
-            return null;
-        }                 
     }
 }

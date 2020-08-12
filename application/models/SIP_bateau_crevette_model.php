@@ -1,10 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class SIP_commercialisation_crevette_model extends CI_Model {
-    protected $table = 'sip_commercialisation_crevette';
+class SIP_bateau_crevette_model extends CI_Model {
+    protected $table = 'sip_bateau_crevette';
 
-    public function add($SIP_commercialisation_crevette) {
-        $this->db->set($this->_set($SIP_commercialisation_crevette))
+    public function add($SIP_bateau_crevette) {
+        $this->db->set($this->_set($SIP_bateau_crevette))
                             ->insert($this->table);
         if($this->db->affected_rows() === 1) {
             return $this->db->insert_id();
@@ -12,8 +12,8 @@ class SIP_commercialisation_crevette_model extends CI_Model {
             return null;
         }                    
     }
-    public function update($id, $SIP_commercialisation_crevette) {
-        $this->db->set($this->_set($SIP_commercialisation_crevette))
+    public function update($id, $SIP_bateau_crevette) {
+        $this->db->set($this->_set($SIP_bateau_crevette))
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,26 +23,20 @@ class SIP_commercialisation_crevette_model extends CI_Model {
             return null;
         }                      
     }
-    public function _set($SIP_commercialisation_crevette) {
+    public function _set($SIP_bateau_crevette) {
         return array(
-            'id_societe_crevette'      =>      $SIP_commercialisation_crevette['id_societe_crevette'],
-            'annee'                    =>      $SIP_commercialisation_crevette['annee'],      
-            'mois'                     =>      $SIP_commercialisation_crevette['mois'],      
-            'produit'                  =>      $SIP_commercialisation_crevette['produit'],      
-            'id_presentation'          =>      $SIP_commercialisation_crevette['id_presentation'],      
-            'id_conservation'          =>      $SIP_commercialisation_crevette['id_conservation'],      
-            'qte_vl'                   =>      $SIP_commercialisation_crevette['qte_vl'],      
-            'pum_vl'                   =>      $SIP_commercialisation_crevette['pum_vl'],      
-            'val_vl'                   =>      $SIP_commercialisation_crevette['val_vl'],      
-            'qte_exp'                  =>      $SIP_commercialisation_crevette['qte_exp'],      
-            'pum_exp'                  =>      $SIP_commercialisation_crevette['pum_exp'],      
-            'val_exp'                  =>      $SIP_commercialisation_crevette['val_exp'],      
-            'dest_exp'                 =>      $SIP_commercialisation_crevette['dest_exp'],
-
-            'qte_export'               =>      $SIP_commercialisation_crevette['qte_export'],      
-            'pum_export'               =>      $SIP_commercialisation_crevette['pum_export'],      
-            'val_export'               =>      $SIP_commercialisation_crevette['val_export'],      
-            'dest_export'              =>      $SIP_commercialisation_crevette['dest_export']   
+            'id_societe_crevette'           =>      $SIP_bateau_crevette['id_societe_crevette'],
+            'immatriculation'               =>      $SIP_bateau_crevette['immatriculation'],      
+            'deb_validite'                  =>      $SIP_bateau_crevette['deb_validite'],      
+            'fin_validite'                  =>      $SIP_bateau_crevette['fin_validite'],      
+            'nom'                           =>      $SIP_bateau_crevette['nom'],      
+            'segment'                       =>      $SIP_bateau_crevette['segment'],      
+            'type'                          =>      $SIP_bateau_crevette['type'],      
+            'numero_license'                =>      $SIP_bateau_crevette['numero_license'],      
+            'license_1'                     =>      $SIP_bateau_crevette['license_1'],      
+            'license_2'                     =>      $SIP_bateau_crevette['license_2'],      
+            'an_acquis'                     =>      $SIP_bateau_crevette['an_acquis'],      
+            'cout'                          =>      $SIP_bateau_crevette['cout']
 
         );
     }
@@ -59,6 +53,22 @@ class SIP_commercialisation_crevette_model extends CI_Model {
                
         $result =  $this->db->select('*')
                         ->from($this->table)
+                        ->order_by('nom')
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+
+    public function findAllbysociete($id_societe_crevette) {
+               
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where("id_societe_crevette", $id_societe_crevette)
                         ->order_by('nom')
                         ->get()
                         ->result();
@@ -98,16 +108,11 @@ class SIP_commercialisation_crevette_model extends CI_Model {
                 sch.qte_exp,
                 sch.pum_exp,
                 sch.val_exp,
-                sch.dest_exp,
-
-                sch.qte_export,
-                sch.pum_export,
-                sch.val_export,
-                sch.dest_export
+                sch.dest_exp
 
            
             from
-                sip_commercialisation_crevette as sch,
+                sip_bateau_crevette as sch,
                 sip_societe_crevette as scrv,
                 sip_espece as esp,
                 sip_presentation as pres,

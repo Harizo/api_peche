@@ -62,18 +62,21 @@ class SIP_exportation_crevette extends REST_Controller {
                 $data = array(
                  
                     'id_societe_crevette'      =>      $this->post('id_societe_crevette'),
+                    'id_espece'                =>      $this->post('id_espece'),
                     'annee'                    =>      $this->post('annee'),      
                     'mois'                     =>      $this->post('mois'),      
-                    'produit'                  =>      $this->post('produit'),      
+                    'date_visa'                =>      $this->post('date_visa'),      
+                    'numero_visa'              =>      $this->post('numero_visa'),      
+                    'date_cos'                 =>      $this->post('date_cos'),      
+                    'numero_cos'               =>      $this->post('numero_cos'),      
+                    'date_edrd'                =>      $this->post('date_edrd'),      
                     'id_presentation'          =>      $this->post('id_presentation'),      
                     'id_conservation'          =>      $this->post('id_conservation'),      
-                    'qte_vl'                   =>      $this->post('qte_vl'),      
-                    'pum_vl'                   =>      $this->post('pum_vl'),      
-                    'val_vl'                   =>      $this->post('val_vl'),      
-                    'qte_exp'                  =>      $this->post('qte_exp'),      
-                    'pum_exp'                  =>      $this->post('pum_exp'),      
-                    'val_exp'                  =>      $this->post('val_exp'),      
-                    'dest_exp'                 =>      $this->post('dest_exp')
+                    'quantite'                 =>      $this->post('quantite'),      
+                    'valeur_ar'                =>      $this->post('valeur_ar'),      
+                    'valeur_euro'              =>      $this->post('valeur_euro'),  
+                    'valeur_usd'               =>      $this->post('valeur_usd'),  
+                    'destination'              =>      $this->post('destination')  
                 );
                 if (!$data) {
                     $this->response([
@@ -101,18 +104,21 @@ class SIP_exportation_crevette extends REST_Controller {
             {
                 $data = array(
                     'id_societe_crevette'      =>      $this->post('id_societe_crevette'),
+                    'id_espece'                =>      $this->post('id_espece'),
                     'annee'                    =>      $this->post('annee'),      
                     'mois'                     =>      $this->post('mois'),      
-                    'produit'                  =>      $this->post('produit'),      
+                    'date_visa'                =>      $this->post('date_visa'),      
+                    'numero_visa'              =>      $this->post('numero_visa'),      
+                    'date_cos'                 =>      $this->post('date_cos'),      
+                    'numero_cos'               =>      $this->post('numero_cos'),      
+                    'date_edrd'                =>      $this->post('date_edrd'),      
                     'id_presentation'          =>      $this->post('id_presentation'),      
                     'id_conservation'          =>      $this->post('id_conservation'),      
-                    'qte_vl'                   =>      $this->post('qte_vl'),      
-                    'pum_vl'                   =>      $this->post('pum_vl'),      
-                    'val_vl'                   =>      $this->post('val_vl'),      
-                    'qte_exp'                  =>      $this->post('qte_exp'),      
-                    'pum_exp'                  =>      $this->post('pum_exp'),      
-                    'val_exp'                  =>      $this->post('val_exp'),      
-                    'dest_exp'                 =>      $this->post('dest_exp') 
+                    'quantite'                 =>      $this->post('quantite'),      
+                    'valeur_ar'                =>      $this->post('valeur_ar'),      
+                    'valeur_euro'              =>      $this->post('valeur_euro'),  
+                    'valeur_usd'               =>      $this->post('valeur_usd'),  
+                    'destination'              =>      $this->post('destination')
                 );
 
                 if (!$data || !$id) {

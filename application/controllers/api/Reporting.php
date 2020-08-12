@@ -17,6 +17,8 @@ class Reporting extends REST_Controller {
    
     public function index_get() 
     {
+        set_time_limit(0);
+        ini_set ('memory_limit', '4096M');
         $menu = $this->get('menu');
         $annee = $this->get('annee');
         $date_fin = $this->get('date_fin');

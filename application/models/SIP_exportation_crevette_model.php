@@ -26,15 +26,16 @@ class SIP_exportation_crevette_model extends CI_Model {
     public function _set($SIP_exportation_crevette) {
         return array(
             'id_societe_crevette'      =>      $SIP_exportation_crevette['id_societe_crevette'],
+            'id_espece'                =>      $SIP_exportation_crevette['id_espece'],
             'annee'                    =>      $SIP_exportation_crevette['annee'],      
             'mois'                     =>      $SIP_exportation_crevette['mois'],      
             'date_visa'                =>      $SIP_exportation_crevette['date_visa'],      
             'numero_visa'              =>      $SIP_exportation_crevette['numero_visa'],      
             'date_cos'                 =>      $SIP_exportation_crevette['date_cos'],      
             'numero_cos'               =>      $SIP_exportation_crevette['numero_cos'],      
+            'date_edrd'                =>      $SIP_exportation_crevette['date_edrd'],      
             'id_presentation'          =>      $SIP_exportation_crevette['id_presentation'],      
             'id_conservation'          =>      $SIP_exportation_crevette['id_conservation'],      
-            'date_edrd'                =>      $SIP_exportation_crevette['date_edrd'],      
             'quantite'                 =>      $SIP_exportation_crevette['quantite'],      
             'valeur_ar'                =>      $SIP_exportation_crevette['valeur_ar'],      
             'valeur_euro'              =>      $SIP_exportation_crevette['valeur_euro'],  
@@ -81,6 +82,9 @@ class SIP_exportation_crevette_model extends CI_Model {
                 pres.id as id_presentation,
                 pres.libelle as libelle_presentation,
 
+                esp.id as id_espece,
+                esp.nom as nom_espece,
+
           
                 
                 sch.id as id,
@@ -101,13 +105,14 @@ class SIP_exportation_crevette_model extends CI_Model {
             from
                 sip_exportation_crevette as sch,
                 sip_societe_crevette as scrv,
-              
+                sip_espece as esp,
                 sip_presentation as pres,
                 sip_conservation as cons
             where
                 sch.id_societe_crevette = scrv.id
                 and sch.id_presentation = pres.id
                 and sch.id_conservation = cons.id
+                and sch.id_espece = esp.id
                 and scrv.id = ".$id_societe_crevette." 
             order by sch.annee desc
 

@@ -1,10 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class SIP_conservation_model extends CI_Model {
-    protected $table = 'sip_conservation';
+class SIP_especes_permis_model extends CI_Model {
+    protected $table = 'sip_especes_permis';
 
-    public function add($SIP_conservation) {
-        $this->db->set($this->_set($SIP_conservation))
+    public function add($SIP_especes_permis) {
+        $this->db->set($this->_set($SIP_especes_permis))
                             ->insert($this->table);
         if($this->db->affected_rows() === 1) {
             return $this->db->insert_id();
@@ -12,8 +12,8 @@ class SIP_conservation_model extends CI_Model {
             return null;
         }                    
     } 
-    public function update($id, $SIP_conservation) {
-        $this->db->set($this->_set($SIP_conservation))
+    public function update($id, $SIP_especes_permis) {
+        $this->db->set($this->_set($SIP_especes_permis))
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,10 +23,10 @@ class SIP_conservation_model extends CI_Model {
             return null;
         }                      
     }
-    public function _set($SIP_conservation) {
+    public function _set($SIP_especes_permis) {
         return array(
-            'id'                 =>      $SIP_conservation['id'],
-            'libelle'            =>      $SIP_conservation['libelle']
+            'id_permis'                 =>      $SIP_especes_permis['id_permis'],
+            'id_espece'            =>      $SIP_especes_permis['id_espece']
 
         );
     }
@@ -53,6 +53,34 @@ class SIP_conservation_model extends CI_Model {
             return null;
         }                 
     }
+
+    public function findAllby_permis($id_permis) 
+    {
+        $sql =  "
+                    select
+
+                        sep.id as id,
+                        se.id as id_espece,
+                        se.code as code,
+                        se.nom as nom,
+                        se.nom_scientifique as nom_scientifique,
+                        se.nom_francaise as nom_francaise,
+                        se.nom_local as nom_local
+
+                    from
+                        sip_especes_permis as sep,
+                        sip_espece as se
+                    where
+                        sep.id_espece = se.id
+                        and sep.id_permis = ".$id_permis."
+
+                ";
+
+               
+        return $this->db->query($sql)->result();              
+    }
+
+
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
@@ -61,21 +89,5 @@ class SIP_conservation_model extends CI_Model {
         }  
     }
 
-     public function findByIdtab($id)
-    {   
-        $result =  $this->db->select('id as id_sip_conservation, libelle')
-                        ->from($this->table)
-                        ->where("id", $id)
-                        ->order_by('id')
-                        ->get()
-                        ->result();
-        if($result)
-        {
-            return $result;
-        }
-        else
-        {
-            return null;
-        }                 
-    }
+    
 }

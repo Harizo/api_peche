@@ -5,46 +5,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_espece extends REST_Controller {
+class SIP_bateau_crevette extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_espece_model', 'SIP_especeManager');
+        $this->load->model('SIP_bateau_crevette_model', 'SIP_bateau_crevetteManager');
     }
 
     public function index_get() 
     {
         $id = $this->get('id');
-        $id_type_espece = $this->get('id_type_espece');
+        $id_societe_crevette = $this->get('id_societe_crevette');
             $data = array();
             if ($id) 
             {
                 
-                $SIP_espece = $this->SIP_especeManager->findById($id);
-                $data['id'] = $SIP_espece->id;
-                $data['code'] = $SIP_espece->code;
-                $data['nom'] = $SIP_espece->nom;
+                $SIP_bateau_crevette = $this->SIP_bateau_crevetteManager->findById($id);
+                $data['id'] = $SIP_bateau_crevette->id;
+                $data['code'] = $SIP_bateau_crevette->code;
+                $data['nom'] = $SIP_bateau_crevette->nom;
             } 
-			else if ($id_type_espece)
+            else 
             {
-                if ($id_type_espece) 
+                $response = $this->SIP_bateau_crevetteManager->findAllbysociete($id_societe_crevette);
+                if ($response) 
                 {
-                    $response = $this->SIP_especeManager->find_all_by_type($id_type_espece);
-                    if ($response) 
-                    {
-                        $data = $response ;
-                    }
-                }
-                else
-                {
-                    $data = $this->SIP_especeManager->findAll();
+                    $data = $response ;
                 }
 
             }
-			else
-			{
-				$data=$this->SIP_especeManager->findAll();
-			}
         if (count($data)>0) 
         {
             $this->response([
@@ -71,17 +60,19 @@ class SIP_espece extends REST_Controller {
             if ($id == 0) 
             {
                 $data = array(
-                    'id_collecteurs'                    => $this->post('id_collecteurs'),
-                    'id_espece'                         => $this->post('id_espece'),
-                    'id_district'                       => $this->post('id_district'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+                 
+                    'id_societe_crevette'           =>      $this->post('id_societe_crevette'),
+                    'immatriculation'               =>      $this->post('immatriculation'),      
+                    'deb_validite'                  =>      $this->post('deb_validite'),      
+                    'fin_validite'                  =>      $this->post('fin_validite'),      
+                    'nom'                           =>      $this->post('nom'),      
+                    'segment'                       =>      $this->post('segment'),      
+                    'type'                          =>      $this->post('type'),      
+                    'numero_license'                =>      $this->post('numero_license'),      
+                    'license_1'                     =>      $this->post('license_1'),      
+                    'license_2'                     =>      $this->post('license_2'),      
+                    'an_acquis'                     =>      $this->post('an_acquis'),      
+                    'cout'                          =>      $this->post('cout')
                 );
                 if (!$data) {
                     $this->response([
@@ -90,7 +81,7 @@ class SIP_espece extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_especeManager->add($data);
+                $dataId = $this->SIP_bateau_crevetteManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -108,17 +99,18 @@ class SIP_espece extends REST_Controller {
             else 
             {
                 $data = array(
-                    'id_collecteurs'                    => $this->post('id_collecteurs'),
-                    'id_espece'                         => $this->post('id_espece'),
-                    'id_district'                       => $this->post('id_district'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+                    'id_societe_crevette'           =>      $this->post('id_societe_crevette'),
+                    'immatriculation'               =>      $this->post('immatriculation'),      
+                    'deb_validite'                  =>      $this->post('deb_validite'),      
+                    'fin_validite'                  =>      $this->post('fin_validite'),      
+                    'nom'                           =>      $this->post('nom'),      
+                    'segment'                       =>      $this->post('segment'),      
+                    'type'                          =>      $this->post('type'),      
+                    'numero_license'                =>      $this->post('numero_license'),      
+                    'license_1'                     =>      $this->post('license_1'),      
+                    'license_2'                     =>      $this->post('license_2'),      
+                    'an_acquis'                     =>      $this->post('an_acquis'),      
+                    'cout'                          =>      $this->post('cout')
                 );
 
                 if (!$data || !$id) {
@@ -128,7 +120,7 @@ class SIP_espece extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_especeManager->update($id, $data);
+                $update = $this->SIP_bateau_crevetteManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -152,7 +144,7 @@ class SIP_espece extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_especeManager->delete($id);         
+            $delete = $this->SIP_bateau_crevetteManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,

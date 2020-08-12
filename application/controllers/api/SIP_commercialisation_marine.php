@@ -15,22 +15,32 @@ class SIP_commercialisation_marine extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
+        $compte_nbr_fiche = $this->get('compte_nbr_fiche');
         $id_permis = $this->get('id_permis');
             $data = array();
-            if ($id) 
-            {
-                
-                $data = $this->SIP_commercialisation_marineManager->findById($id);
-               
-            } 
-            else 
-            {
-                $response = $this->SIP_commercialisation_marineManager->find_all_join($id_permis);
-                if ($response) 
-                {
-                    $data = $response ;
-                }
+            
 
+            if ($compte_nbr_fiche) 
+            {
+                $data = $this->SIP_commercialisation_marineManager->compte_nbr_fiche($id_permis);
+            }
+            else
+            {
+                if ($id) 
+                {
+                    
+                    $data = $this->SIP_commercialisation_marineManager->findById($id);
+                   
+                } 
+                else 
+                {
+                    $response = $this->SIP_commercialisation_marineManager->find_all_join($id_permis);
+                    if ($response) 
+                    {
+                        $data = $response ;
+                    }
+
+                }
             }
         if (count($data)>0) 
         {
@@ -59,7 +69,8 @@ class SIP_commercialisation_marine extends REST_Controller {
             {
                 $data = array(
                    
-                    'id_permis'                         =>      $this->post('id_permis'),              
+                    'id_permis'                         =>      $this->post('id_permis'),             
+                    'id_espece'                         =>      $this->post('id_espece'),                
                     'numero_visa'                       =>      $this->post('numero_visa'),              
                     'numero_cos'                        =>      $this->post('numero_cos'),              
                     'annee'                             =>      $this->post('annee'),                 
@@ -76,6 +87,12 @@ class SIP_commercialisation_marine extends REST_Controller {
                     'exp_prix_par_kg'                   =>      $this->post('exp_prix_par_kg'),
                     'exp_poids_vif'                     =>      $this->post('exp_poids_vif'),
                     'exp_destination'                   =>      $this->post('exp_destination'),
+
+                    'export_qte'                           =>      $this->post('export_qte'),
+                    'export_prix_par_kg'                   =>      $this->post('export_prix_par_kg'),
+                    'export_poids_vif'                     =>      $this->post('export_poids_vif'),
+                    'export_destination'                   =>      $this->post('export_destination'),
+
                     'date_expedition'                   =>      $this->post('date_expedition'),
                     
                     'nbr_colis'                         =>      $this->post('nbr_colis'),
@@ -110,6 +127,7 @@ class SIP_commercialisation_marine extends REST_Controller {
             {
                 $data = array(
                     'id_permis'                         =>      $this->post('id_permis'),              
+                    'id_espece'                         =>      $this->post('id_espece'),               
                     'numero_visa'                       =>      $this->post('numero_visa'),              
                     'numero_cos'                        =>      $this->post('numero_cos'),              
                     'annee'                             =>      $this->post('annee'),                 
@@ -126,6 +144,12 @@ class SIP_commercialisation_marine extends REST_Controller {
                     'exp_prix_par_kg'                   =>      $this->post('exp_prix_par_kg'),
                     'exp_poids_vif'                     =>      $this->post('exp_poids_vif'),
                     'exp_destination'                   =>      $this->post('exp_destination'),
+
+                    'export_qte'                           =>      $this->post('export_qte'),
+                    'export_prix_par_kg'                   =>      $this->post('export_prix_par_kg'),
+                    'export_poids_vif'                     =>      $this->post('export_poids_vif'),
+                    'export_destination'                   =>      $this->post('export_destination'),
+                    
                     'date_expedition'                   =>      $this->post('date_expedition'),
                     
                     'nbr_colis'                         =>      $this->post('nbr_colis'),
