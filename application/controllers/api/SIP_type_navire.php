@@ -5,50 +5,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_espece extends REST_Controller {
+class SIP_type_navire extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_espece_model', 'SIP_especeManager');
+        $this->load->model('SIP_type_navire_model', 'SIP_type_navireManager');
     }
 
     public function index_get() 
     {
         $id = $this->get('id');
-        $id_type_espece = $this->get('id_type_espece');
-        $id_navire = $this->get('id_navire');
             $data = array();
             if ($id) 
-            {
-                
-                $SIP_espece = $this->SIP_especeManager->findById($id);
-                $data['id'] = $SIP_espece->id;
-                $data['code'] = $SIP_espece->code;
-                $data['nom'] = $SIP_espece->nom;
+            {               
+                $data = $this->SIP_type_navireManager->findById($id);               
             } 
-			else if ($id_type_espece)
+            else 
             {
-                if ($id_type_espece) 
+                $response = $this->SIP_type_navireManager->findAll();
+                if ($response) 
                 {
-                    $response = $this->SIP_especeManager->find_all_by_type($id_type_espece);
-                    if ($response) 
-                    {
-                        $data = $response ;
-                    }
+                    $data = $response ;
                 }
-                else
-                {
-                    $data = $this->SIP_especeManager->findAll();
-                }
-
             }
-			else if($id_navire) {
-				$data = $this->SIP_especeManager->find_all_by_navire($id_navire);
-			}
-			else
-			{
-				$data=$this->SIP_especeManager->findAll();
-			}
         if (count($data)>0) 
         {
             $this->response([
@@ -74,18 +53,8 @@ class SIP_espece extends REST_Controller {
         {
             if ($id == 0) 
             {
-                $data = array(
-                    'id_collecteurs'                    => $this->post('id_collecteurs'),
-                    'id_espece'                         => $this->post('id_espece'),
-                    'id_district'                       => $this->post('id_district'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+                $data = array(                   
+                    'libelle'  =>      $this->post('libelle'),              
                 );
                 if (!$data) {
                     $this->response([
@@ -94,7 +63,7 @@ class SIP_espece extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_especeManager->add($data);
+                $dataId = $this->SIP_type_navireManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -111,20 +80,9 @@ class SIP_espece extends REST_Controller {
             } 
             else 
             {
-                $data = array(
-                    'id_collecteurs'                    => $this->post('id_collecteurs'),
-                    'id_espece'                         => $this->post('id_espece'),
-                    'id_district'                       => $this->post('id_district'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+                $data = array(                   
+                    'libelle'  =>      $this->post('libelle'),              
                 );
-
                 if (!$data || !$id) {
                     $this->response([
                         'status' => FALSE,
@@ -132,7 +90,7 @@ class SIP_espece extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_especeManager->update($id, $data);
+                $update = $this->SIP_type_navireManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -156,7 +114,7 @@ class SIP_espece extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_especeManager->delete($id);         
+            $delete = $this->SIP_type_navireManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,

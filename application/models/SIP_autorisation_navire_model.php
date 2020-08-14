@@ -1,19 +1,22 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class sip_autorisation_navire_model extends CI_Model {
+
+class SIP_autorisation_navire_model extends CI_Model {
     protected $table = 'sip_autorisation_navire';
 
-    public function add($sip_autorisation_navire) {
-        $this->db->set($this->_set($sip_autorisation_navire))
+    public function add($SIP_autorisation_navire) {
+        $this->db->set($this->_set($SIP_autorisation_navire))
+
                             ->insert($this->table);
         if($this->db->affected_rows() === 1) {
             return $this->db->insert_id();
         }else{
             return null;
         }                    
-    }
-    public function update($id, $sip_autorisation_navire) {
-        $this->db->set($this->_set($sip_autorisation_navire))
+	}
+    public function update($id, $SIP_autorisation_navire) {
+        $this->db->set($this->_set($SIP_autorisation_navire))
+
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,12 +26,14 @@ class sip_autorisation_navire_model extends CI_Model {
             return null;
         }                      
     }
-    public function _set($sip_autorisation_navire) {
+
+ public function _set($SIP_autorisation_navire) {
         return array(
-            'id_navire'           => $sip_autorisation_navire['id_navire'],              
-            'zone_autorisee'     => $sip_autorisation_navire['zone_autorisee'],              
-            'espece_1_autorisee' => $sip_autorisation_navire['espece_1_autorisee'],              
-            'espece_2_autorisee' => $sip_autorisation_navire['espece_2_autorisee']
+            'id_navire'	            => $SIP_autorisation_navire['id_navire'],
+            'zone_autorisee'	    => $SIP_autorisation_navire['zone_autorisee'],
+            'espece_1_autorisee'   	=> $SIP_autorisation_navire['espece_1_autorisee'],        
+            'espece_2_autorisee'    => $SIP_autorisation_navire['espece_2_autorisee'],  
+
         );
     }
     public function delete($id) {
@@ -41,20 +46,15 @@ class sip_autorisation_navire_model extends CI_Model {
         }  
     }
     public function findAll() {
-               
-        $result =  $this->db->select('*')
-                        ->from($this->table)
-                        ->order_by('zone_autorisee')
-                        ->get()
-                        ->result();
-        if($result)
-        {
-            return $result;
-        }else{
-            return null;
-        }                 
+        $requete="select autn.id,autn.zone_autorisee,autn.espece_1_autorisee,autn.espece_2_autorisee,             
+             e1.code as code_espece1,e1.nom as nom_espece1,e2.code as code_espece2,e2.nom as nom_espece2,autn.id_navire,
+            nav.nom as nom_navire,nav.immatricule    
+			 from sip_autorisation_navire as autn 
+			  left join sip_espece as e1 on e1.id=autn.espece_1_autorisee  
+			  left join sip_espece as e2 on e2.id=autn.espece_2_autorisee  
+			  left join sip_navire as nav on nav.id=autn.id_navire";
+		return $this->db->query($requete)->result();			                 
     }
-
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
@@ -62,24 +62,15 @@ class sip_autorisation_navire_model extends CI_Model {
             return $q->row();
         }  
     }
-
-    public function findCleNavire($id_navire)
-    {
-        $sql = " select *
-            FROM sip_autorisation_navire
-            WHERE sip_autorisation_navire.id_navire = ".$id_navire."
-        ";
-
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-        {
-            return $result;
-        }
-        else
-        {
-            return null;
-        }
-
+    public function findByNavire($id_navire)  {
+        $requete="select autn.id,autn.zone_autorisee,autn.espece_1_autorisee,autn.espece_2_autorisee,             
+             e1.code as code_espece1,e1.nom as nom_espece1,e2.code as code_espece2,e2.nom as nom_espece2,autn.id_navire,
+            nav.nom as nom_navire,nav.immatricule    
+			 from sip_autorisation_navire as autn 
+			  left join sip_espece as e1 on e1.id=autn.espece_1_autorisee  
+			  left join sip_espece as e2 on e2.id=autn.espece_2_autorisee  
+			  left join sip_navire as nav on nav.id=autn.id_navire  
+			  where id_navire=".$id_navire;
+		return $this->db->query($requete)->result();			                 
     }
 }

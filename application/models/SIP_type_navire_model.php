@@ -3,12 +3,12 @@
 class SIP_type_navire_model extends CI_Model {
     protected $table = 'sip_type_navire';
 
-    public function add($sip_type_navire)
-    {
+
+    public function add($sip_type_navire) {
         $this->db->set($this->_set($sip_type_navire))
                             ->insert($this->table);
-        if($this->db->affected_rows() === 1)
-        {
+        if($this->db->affected_rows() === 1) {
+
             return $this->db->insert_id();
         }else{
             return null;
@@ -16,9 +16,11 @@ class SIP_type_navire_model extends CI_Model {
     }
 
 
+
     public function update($id, $sip_type_navire)
     {
         $this->db->set($this->_set($sip_type_navire))
+
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -29,11 +31,11 @@ class SIP_type_navire_model extends CI_Model {
         }                      
     }
 
+
     public function _set($sip_type_navire)
     {
         return array(
-            'id'        =>      $sip_type_navire['id'],
-            'libelle'         =>      $sip_type_navire['libelle'],
+            'libelle'	=> $sip_type_navire['libelle'],              
         );
     }
 
@@ -49,11 +51,13 @@ class SIP_type_navire_model extends CI_Model {
         }  
     }
 
-    public function findAll()
-    {
+
+    public function findAll() {
+               
         $result =  $this->db->select('*')
                         ->from($this->table)
                         ->order_by('id')
+                        ->order_by('libelle')
                         ->get()
                         ->result();
         if($result)
@@ -64,12 +68,13 @@ class SIP_type_navire_model extends CI_Model {
         }                 
     }
 
-    public function findById($id)
-    {
+
+    public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
         if ($q->num_rows() > 0) {
             return $q->row();
+
         }
         return null;
     }
@@ -129,3 +134,4 @@ class SIP_type_navire_model extends CI_Model {
        return $query-> ressult_array ();   
    }
 }
+

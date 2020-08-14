@@ -1,10 +1,12 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class sip_peche_thoniere_malagasy_model extends CI_Model {
+
+class SIP_peche_thoniere_malagasy_model extends CI_Model {
     protected $table = 'sip_peche_thoniere_malagasy';
 
-    public function add($sip_peche_thoniere_malagasy) {
-        $this->db->set($this->_set($sip_peche_thoniere_malagasy))
+    public function add($SIP_peche_thoniere_malagasy) {
+        $this->db->set($this->_set($SIP_peche_thoniere_malagasy))
+
                             ->insert($this->table);
         if($this->db->affected_rows() === 1) {
             return $this->db->insert_id();
@@ -12,8 +14,10 @@ class sip_peche_thoniere_malagasy_model extends CI_Model {
             return null;
         }                    
     }
+
     public function update($id, $sip_peche_thoniere_malagasy) {
         $this->db->set($this->_set($sip_peche_thoniere_malagasy))
+
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,6 +27,7 @@ class sip_peche_thoniere_malagasy_model extends CI_Model {
             return null;
         }                      
     }
+
     public function _set($sip_peche_thoniere_malagasy) {
         return array(
            'id_navire'         => $sip_peche_thoniere_malagasy['id_navire'],              
@@ -37,6 +42,7 @@ class sip_peche_thoniere_malagasy_model extends CI_Model {
             'nbr_jour_en_mer'  => $sip_peche_thoniere_malagasy['nbr_jour_en_mer'],
             'nbr_peche'        => $sip_peche_thoniere_malagasy['nbr_peche'],
             'nbr_peche_zee_mdg'=> $sip_peche_thoniere_malagasy['nbr_peche_zee_mdg']
+
         );
     }
     public function delete($id) {
@@ -49,18 +55,13 @@ class sip_peche_thoniere_malagasy_model extends CI_Model {
         }  
     }
     public function findAll() {
-               
-        $result =  $this->db->select('*')
-                        ->from($this->table)
-                        ->order_by('nom_capitaine')
-                        ->get()
-                        ->result();
-        if($result)
-        {
-            return $result;
-        }else{
-            return null;
-        }                 
+
+        $requete="select pthm.id,pthm.id_navire,n.immatricule,n.nom as nom_navire,pthm.numfp,pthm.nom_capitaine,pthm.nbr_equipage,             
+            pthm.date_rapport,pthm.nom_declarant,pthm.date_depart,pthm.date_arrive,pthm.port,              
+            pthm.nbr_jour_en_mer,pthm.nbr_peche,pthm.nbr_peche_zee_mdg 
+			 from sip_peche_thoniere_malagasy as pthm 
+			  join sip_navire as n on n.id=pthm.id_navire";
+		return $this->db->query($requete)->result();			  
     }
     public function findById($id)  {
         $this->db->where("id", $id);
@@ -89,4 +90,5 @@ class sip_peche_thoniere_malagasy_model extends CI_Model {
         }
 
     }
+
 }
