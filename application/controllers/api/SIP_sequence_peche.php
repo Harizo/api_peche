@@ -5,29 +5,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_sequence_transbordement extends REST_Controller {
+class SIP_sequence_peche extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_sequence_transbordement_model', 'SIP_sequence_transbordementManager');
+        $this->load->model('SIP_sequence_peche_model', 'SIP_sequence_pecheManager');
     }
 
     public function index_get() 
     {
         $id = $this->get('id');
-        $id_sequence_peche = $this->get('id_sequence_peche');
+        $annee = $this->get('annee');
+        $get_nbr_sequence_peche = $this->get('get_nbr_sequence_peche');
+        $id_fiche_peche_crevette = $this->get('id_fiche_peche_crevette');
             $data = array();
             if ($id) 
             {
                 
-                $data = $this->SIP_sequence_transbordementManager->findById($id);
+                $data = $this->SIP_sequence_pecheManager->findById($id);
                 
             } 
             else 
             {
-                if ($id_sequence_peche) 
+                if ($id_fiche_peche_crevette) 
                 {
-                    $response = $this->SIP_sequence_transbordementManager->findAll_by_fiche_peche_crevette($id_sequence_peche);
+                    $response = $this->SIP_sequence_pecheManager->findAll_by_fiche_peche_crevette($id_fiche_peche_crevette);
                     if ($response) 
                     {
                         $data = $response ;
@@ -35,7 +37,18 @@ class SIP_sequence_transbordement extends REST_Controller {
                 }
                 else
                 {
-                    $data = $this->SIP_sequence_transbordementManager->findAll();
+
+                    if ($get_nbr_sequence_peche == 1) 
+                    {
+                        $response = $this->SIP_sequence_pecheManager->get_nbr_sequence_peche($annee);
+                        if ($response) 
+                        {
+                            $data = $response ;
+                        }
+                    }
+                    else
+
+                        $data = $this->SIP_sequence_pecheManager->findAll();
                 }
 
             }
@@ -65,14 +78,8 @@ class SIP_sequence_transbordement extends REST_Controller {
             if ($id == 0) 
             {
                 $data = array(
-                    'id_sequence_peche'       => $this->post('id_sequence_peche'),
-                    'date'                          => $this->post('date'),
-                    'heurep'                        => $this->post('heurep'),
-                    'minutep'                       => $this->post('minutep'),
-                    'heuret'                        => $this->post('heuret'),
-                    'minutet'                       => $this->post('minutet'),
-                    'postlatitude'                  => $this->post('postlatitude'),
-                    'postlongitude'                 => $this->post('postlongitude')
+                    'id_fiche_peche_crevette'       => $this->post('id_fiche_peche_crevette'),
+                    'numseqpeche'                          => $this->post('numseqpeche')
                 );
                 if (!$data) {
                     $this->response([
@@ -81,7 +88,7 @@ class SIP_sequence_transbordement extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_sequence_transbordementManager->add($data);
+                $dataId = $this->SIP_sequence_pecheManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -99,16 +106,9 @@ class SIP_sequence_transbordement extends REST_Controller {
             else 
             {
                 $data = array(
-                    'id_sequence_peche'       => $this->post('id_sequence_peche'),
-                    'date'                          => $this->post('date'),
-                    'heurep'                        => $this->post('heurep'),
-                    'minutep'                       => $this->post('minutep'),
-                    'heuret'                        => $this->post('heuret'),
-                    'minutet'                       => $this->post('minutet'),
-                    'postlatitude'                  => $this->post('postlatitude'),
-                    'postlongitude'                 => $this->post('postlongitude')
+                    'id_fiche_peche_crevette'       => $this->post('id_fiche_peche_crevette'),
+                    'numseqpeche'                          => $this->post('numseqpeche')
                 );
-
                 if (!$data || !$id) {
                     $this->response([
                         'status' => FALSE,
@@ -116,7 +116,7 @@ class SIP_sequence_transbordement extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_sequence_transbordementManager->update($id, $data);
+                $update = $this->SIP_sequence_pecheManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -140,7 +140,7 @@ class SIP_sequence_transbordement extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_sequence_transbordementManager->delete($id);         
+            $delete = $this->SIP_sequence_pecheManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,
