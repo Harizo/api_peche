@@ -4,8 +4,8 @@ class SIP_type_navire_model extends CI_Model {
     protected $table = 'sip_type_navire';
 
 
-    public function add($SIP_type_navire) {
-        $this->db->set($this->_set($SIP_type_navire))
+    public function add($sip_type_navire) {
+        $this->db->set($this->_set($sip_type_navire))
                             ->insert($this->table);
         if($this->db->affected_rows() === 1) {
 
@@ -35,7 +35,7 @@ class SIP_type_navire_model extends CI_Model {
     public function _set($sip_type_navire)
     {
         return array(
-            'libelle'	=> $SIP_type_navire['libelle'],              
+            'libelle'	=> $sip_type_navire['libelle'],              
         );
     }
 
@@ -69,8 +69,6 @@ class SIP_type_navire_model extends CI_Model {
     }
 
 
-    public function findById($id)
-    {
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);

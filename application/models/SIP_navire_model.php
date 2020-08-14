@@ -60,6 +60,14 @@ class SIP_navire_model extends CI_Model {
 			  left join sip_type_navire as tnav on tnav.id=nav.type_navire";
 		return $this->db->query($requete)->result();			  
     }
+    public function findByTypenavire($id_type_navire) {
+        $requete="select nav.id,nav.immatricule,nav.nom as nom_navire,nav.pavillon,nav.armateur,nav.adresse,nav.tonnage_brute,             
+            nav.lht,nav.capacite_cale,nav.indication_ratio,nav.type_navire,tnav.libelle as libelle_type_navire 
+			 from sip_navire as nav 
+			  left join sip_type_navire as tnav on tnav.id=nav.type_navire  
+			  where nav.type_navire=".$id_type_navire;
+		return $this->db->query($requete)->result();			  
+    }
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
@@ -104,4 +112,3 @@ class SIP_navire_model extends CI_Model {
     }
          
 }
->>>>>>> origin/master

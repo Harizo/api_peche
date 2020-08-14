@@ -16,6 +16,7 @@ class SIP_espece extends REST_Controller {
     {
         $id = $this->get('id');
         $id_type_espece = $this->get('id_type_espece');
+        $id_navire = $this->get('id_navire');
             $data = array();
             if ($id) 
             {
@@ -41,6 +42,9 @@ class SIP_espece extends REST_Controller {
                 }
 
             }
+			else if($id_navire) {
+				$data = $this->SIP_especeManager->find_all_by_navire($id_navire);
+			}
 			else
 			{
 				$data=$this->SIP_especeManager->findAll();

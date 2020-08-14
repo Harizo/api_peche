@@ -15,13 +15,16 @@ class SIP_navire extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
+        $id_type_navire = $this->get('id_type_navire');
             $data = array();
             if ($id) 
             {               
                 $data = $this->SIP_navireManager->findById($id);               
             } 
-            else 
-            {
+            else if($id_type_navire) {
+				 $data = $this->SIP_navireManager->findByTypenavire($id_type_navire);    
+            }	
+			else {	
                 $response = $this->SIP_navireManager->findAll();
                 if ($response) 
                 {

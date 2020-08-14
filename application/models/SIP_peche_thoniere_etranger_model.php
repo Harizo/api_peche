@@ -1,6 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
 class SIP_peche_thoniere_etranger_model extends CI_Model {
     protected $table = 'sip_peche_thoniere_etranger';
 
@@ -13,9 +12,7 @@ class SIP_peche_thoniere_etranger_model extends CI_Model {
             return null;
         }                    
     }
-
-    public function update($id, $sip_peche_thoniere_etranger) {
-        $this->db->set($this->_set($sip_peche_thoniere_etranger))
+    public function update($id, $SIP_peche_thoniere_etranger) {
         $this->db->set($this->_set($SIP_peche_thoniere_etranger))
                             ->where('id', (int) $id)
                             ->update($this->table);
@@ -26,8 +23,7 @@ class SIP_peche_thoniere_etranger_model extends CI_Model {
             return null;
         }                      
     }
-
- public function _set($SIP_peche_thoniere_etranger) {
+ public function _set($sip_peche_thoniere_etranger) {
         return array(
             'id_navire'         => $sip_peche_thoniere_etranger['id_navire'],              
             'numfp'             => $sip_peche_thoniere_etranger['numfp'],              
@@ -40,10 +36,8 @@ class SIP_peche_thoniere_etranger_model extends CI_Model {
             'port'              => $sip_peche_thoniere_etranger['port'],
             'nbr_jour_en_mer'   => $sip_peche_thoniere_etranger['nbr_jour_en_mer'],
             'nbr_peche'         => $sip_peche_thoniere_etranger['nbr_peche'],
-            'nbr_lancer'        => $sip_peche_thoniere_etranger['nbr_lancer'],
+            'nbr_lancers'        => $sip_peche_thoniere_etranger['nbr_lancers'],
             'num_sortie_peche'  => $sip_peche_thoniere_etranger['num_sortie_peche']
-
-            'num_sortie_peche'	    => $SIP_peche_thoniere_etranger['num_sortie_peche'],              
         );
     }
     public function delete($id) {
@@ -56,7 +50,6 @@ class SIP_peche_thoniere_etranger_model extends CI_Model {
         }  
     }
     public function findAll() {
-
         $requete="select pthe.id,pthe.id_navire,n.immatricule,n.nom as nom_navire,pthe.numfp,pthe.nom_capitaine,pthe.nbr_equipage,             
             pthe.date_rapport,pthe.nom_declarant,pthe.date_depart,pthe.date_arrive,pthe.port,              
             pthe.nbr_jour_en_mer,pthe.nbr_peche,pthe.nbr_lancers,pthe.num_sortie_peche  

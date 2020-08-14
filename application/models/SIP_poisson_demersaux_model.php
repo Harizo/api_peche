@@ -50,7 +50,7 @@ class SIP_poisson_demersaux_model extends CI_Model {
     public function findAll() {
         $requete="select pthe.id,pthe.id_navire,n.immatricule,n.nom as nom_navire,pthe.nom_capitaine,pthe.port,             
              pthe.num_maree,pthe.date_depart,pthe.date_arrive,pthe.annee,pthe.mois,pthe.id_espece,              
-            pthe.quantite,e.nom as nom_espece,e.code as code_espece   
+            pthe.quantite,e.nom as nom_espece,e.code as code_espece,pthe.reference_produit    
 			 from sip_poisson_demersaux as pthe 
 			  join sip_navire as n on n.id=pthe.id_navire  
 			  join sip_espece as e on e.id=pthe.id_espece";

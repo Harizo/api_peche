@@ -13,7 +13,7 @@ class SIP_autorisation_navire_model extends CI_Model {
         }else{
             return null;
         }                    
-   
+	}
     public function update($id, $SIP_autorisation_navire) {
         $this->db->set($this->_set($SIP_autorisation_navire))
 

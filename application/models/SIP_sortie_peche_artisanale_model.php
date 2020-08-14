@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class SIP_poisson_demersaux_model extends CI_Model {
+class SIP_sortie_peche_artisanale_model extends CI_Model {
     protected $table = 'sip_sortie_peche_artisanale';
 
     public function add($SIP_poisson_demersaux) {
@@ -63,7 +63,7 @@ class SIP_poisson_demersaux_model extends CI_Model {
 			  join sip_navire as n on n.id=pthe.id_navire  
 			  join sip_espece as e on e.id=pthe.id_espece";
 		return $this->db->query($requete)->result();			  
-
+	}
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);

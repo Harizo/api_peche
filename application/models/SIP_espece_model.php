@@ -38,15 +38,6 @@ class SIP_espece_model extends CI_Model {
         if($this->db->affected_rows() === 1)
         {
             return true;
-        }
-        else
-        {
-            return null;
-        }  
-    }
-    public function findAll()
-    {   $result =  $this->db->select('*')
-                        ->from($this->table)
         }else{
             return null;
         }  
@@ -63,7 +54,7 @@ class SIP_espece_model extends CI_Model {
             return $result;
         }else{
             return null;
-        }                 
+        }  
     }
 
 
@@ -82,6 +73,21 @@ class SIP_espece_model extends CI_Model {
             return null;
         }                 
     }
-  
-         
+
+	public function find_all_by_navire($id_navire) {
+        $requete="select distinct esp.id,esp.code,esp.nom,esp.type_espece,esp.nom_scientifique,esp.nom_francaise,esp.nom_local
+			 from sip_espece as esp,sip_autorisation_navire as nav  
+			 where esp.id in (nav.espece_1_autorisee,nav.espece_2_autorisee) 
+			   and nav.id_navire=".$id_navire;
+		return $this->db->query($requete)->result();			  
+		
+	}
+    
+    public function findById($id)  {
+        $this->db->where("id", $id);
+        $q = $this->db->get($this->table);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }  
+    }
 }
