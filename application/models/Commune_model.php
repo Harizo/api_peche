@@ -51,6 +51,22 @@ class Commune_model extends CI_Model {
             return null;
         }                 
     }
+
+    public function findAll_by_district($id_district) {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where("id_district", $id_district)
+                        ->order_by('nom')
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+
     public function findById($id) {
         $result =  $this->db->select('*')
                         ->from($this->table)

@@ -16,6 +16,7 @@ class Commune extends REST_Controller {
         $id = $this->get('id');
         $id_district = $this->get('id_district');
         $id_region = $this->get('id_region');
+        $cle_etrangere = $this->get('cle_etrangere');
 		$taiza="";
             if ($id)  {
                 $data = array();
@@ -25,20 +26,29 @@ class Commune extends REST_Controller {
                 $data['code'] = $commune->code;
                 $data['nom'] = $commune->nom;
                 $data['district'] = $district;
-            }else {
-				$taiza="findAll no nataony";
-                $menu = $this->CommuneManager->findAll();
-                if ($menu) {
-                    foreach ($menu as $key => $value) {
-                        $district = array();
-                        $district = $this->DistrictManager->findById($value->id_district);
-                        $data[$key]['id'] = $value->id;
-                        $data[$key]['code'] = $value->code;
-                        $data[$key]['nom'] = $value->nom;
-                        $data[$key]['district'] = $district;
-                    }
-                } else
-                    $data = array();
+            }
+            else 
+            {
+				if ($cle_etrangere) 
+                {
+                    $data = $this->CommuneManager->findAll_by_district($cle_etrangere);
+                }
+                else
+                {
+                    $taiza="findAll no nataony";
+                    $menu = $this->CommuneManager->findAll();
+                    if ($menu) {
+                        foreach ($menu as $key => $value) {
+                            $district = array();
+                            $district = $this->DistrictManager->findById($value->id_district);
+                            $data[$key]['id'] = $value->id;
+                            $data[$key]['code'] = $value->code;
+                            $data[$key]['nom'] = $value->nom;
+                            $data[$key]['district'] = $district;
+                        }
+                    } else
+                        $data = array();
+                }
             }
         
         if (count($data)>0) {
