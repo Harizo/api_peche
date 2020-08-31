@@ -289,29 +289,7 @@ class SIP_commercialisation_eau_douce_model extends CI_Model {
             return $q->row();
         }  
     }
-/*
-     public function findAllBySIP_commercialisation_eau_douce($cle_etranger)
-    {
-        $sql = " select *
-            FROM sip_commercialisation_eau_douce
-            WHERE sip_commercialisation_eau_douce.id_presentation = ".$cle_etranger."
-            OR sip_commercialisation_eau_douce.id_conservation = ".$cle_etranger."
-            OR sip_commercialisation_eau_douce.id_permis = ".$cle_etranger."
-        ";
 
-        return $this->db->query($sql)->result();
-                                
-            if($result)
-            {
-                return $result;
-            }
-            else
-            {
-            return null;
-            }
-
-    }
-*/
     public function findClePresentation($id_presentation)
     {
         $sql = " select *

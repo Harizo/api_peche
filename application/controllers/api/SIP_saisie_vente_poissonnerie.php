@@ -1,41 +1,65 @@
-<?php
+ <?php
 //harizo
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_peche_thoniere_etranger extends REST_Controller {
+class SIP_saisie_vente_poissonnerie extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_peche_thoniere_etranger_model', 'SIP_peche_thoniere_etrangerManager');
+        $this->load->model('SIP_saisie_vente_poissonnerie_model', 'SIP_saisie_vente_poissonnerieManager');
     }
 
     public function index_get() 
     {
-        $id = $this->get('id');
-        $id_navire       = $this->get('id_navire');
-        $data = array();
-        if($id_navire)
+        $id                 = $this->get('id');
+        $id_poissonnerie    = $this->get('id_poissonnerie');
+        $id_presentation    = $this->get('id_presentation');
+        $id_conservation    = $this->get('id_conservation');
+        $famille_rh         = $this->get('famille_rh');
+        $data   =   array();
+
+        if (($id_presentation)||($id_conservation)||($id_poissonnerie)||($famille_rh))
         {
-            $menu = $this->SIP_peche_thoniere_etrangerManager->findCleNavire($id_navire);
+            if ($id_presentation) 
+            {
+                $data = $this->SIP_saisie_vente_poissonnerieManager->findClePresentation($id_presentation);               
+            }
+
+            if ($id_conservation)
+            {
+                $data = $this->SIP_saisie_vente_poissonnerieManager->findCleConservation($id_conservation);
+            }
+
+            if ($id_poissonnerie)
+            {
+                $data = $this->SIP_saisie_vente_poissonnerieManager->findClePoissonnerie($id_poissonnerie);
+            }
+
+            if ($famille_rh)
+            {
+                $data = $this->SIP_saisie_vente_poissonnerieManager->findCleFamille($famille_rh);
+            }
         }
         else
         {
             if ($id) 
-            {               
-                $data = $this->SIP_peche_thoniere_etrangerManager->findById($id);               
+            {
+                $data = $this->SIP_saisie_vente_poissonnerieManager->findByid($id);
             } 
+           
             else 
             {
-                $response = $this->SIP_peche_thoniere_etrangerManager->findAll();
+               $response = $this->SIP_saisie_vente_poissonnerieManager->findAll();
                 if ($response) 
                 {
                     $data = $response ;
-                }
+                }           
             }
         }
+        
         if (count($data)>0) 
         {
             $this->response([
@@ -53,29 +77,30 @@ class SIP_peche_thoniere_etranger extends REST_Controller {
             ], REST_Controller::HTTP_OK);
         }
     }
+
     public function index_post() 
     {
-        $id = $this->post('id') ;
-        $supprimer = $this->post('supprimer') ;
+        $id             = $this->post('id') ;
+        $supprimer      = $this->post('supprimer') ;
         if ($supprimer == 0) 
         {
+            $data = array(
+                'id'                        =>$this->post('id'),
+                //'id_poissonnerie'           =>$this->post('id_poissonnerie'),
+                'reference_fournisseur'     =>$this->post('reference_fournisseur'),
+                'famille_rh'                =>$this->post('famille_rh'), 
+                'origine_produits'          =>$this->post('origine_produits'),
+                'id_conservation'           =>$this->post('id_conservation'),
+                'designation_article'       =>$this->post('designation_article'),
+                'quantite_vendu'            =>$this->post('quantite_vendu'),
+                'id_presentation'           =>$this->post('id_presentation'),
+                'chiffre_affaire'           =>$this->post('chiffre_affaire'),
+                'prix_kg'                   =>$this->post('prix_kg') ,   
+                'observations'              =>$this->post('observations')          
+            );
             if ($id == 0) 
             {
-                $data = array(                   
-                    'id_navire'         =>  $this->post('id_navire'),              
-                    'numfp'             =>  $this->post('numfp'),              
-                    'nom_capitaine'     =>  $this->post('nom_capitaine'),              
-                    'nbr_equipage'      =>  $this->post('nbr_equipage'),              
-                    'date_rapport'      =>  $this->post('date_rapport'),              
-                    'nom_declarant'     =>  $this->post('nom_declarant'),              
-                    'date_depart'       =>  $this->post('date_depart'),              
-                    'date_arrive'       =>  $this->post('date_arrive'),              
-                    'port'              =>  $this->post('port'),              
-                    'nbr_jour_en_mer'   =>  $this->post('nbr_jour_en_mer'),              
-                    'nbr_peche'         =>  $this->post('nbr_peche'),              
-                    'nbr_lancers'       =>  $this->post('nbr_lancers'),              
-                    'num_sortie_peche'  =>  $this->post('num_sortie_peche'),              
-                );
+                
                 if (!$data) {
                     $this->response([
                         'status' => FALSE,
@@ -83,7 +108,7 @@ class SIP_peche_thoniere_etranger extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_peche_thoniere_etrangerManager->add($data);
+                $dataId = $this->SIP_saisie_vente_poissonnerieManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -100,21 +125,6 @@ class SIP_peche_thoniere_etranger extends REST_Controller {
             } 
             else 
             {
-                $data = array(                   
-                    'id_navire'         =>  $this->post('id_navire'),              
-                    'numfp'             =>  $this->post('numfp'),              
-                    'nom_capitaine'     =>  $this->post('nom_capitaine'),              
-                    'nbr_equipage'      =>  $this->post('nbr_equipage'),              
-                    'date_rapport'      =>  $this->post('date_rapport'),              
-                    'nom_declarant'     =>  $this->post('nom_declarant'),              
-                    'date_depart'       =>  $this->post('date_depart'),              
-                    'date_arrive'       =>  $this->post('date_arrive'),              
-                    'port'              =>  $this->post('port'),              
-                    'nbr_jour_en_mer'   =>  $this->post('nbr_jour_en_mer'),              
-                    'nbr_peche'         =>  $this->post('nbr_peche'),              
-                    'nbr_lancers'       =>  $this->post('nbr_lancers'),              
-                    'num_sortie_peche'  =>  $this->post('num_sortie_peche'),              
-                );
                 if (!$data || !$id) {
                     $this->response([
                         'status' => FALSE,
@@ -122,7 +132,7 @@ class SIP_peche_thoniere_etranger extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_peche_thoniere_etrangerManager->update($id, $data);
+                $update = $this->SIP_saisie_vente_poissonnerieManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -146,7 +156,7 @@ class SIP_peche_thoniere_etranger extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_peche_thoniere_etrangerManager->delete($id);         
+            $delete = $this->SIP_saisie_vente_poissonnerieManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,

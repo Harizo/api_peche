@@ -132,4 +132,58 @@ class SIP_commercialisation_crevette_model extends CI_Model {
             return $q->row();
         }  
     }
+
+     public function findClePresentation($id_presentation)
+    {
+        $sql = " select *
+            FROM sip_commercialisation_crevette
+            WHERE sip_commercialisation_crevette.id_presentation = ".$id_presentation."
+        ";
+
+        return $this->db->query($sql)->result();
+                                
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+    public function findCleConservation($id_conservation)
+    {
+        $sql = " select *
+            FROM sip_commercialisation_crevette
+            WHERE sip_commercialisation_crevette.id_conservation = ".$id_conservation."
+        ";
+
+        return $this->db->query($sql)->result();
+                                
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+ 
+    public function findEspece($id_espece)
+    {
+       $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where('produit='.$id_espece)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        } 
+    }
 }

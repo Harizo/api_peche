@@ -25,7 +25,6 @@ class SIP_presentation_model extends CI_Model {
     }
     public function _set($SIP_presentation) {
         return array(
-            'id'                   =>      $SIP_presentation['id'],
             'libelle'              =>      $SIP_presentation['libelle']
 
         );

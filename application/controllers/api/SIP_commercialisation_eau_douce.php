@@ -17,30 +17,45 @@ class SIP_commercialisation_eau_douce extends REST_Controller {
         $id = $this->get('id');
         $id_permis = $this->get('id_permis');
         $compte_nbr_fiche = $this->get('compte_nbr_fiche');
-            $data = array();
+        $id_conservation = $this->get('id_conservation');
+        $id_presentation = $this->get('id_presentation');
+        $data = array();
+        if (($id_presentation)||($id_conservation)||($compte_nbr_fiche)) 
+        {
+           if($id_conservation)
+            {
+                $data = $this->SIP_commercialisation_eau_douceManager->findCleConservation($id_conservation);
+            }
+
+            if($id_presentation)
+            {
+                $data = $this->SIP_commercialisation_eau_douceManager->findClePresentation($id_presentation);
+            }
 
             if ($compte_nbr_fiche) 
             {
                 $data = $this->SIP_commercialisation_eau_douceManager->compte_nbr_fiche($id_permis);
             }
-            else
+        }
+            
+        else
+        {
+            if ($id) 
             {
-                if ($id) 
+                
+                $data = $this->SIP_commercialisation_eau_douceManager->findById($id);
+               
+            } 
+            else 
+            {
+                $response = $this->SIP_commercialisation_eau_douceManager->find_all_join($id_permis);
+                if ($response) 
                 {
-                    
-                    $data = $this->SIP_commercialisation_eau_douceManager->findById($id);
-                   
-                } 
-                else 
-                {
-                    $response = $this->SIP_commercialisation_eau_douceManager->find_all_join($id_permis);
-                    if ($response) 
-                    {
-                        $data = $response ;
-                    }
-
+                    $data = $response ;
                 }
+
             }
+        }
             
         if (count($data)>0) 
         {

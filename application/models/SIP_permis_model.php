@@ -37,7 +37,7 @@ class SIP_permis_model extends CI_Model {
         $this->db->where('id', (int) $id)->delete($this->table);
         if($this->db->affected_rows() === 1)
         {
-            return true;
+            return true; 
         }else{
             return null;
         }  
@@ -57,6 +57,21 @@ class SIP_permis_model extends CI_Model {
         }                 
     }
 
+    public function findEspece($id_espece) 
+    {
+               
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where('id_espece='.$id_espece)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
 
     public function find_all_join($id_collecteurs)
     {

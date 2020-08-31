@@ -16,13 +16,19 @@ class SIP_permis extends REST_Controller {
     {
         $id = $this->get('id');
         $id_collecteurs = $this->get('id_collecteurs');
-            $data = array();
+        $id_espece = $this->get('id_espece');
+        $data = array();
+         if ($id_espece) {
+            $data = $this->SIP_permisManager->findEspece($id_espece);
+
+        } 
+        else {
             if ($id) 
             {
                 
                 $SIP_permis = $this->SIP_permisManager->findById($id);
                 $data['id'] = $SIP_permis->id;
-                $data['code'] = $SIP_permis->code;
+                $data['code'] = $SIP_permis->code; 
                 $data['nom'] = $SIP_permis->nom;
             } 
             else 
@@ -34,6 +40,7 @@ class SIP_permis extends REST_Controller {
                 }
 
             }
+        }
         if (count($data)>0) 
         {
             $this->response([

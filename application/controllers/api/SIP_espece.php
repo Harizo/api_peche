@@ -16,8 +16,31 @@ class SIP_espece extends REST_Controller {
     {
         $id = $this->get('id');
         $id_type_espece = $this->get('id_type_espece');
+        $id_famille = $this->get('id_famille');
         $id_navire = $this->get('id_navire');
-            $data = array();
+        $data = array();
+        
+        if (($id_type_espece)||($id_navire)||($id_famille)) {
+            
+            if($id_famille) {
+                $data = $this->SIP_especeManager->findFamille($id_famille);
+            }
+
+            if ($id_type_espece) 
+            {
+                $response = $this->SIP_especeManager->find_all_by_type($id_type_espece);
+                if ($response) 
+                {
+                    $data = $response ;
+                }
+            }
+
+            if($id_navire) {
+                $data = $this->SIP_especeManager->find_all_by_navire($id_navire);
+            }
+        } 
+        else {
+            
             if ($id) 
             {
                 
@@ -25,30 +48,13 @@ class SIP_espece extends REST_Controller {
                 $data['id'] = $SIP_espece->id;
                 $data['code'] = $SIP_espece->code;
                 $data['nom'] = $SIP_espece->nom;
-            } 
-			else if ($id_type_espece)
+            }  
+            else
             {
-                if ($id_type_espece) 
-                {
-                    $response = $this->SIP_especeManager->find_all_by_type($id_type_espece);
-                    if ($response) 
-                    {
-                        $data = $response ;
-                    }
-                }
-                else
-                {
-                    $data = $this->SIP_especeManager->findAll();
-                }
-
+                $data=$this->SIP_especeManager->findAll();
             }
-			else if($id_navire) {
-				$data = $this->SIP_especeManager->find_all_by_navire($id_navire);
-			}
-			else
-			{
-				$data=$this->SIP_especeManager->findAll();
-			}
+        }
+
         if (count($data)>0) 
         {
             $this->response([
@@ -74,18 +80,15 @@ class SIP_espece extends REST_Controller {
         {
             if ($id == 0) 
             {
+              
                 $data = array(
-                    'id_collecteurs'                    => $this->post('id_collecteurs'),
-                    'id_espece'                         => $this->post('id_espece'),
-                    'id_district'                       => $this->post('id_district'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+                    'code'              => $this->post('code'),
+                    'nom'               => $this->post('nom'),
+                    'nom_local'         => $this->post('nom_local'),
+                    'nom_francaise'     => $this->post('nom_francaise'),
+                    'nom_scientifique'  => $this->post('nom_scientifique'),
+                    'typ_esp_id'        => $this->post('typ_esp_id'),
+                    'id_famille'        => $this->post('id_famille')
                 );
                 if (!$data) {
                     $this->response([
@@ -111,18 +114,14 @@ class SIP_espece extends REST_Controller {
             } 
             else 
             {
-                $data = array(
-                    'id_collecteurs'                    => $this->post('id_collecteurs'),
-                    'id_espece'                         => $this->post('id_espece'),
-                    'id_district'                       => $this->post('id_district'),
-                    'annee'                             => $this->post('annee'),
-                    'mois'                              => $this->post('mois'),
-                    'id_conservation'                   => $this->post('id_conservation'),
-                    'quantite'                          => $this->post('quantite'),
-                    'prix'                              => $this->post('prix'),
-                    'id_presentation'                   => $this->post('id_presentation'),
-                    'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
-                    'valeur'                            => $this->post('valeur')
+               $data = array(
+                    'code'              => $this->post('code'),
+                    'nom'               => $this->post('nom'),
+                    'nom_local'         => $this->post('nom_local'),
+                    'nom_francaise'     => $this->post('nom_francaise'),
+                    'nom_scientifique'  => $this->post('nom_scientifique'),
+                    'typ_esp_id'        => $this->post('typ_esp_id'),
+                    'id_famille'        => $this->post('id_famille')
                 );
 
                 if (!$data || !$id) {

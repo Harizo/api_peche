@@ -66,4 +66,36 @@ class SIP_societe_crevette_model extends CI_Model {
             return $q->row();
         }  
     }
+
+     public function findBaseGeo($lib_base_geo)
+    {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where('base_geo=',$lib_base_geo)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }  
+    
+    }
+
+    public function findBaseCote($lib_base_cote)
+    {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where('base_cote=',$lib_base_cote)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }  
+    
+    }
 }

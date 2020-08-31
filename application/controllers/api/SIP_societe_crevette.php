@@ -15,7 +15,18 @@ class SIP_societe_crevette extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
-            $data = array();
+        $base_cote = $this->get('base_cote');
+        $base_geo = $this->get('base_geo');
+        $data = array();
+        if (($base_geo) || ($base_cote)) {
+            if ($base_geo) {
+                $data = $this->SIP_societe_crevetteManager->findBaseGeo($base_geo);
+            }
+
+            if ($base_cote) {
+               $data = $this->SIP_societe_crevetteManager->findBaseCote($base_cote);
+            }
+        } else {
             if ($id) 
             {
                 
@@ -33,6 +44,7 @@ class SIP_societe_crevette extends REST_Controller {
                 }
 
             }
+        }
         if (count($data)>0) 
         {
             $this->response([

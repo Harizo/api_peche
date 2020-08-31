@@ -1,19 +1,24 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class SIP_conservation_model extends CI_Model {
-    protected $table = 'sip_conservation';
+class SIP_base_cote_model extends CI_Model {
+    protected $table = 'sip_base_cote';
 
-    public function add($SIP_conservation) {
-        $this->db->set($this->_set($SIP_conservation))
+    public function add($b_cote)
+    {
+        $this->db->set($this->_set($b_cote))
                             ->insert($this->table);
-        if($this->db->affected_rows() === 1) {
+        if($this->db->affected_rows() === 1)
+        {
             return $this->db->insert_id();
         }else{
             return null;
         }                    
-    } 
-    public function update($id, $SIP_conservation) {
-        $this->db->set($this->_set($SIP_conservation))
+    }
+
+
+    public function update($id, $b_cote)
+    {
+        $this->db->set($this->_set($b_cote))
                             ->where('id', (int) $id)
                             ->update($this->table);
         if($this->db->affected_rows() === 1)
@@ -23,13 +28,18 @@ class SIP_conservation_model extends CI_Model {
             return null;
         }                      
     }
-    public function _set($SIP_conservation) {
-        return array(
-            'libelle'            =>      $SIP_conservation['libelle']
 
+    public function _set($b_cote)
+    {
+        return array(
+            'id'        =>      $b_cote['id'],
+            'libelle'   =>      $b_cote['libelle'],
         );
     }
-    public function delete($id) {
+
+
+    public function delete($id)
+    {
         $this->db->where('id', (int) $id)->delete($this->table);
         if($this->db->affected_rows() === 1)
         {
@@ -38,11 +48,12 @@ class SIP_conservation_model extends CI_Model {
             return null;
         }  
     }
-    public function findAll() {
-               
+
+    public function findAll()
+    {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('libelle')
+                        ->order_by('id')
                         ->get()
                         ->result();
         if($result)
@@ -52,29 +63,20 @@ class SIP_conservation_model extends CI_Model {
             return null;
         }                 
     }
-    public function findById($id)  {
+
+    public function findById($id)
+    {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
         if ($q->num_rows() > 0) {
             return $q->row();
-        }  
-    }
-
-     public function findByIdtab($id)
-    {   
-        $result =  $this->db->select('id as id_sip_conservation, libelle')
-                        ->from($this->table)
-                        ->where("id", $id)
-                        ->order_by('id')
-                        ->get()
-                        ->result();
-        if($result)
-        {
-            return $result;
         }
-        else
-        {
-            return null;
-        }                 
+        return null;
     }
+    function get($id)
+   {
+       $this->db-> where ($this->idkey, $id);
+       $query = $this-> db-> get ($this->table);
+       return $query-> ressult_array ();   
+   }
 }

@@ -15,8 +15,9 @@ class SIP_conservation extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
-            $data = array();
-            if ($id) 
+        $data = array();
+       
+       /*     if ($id) 
             {
                 
                 $SIP_conservation = $this->SIP_conservationManager->findById($id);
@@ -33,6 +34,22 @@ class SIP_conservation extends REST_Controller {
                 }
 
             }
+        */
+       
+        if ($id) 
+        {
+            $data = $this->SIP_conservationManager->findById($id);
+        } 
+        else 
+        {
+            $response = $this->SIP_conservationManager->findAll();
+            if ($response) 
+            {
+                $data = $response ;
+            }
+
+        }
+        
         if (count($data)>0) 
         {
             $this->response([
@@ -56,8 +73,14 @@ class SIP_conservation extends REST_Controller {
         $supprimer = $this->post('supprimer') ;
         if ($supprimer == 0) 
         {
+     
+             $data = array(
+                'libelle'       => $this->post('libelle')
+            );
+                
             if ($id == 0) 
             {
+               /*
                 $data = array(
                     'id_collecteurs'                    => $this->post('id_collecteurs'),
                     'id_espece'                         => $this->post('id_espece'),
@@ -71,6 +94,7 @@ class SIP_conservation extends REST_Controller {
                     'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
                     'valeur'                            => $this->post('valeur')
                 );
+                */
                 if (!$data) {
                     $this->response([
                         'status' => FALSE,
@@ -95,6 +119,7 @@ class SIP_conservation extends REST_Controller {
             } 
             else 
             {
+                /*
                 $data = array(
                     'id_collecteurs'                    => $this->post('id_collecteurs'),
                     'id_espece'                         => $this->post('id_espece'),
@@ -108,6 +133,7 @@ class SIP_conservation extends REST_Controller {
                     'coefficiant_conservation'          => $this->post('coefficiant_conservation'),
                     'valeur'                            => $this->post('valeur')
                 );
+                */
 
                 if (!$data || !$id) {
                     $this->response([
