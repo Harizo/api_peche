@@ -16,7 +16,24 @@ class SIP_exportation_crevette extends REST_Controller {
     {
         $id = $this->get('id');
         $id_societe_crevette = $this->get('id_societe_crevette');
-            $data = array();
+        $id_conservation = $this->get('id_conservation');
+        $id_presentation = $this->get('id_presentation');
+        $data = array();
+        if (($id_presentation)||($id_conservation)) 
+        {
+           if($id_conservation)
+            {
+                $data = $this->SIP_exportation_crevetteManager->findCleConservation($id_conservation);
+            }
+
+            if($id_presentation)
+            {
+                $data = $this->SIP_exportation_crevetteManager->findClePresentation($id_presentation);
+            }
+        }
+        
+        else
+        {  
             if ($id) 
             {
                 
@@ -34,6 +51,7 @@ class SIP_exportation_crevette extends REST_Controller {
                 }
 
             }
+        }
         if (count($data)>0) 
         {
             $this->response([

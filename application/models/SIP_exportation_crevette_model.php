@@ -128,4 +128,35 @@ class SIP_exportation_crevette_model extends CI_Model {
             return $q->row();
         }  
     }
+
+     public function findClePresentation($id_presentation)
+    {
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where('id_presentation='.$id_presentation)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }  
+    
+    }
+
+    public function findCleConservation($id_conservation)
+    {
+       $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->where('id_conservation='.$id_conservation)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        } 
+    }
 }

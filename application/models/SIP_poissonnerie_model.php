@@ -47,11 +47,22 @@ class SIP_poissonnerie_model extends CI_Model {
     }
     public function findAll() {
                
-        $result =  $this->db->select('*')
+        $result =  $this->db->select('ps.id as id, ps.nom, ps.localisation, ps.adresse, ps.rcs, ps.stat,
+                                    ps.nif,ps.tel , re.nom as nom_region, re.id as id_region')
+                        ->from('sip_poissonnerie as ps, region as re')
+                        ->where('ps.id_region=re.id')
+                        ->order_by('ps.nom')
+                        ->get()
+                        ->result() ;  
+      
+        
+        /*
+          $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('annee')
+                        ->order_by('nom')
                         ->get()
                         ->result();
+        */
         if($result)
         {
             return $result;
@@ -112,13 +123,24 @@ class SIP_poissonnerie_model extends CI_Model {
     
     public function findCleRegion($id_region)
     {
+       
         $sql = " select *
             FROM SIP_poissonnerie
             WHERE SIP_poissonnerie.id_region = ".$id_region."
         ";
 
         return $this->db->query($sql)->result();
-                                
+        
+        /*
+        $result =  $this->db->select('ps.nom, ps.localisation, ps.adresse, ps.rcs, ps.stat,
+                                    ps.nif,ps.tel , re.nom as nom_region, re.id as id_region
+                                ')
+                        ->from('region as re', 'sip_poissonnerie as ps')
+                        ->where("ps.id_region=", $id_region)
+                        ->order_by('re.nom')
+                        ->get()
+                        ->result();       
+        */                 
         if($result)
         {
             return $result;

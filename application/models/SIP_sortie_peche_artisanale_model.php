@@ -93,7 +93,7 @@ class SIP_sortie_peche_artisanale_model extends CI_Model {
 
     }
 
-    public function findCleEspecce($id_espece)
+    public function findCleEspece($id_espece)
     {
         $sql = " select *
             FROM sip_sortie_peche_artisanale

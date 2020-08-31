@@ -15,7 +15,21 @@ class SIP_sortie_peche_artisanale extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
-            $data = array();
+        $id_espece       = $this->get('id_espece');
+        $id_navire       = $this->get('id_navire');
+        $data = array();
+        if (($id_espece)||($id_navire)) {
+            if($id_espece)
+            {
+                $data = $this->SIP_sortie_peche_artisanaleManager->findCleEspece($id_espece);               
+            }
+
+            if($id_navire)
+            {
+                $data = $this->SIP_sortie_peche_artisanaleManager->findCleNavire($id_navire);
+            }
+        } 
+        else {
             if ($id) 
             {               
                 $data = $this->SIP_sortie_peche_artisanaleManager->findById($id);               
@@ -28,6 +42,7 @@ class SIP_sortie_peche_artisanale extends REST_Controller {
                     $data = $response ;
                 }
             }
+        }
         if (count($data)>0) 
         {
             $this->response([

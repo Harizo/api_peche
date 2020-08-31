@@ -15,7 +15,16 @@ class SIP_peche_thoniere_malagasy extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
-            $data = array();
+        $id_navire       = $this->get('id_navire');
+        $data = array();      
+        if($id_navire)
+        {
+            $data = $this->SIP_peche_thoniere_malagasyManager->findCleNavire($id_navire);
+           
+        }
+       
+        else
+        {
             if ($id) 
             {               
                 $data = $this->SIP_peche_thoniere_malagasyManager->findById($id);               
@@ -28,6 +37,7 @@ class SIP_peche_thoniere_malagasy extends REST_Controller {
                     $data = $response ;
                 }
             }
+        }
         if (count($data)>0) 
         {
             $this->response([

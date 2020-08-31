@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class sip_famille_model extends CI_Model {
+class SIP_famille_model extends CI_Model {
     protected $table = 'sip_famille';
 
     public function add($sip_famille)
@@ -33,8 +33,7 @@ class sip_famille_model extends CI_Model {
     {
         return array(
             'id'        =>      $sip_famille['id'],
-            'libelle'         =>      $sip_famille['libelle'],
-          //  'type_espece' =>      $sip_famille['type_espece']                       
+            'libelle'   =>      $sip_famille['libelle'],
         );
     }
 
