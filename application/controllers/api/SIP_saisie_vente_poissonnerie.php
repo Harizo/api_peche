@@ -85,8 +85,7 @@ class SIP_saisie_vente_poissonnerie extends REST_Controller {
         if ($supprimer == 0) 
         {
             $data = array(
-                'id'                        =>$this->post('id'),
-                //'id_poissonnerie'           =>$this->post('id_poissonnerie'),
+                'id_poissonnerie'           =>$this->post('id_poissonnerie'),
                 'reference_fournisseur'     =>$this->post('reference_fournisseur'),
                 'famille_rh'                =>$this->post('famille_rh'), 
                 'origine_produits'          =>$this->post('origine_produits'),

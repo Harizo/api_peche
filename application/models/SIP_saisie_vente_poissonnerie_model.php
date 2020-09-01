@@ -25,7 +25,7 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
     }
     public function _set($SIP_saisie_vente_poissonnerie) {
         return array(
-           // 'id_poissonnerie'           =>      $SIP_saisie_vente_poissonnerie['id_poissonnerie'],
+            'id_poissonnerie'           =>      $SIP_saisie_vente_poissonnerie['id_poissonnerie'],
             'reference_fournisseur'     =>      $SIP_saisie_vente_poissonnerie['reference_fournisseur'],
            'famille_rh'                 =>      $SIP_saisie_vente_poissonnerie['famille_rh'],                 
             'origine_produits'      	=>      $SIP_saisie_vente_poissonnerie['origine_produits'],                 

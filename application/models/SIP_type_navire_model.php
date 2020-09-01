@@ -35,7 +35,7 @@ class SIP_type_navire_model extends CI_Model {
     public function _set($sip_type_navire)
     {
         return array(
-            'libelle'	=> $sip_type_navire['libelle'],              
+            'libelle'	=> $sip_type_navire['libelle']  
         );
     }
 

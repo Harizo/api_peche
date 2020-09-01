@@ -32,8 +32,7 @@ class SIP_base_cote_model extends CI_Model {
     public function _set($b_cote)
     {
         return array(
-            'id'        =>      $b_cote['id'],
-            'libelle'   =>      $b_cote['libelle'],
+            'libelle'   =>      $b_cote['libelle']
         );
     }
 

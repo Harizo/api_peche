@@ -48,7 +48,6 @@ class SIP_base_geo extends REST_Controller {
         $supprimer = $this->post('supprimer') ;
         if ($supprimer == 0) {
             $data = array(
-                'id' => $this->post('id'),
                 'libelle' => $this->post('libelle'),
             );
             if ($id == 0) {

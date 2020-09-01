@@ -32,8 +32,7 @@ class SIP_base_geo_model extends CI_Model {
     public function _set($b_geo)
     {
         return array(
-            'id'        =>      $b_geo['id'],
-            'libelle'   =>      $b_geo['libelle'],
+            'libelle'   =>      $b_geo['libelle']
         );
     }
 

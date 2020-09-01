@@ -32,8 +32,7 @@ class sip_type_espece_model extends CI_Model {
     public function _set($sip_type_espece)
     {
         return array(
-            'id'        =>      $sip_type_espece['id'],
-            'libelle'   =>      $sip_type_espece['libelle'],
+            'libelle'   =>      $sip_type_espece['libelle']
         );
     }
 

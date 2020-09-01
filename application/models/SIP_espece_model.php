@@ -46,13 +46,25 @@ class SIP_espece_model extends CI_Model {
     }
     public function findAll() {
                
-        $result =  $this->db->select('sp.id as id, sp.nom, sp.code, sp.nom_local, sp.nom_francaise, sp.nom_scientifique, tep.id as typ_esp_id, tep.libelle as type_lib, fam.id as id_famille, fam.libelle as libelle_famille')
-                        ->from('sip_espece as sp, sip_type_espece as tep, sip_famille as fam')
-                        ->where('sp.type_espece=tep.id')
-                        ->where('sp.id_famille=fam.id')
-                        ->order_by('sp.nom')
-                        ->get()
-                        ->result(); 
+        $sql = "select  esp.id as id, 
+                        esp.code, 
+                        esp.nom, 
+                        esp.type_espece AS typ_esp_id, 
+                        tesp.libelle AS type_lib, 
+                        esp.nom_scientifique, 
+                        esp.nom_francaise,
+                        esp.id_famille AS id_famille, 
+                        esp.nom_local, 
+                        fam.libelle AS libelle_famille
+                    
+                    FROM sip_espece AS esp  
+                    
+                    INNER JOIN sip_type_espece AS tesp on esp.type_espece = tesp.id
+                   
+                    LEFT join sip_famille AS fam ON fam.id=esp.id_famille
+           ";
+           return $this->db->query($sql)->result();
+
         if($result)
         {
             return $result;
@@ -80,11 +92,16 @@ class SIP_espece_model extends CI_Model {
 
 	public function find_all_by_navire($id_navire) {
         $requete="select distinct esp.id,esp.code,esp.nom,esp.type_espece,esp.nom_francaise, esp.nom_scientifique,esp.nom_francaise,esp.nom_local
-			 from sip_espece as esp,sip_autorisation_navire as nav  
-			 where esp.id in (nav.espece_1_autorisee,nav.espece_2_autorisee) 
-			   and nav.id_navire=".$id_navire;
+			         from sip_espece as esp,sip_autorisation_navire as nav  
+			         where esp.id in (nav.espece_1_autorisee,nav.espece_2_autorisee) 
+			         and nav.id_navire=".$id_navire;
 		return $this->db->query($requete)->result();			  
-		
+		 if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }
 	}
     
     public function findById($id)  {

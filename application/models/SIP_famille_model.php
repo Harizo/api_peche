@@ -32,8 +32,7 @@ class SIP_famille_model extends CI_Model {
     public function _set($sip_famille)
     {
         return array(
-            'id'        =>      $sip_famille['id'],
-            'libelle'   =>      $sip_famille['libelle'],
+            'libelle'   =>      $sip_famille['libelle']
         );
     }
 

@@ -66,7 +66,6 @@ class SIP_poissonnerie extends REST_Controller {
         if ($supprimer == 0) 
         {
             $data = array(
-                'id'            =>      $this->post('id'),
                 'id_region'     =>      $this->post('id_region'),              
                 'nom'           =>      $this->post('nom'),
                 'localisation'  =>      $this->post('localisation'),                 
