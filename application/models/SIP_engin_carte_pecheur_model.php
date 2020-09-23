@@ -33,7 +33,8 @@ class SIP_engin_carte_pecheur_model extends CI_Model {
             'largeur'                   =>      $SIP_engin_carte_pecheur['largeur'],
             'hauteur'                   =>      $SIP_engin_carte_pecheur['hauteur'],
             'maille'                    =>      $SIP_engin_carte_pecheur['maille'],
-            'hamecon'                   =>      $SIP_engin_carte_pecheur['hamecon']
+            'hamecon'                   =>      $SIP_engin_carte_pecheur['hamecon'],
+            'etat_principale'           =>      $SIP_engin_carte_pecheur['etat_principale']
 
         );
     }
@@ -92,6 +93,7 @@ class SIP_engin_carte_pecheur_model extends CI_Model {
                 secp.hauteur as hauteur,
                 secp.maille as maille,
                 secp.hamecon as hamecon,
+                secp.etat_principale as etat_principale,
 
                 scp.id as id_carte_pecheur,
                 

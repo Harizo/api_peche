@@ -73,7 +73,7 @@ class SIP_production_commercialisation_region_model extends CI_Model {
     }
 
 
-    public function findAll()
+    public function findAll($id_region)
     {
 
         $sql = 
@@ -109,6 +109,7 @@ class SIP_production_commercialisation_region_model extends CI_Model {
             where
                 spcr.id_espece = esp.id
                 and spcr.id_region = reg.id 
+                and reg.id = ".$id_region."
             order by spcr.annee desc
 
         " ;

@@ -5,11 +5,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_collecteur_mareyeur extends REST_Controller {
+class SIP_fiche_enquete_marche extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_collecteur_mareyeur_model', 'SIP_collecteur_mareyeurManager');
+        $this->load->model('SIP_fiche_enquete_marche_model', 'SIP_fiche_enquete_marcheManager');
     }
 
     public function index_get() 
@@ -20,16 +20,14 @@ class SIP_collecteur_mareyeur extends REST_Controller {
             if ($id) 
             {
                 
-                $SIP_collecteur_mareyeur = $this->SIP_collecteur_mareyeurManager->findById($id);
-                $data['id'] = $SIP_collecteur_mareyeur->id;
-                $data['code'] = $SIP_collecteur_mareyeur->code;
-                $data['nom'] = $SIP_collecteur_mareyeur->nom;
+                $data = $this->SIP_fiche_enquete_marcheManager->findById($id);
+                
             } 
             else 
             {
                 if ($id_district) 
                 {
-                    $response = $this->SIP_collecteur_mareyeurManager->findAllby_district_permis($id_district);
+                   $response = $this->SIP_fiche_enquete_marcheManager->find_all_by_district($id_district);
                     if ($response) 
                     {
                         $data = $response ;
@@ -37,7 +35,7 @@ class SIP_collecteur_mareyeur extends REST_Controller {
                 }
                 else
                 {
-                    $response = $this->SIP_collecteur_mareyeurManager->findAll();
+                    $response = $this->SIP_fiche_enquete_marcheManager->findAll();
                     if ($response) 
                     {
                         $data = $response ;
@@ -71,14 +69,25 @@ class SIP_collecteur_mareyeur extends REST_Controller {
             if ($id == 0) 
             {
                 $data = array(
-                    'code'                  => $this->post('code'),
-                    'nom'                   => $this->post('nom'),
-                    'type_genre'            => $this->post('type_genre'),
-                    'adresse'               => $this->post('adresse'),
-                    'ref_autorisation'      => $this->post('ref_autorisation'),
-                    'is_coll_eau_douce'     => $this->post('is_coll_eau_douce'),
-                    'is_coll_marine'        => $this->post('is_coll_marine'),
-                    'is_mareyeur'           => $this->post('is_mareyeur')
+                 
+
+                    'id_district'                   =>      $this->post('id_district'),
+                    'nom_marche'                    =>      $this->post('nom_marche'),      
+                    'nom_ville'                     =>      $this->post('nom_ville'),     
+                    'date_releve'                   =>      $this->post('date_releve'),     
+                    'nbr_jour_ouvrable_mois'        =>      $this->post('nbr_jour_ouvrable_mois') ,
+                    'nbr_tot_etal'                  =>      $this->post('nbr_tot_etal') ,
+                    'nbr_etal_pdt_frais'            =>      $this->post('nbr_etal_pdt_frais') ,
+                    'nbr_etal_pdt_transforme'       =>      $this->post('nbr_etal_pdt_transforme'), 
+                    'annee'                         =>      $this->post('annee'),     
+                    'mois'                          =>      $this->post('mois'),     
+                    'domaines'                      =>      $this->post('domaines'),     
+                    'id_espece'                     =>      $this->post('id_espece') ,
+                    'id_presentation'               =>      $this->post('id_presentation') ,
+                    'id_conservation'               =>      $this->post('id_conservation') ,
+                    'detaillant'                    =>      $this->post('detaillant') ,
+                    'offre_kg'                      =>      $this->post('offre_kg') ,
+                    'prix_kg'                       =>      $this->post('prix_kg') 
                 );
                 if (!$data) {
                     $this->response([
@@ -87,7 +96,7 @@ class SIP_collecteur_mareyeur extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_collecteur_mareyeurManager->add($data);
+                $dataId = $this->SIP_fiche_enquete_marcheManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -105,14 +114,23 @@ class SIP_collecteur_mareyeur extends REST_Controller {
             else 
             {
                 $data = array(
-                    'code'                  => $this->post('code'),
-                    'nom'                   => $this->post('nom'),
-                    'type_genre'            => $this->post('type_genre'),
-                    'adresse'               => $this->post('adresse'),
-                    'ref_autorisation'      => $this->post('ref_autorisation'),
-                    'is_coll_eau_douce'     => $this->post('is_coll_eau_douce'),
-                    'is_coll_marine'        => $this->post('is_coll_marine'),
-                    'is_mareyeur'           => $this->post('is_mareyeur')
+                    'id_district'                   =>      $this->post('id_district'),
+                    'nom_marche'                    =>      $this->post('nom_marche'),      
+                    'nom_ville'                     =>      $this->post('nom_ville'),     
+                    'date_releve'                   =>      $this->post('date_releve'),     
+                    'nbr_jour_ouvrable_mois'        =>      $this->post('nbr_jour_ouvrable_mois') ,
+                    'nbr_tot_etal'                  =>      $this->post('nbr_tot_etal') ,
+                    'nbr_etal_pdt_frais'            =>      $this->post('nbr_etal_pdt_frais') ,
+                    'nbr_etal_pdt_transforme'       =>      $this->post('nbr_etal_pdt_transforme'), 
+                    'annee'                         =>      $this->post('annee'),     
+                    'mois'                          =>      $this->post('mois'),     
+                    'domaines'                      =>      $this->post('domaines'),     
+                    'id_espece'                     =>      $this->post('id_espece') ,
+                    'id_presentation'               =>      $this->post('id_presentation') ,
+                    'id_conservation'               =>      $this->post('id_conservation') ,
+                    'detaillant'                    =>      $this->post('detaillant') ,
+                    'offre_kg'                      =>      $this->post('offre_kg') ,
+                    'prix_kg'                       =>      $this->post('prix_kg') 
                 );
 
                 if (!$data || !$id) {
@@ -122,7 +140,7 @@ class SIP_collecteur_mareyeur extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_collecteur_mareyeurManager->update($id, $data);
+                $update = $this->SIP_fiche_enquete_marcheManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -146,7 +164,7 @@ class SIP_collecteur_mareyeur extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_collecteur_mareyeurManager->delete($id);         
+            $delete = $this->SIP_fiche_enquete_marcheManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,

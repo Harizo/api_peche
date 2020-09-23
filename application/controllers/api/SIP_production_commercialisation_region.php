@@ -15,6 +15,7 @@ class SIP_production_commercialisation_region extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
+        $id_region = $this->get('id_region');
             $data = array();
             if ($id) 
             {
@@ -25,7 +26,7 @@ class SIP_production_commercialisation_region extends REST_Controller {
             else 
             {
                 
-                $data = $this->SIP_production_commercialisation_regionManager->findAll();
+                $data = $this->SIP_production_commercialisation_regionManager->findAll($id_region);
                 
 
             }

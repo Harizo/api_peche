@@ -61,6 +61,7 @@ class SIP_especes_permis_model extends CI_Model {
 
                         sep.id as id,
                         se.id as id_espece,
+                        se.type_espece as type_espece,
                         se.code as code,
                         se.nom as nom,
                         se.nom_scientifique as nom_scientifique,

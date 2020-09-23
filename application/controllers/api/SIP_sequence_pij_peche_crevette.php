@@ -5,31 +5,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_collecteur_mareyeur extends REST_Controller {
+class SIP_sequence_pij_peche_crevette extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_collecteur_mareyeur_model', 'SIP_collecteur_mareyeurManager');
+        $this->load->model('SIP_sequence_pij_peche_crevette_model', 'SIP_sequence_pij_peche_crevetteManager');
     }
 
     public function index_get() 
     {
         $id = $this->get('id');
-        $id_district = $this->get('id_district');
+        $id_sequence_peche = $this->get('id_sequence_peche');
             $data = array();
             if ($id) 
             {
                 
-                $SIP_collecteur_mareyeur = $this->SIP_collecteur_mareyeurManager->findById($id);
-                $data['id'] = $SIP_collecteur_mareyeur->id;
-                $data['code'] = $SIP_collecteur_mareyeur->code;
-                $data['nom'] = $SIP_collecteur_mareyeur->nom;
+                $data = $this->SIP_sequence_pij_peche_crevetteManager->findById($id);
+                
             } 
             else 
             {
-                if ($id_district) 
+                if ($id_sequence_peche) 
                 {
-                    $response = $this->SIP_collecteur_mareyeurManager->findAllby_district_permis($id_district);
+                    $response = $this->SIP_sequence_pij_peche_crevetteManager->findAll_by_fiche_peche_crevette($id_sequence_peche);
                     if ($response) 
                     {
                         $data = $response ;
@@ -37,11 +35,7 @@ class SIP_collecteur_mareyeur extends REST_Controller {
                 }
                 else
                 {
-                    $response = $this->SIP_collecteur_mareyeurManager->findAll();
-                    if ($response) 
-                    {
-                        $data = $response ;
-                    }
+                    $data = $this->SIP_sequence_pij_peche_crevetteManager->findAll();
                 }
 
             }
@@ -71,14 +65,18 @@ class SIP_collecteur_mareyeur extends REST_Controller {
             if ($id == 0) 
             {
                 $data = array(
-                    'code'                  => $this->post('code'),
-                    'nom'                   => $this->post('nom'),
-                    'type_genre'            => $this->post('type_genre'),
-                    'adresse'               => $this->post('adresse'),
-                    'ref_autorisation'      => $this->post('ref_autorisation'),
-                    'is_coll_eau_douce'     => $this->post('is_coll_eau_douce'),
-                    'is_coll_marine'        => $this->post('is_coll_marine'),
-                    'is_mareyeur'           => $this->post('is_mareyeur')
+                    'id_sequence_peche'       => $this->post('id_sequence_peche'),
+                    'date'                          => $this->post('date'),
+                    'j_ou_n'                        => $this->post('j_ou_n'),
+                    'zone'                          => $this->post('zone'),
+                    'carre'                         => $this->post('carre'),
+                    'activite'                      => $this->post('activite'),
+                    'sonde'                         => $this->post('sonde'),
+                    'nb_traits'                     => $this->post('nb_traits'),
+                    'heurep'                        => $this->post('heurep'),
+                    'minutep'                       => $this->post('minutep'),
+                    'heuret'                        => $this->post('heuret'),
+                    'minutet'                       => $this->post('minutet')
                 );
                 if (!$data) {
                     $this->response([
@@ -87,7 +85,7 @@ class SIP_collecteur_mareyeur extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_collecteur_mareyeurManager->add($data);
+                $dataId = $this->SIP_sequence_pij_peche_crevetteManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -105,14 +103,18 @@ class SIP_collecteur_mareyeur extends REST_Controller {
             else 
             {
                 $data = array(
-                    'code'                  => $this->post('code'),
-                    'nom'                   => $this->post('nom'),
-                    'type_genre'            => $this->post('type_genre'),
-                    'adresse'               => $this->post('adresse'),
-                    'ref_autorisation'      => $this->post('ref_autorisation'),
-                    'is_coll_eau_douce'     => $this->post('is_coll_eau_douce'),
-                    'is_coll_marine'        => $this->post('is_coll_marine'),
-                    'is_mareyeur'           => $this->post('is_mareyeur')
+                    'id_sequence_peche'       => $this->post('id_sequence_peche'),
+                    'date'                          => $this->post('date'),
+                    'j_ou_n'                        => $this->post('j_ou_n'),
+                    'zone'                          => $this->post('zone'),
+                    'carre'                         => $this->post('carre'),
+                    'activite'                      => $this->post('activite'),
+                    'sonde'                         => $this->post('sonde'),
+                    'nb_traits'                     => $this->post('nb_traits'),
+                    'heurep'                        => $this->post('heurep'),
+                    'minutep'                       => $this->post('minutep'),
+                    'heuret'                        => $this->post('heuret'),
+                    'minutet'                       => $this->post('minutet')
                 );
 
                 if (!$data || !$id) {
@@ -122,7 +124,7 @@ class SIP_collecteur_mareyeur extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_collecteur_mareyeurManager->update($id, $data);
+                $update = $this->SIP_sequence_pij_peche_crevetteManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -146,7 +148,7 @@ class SIP_collecteur_mareyeur extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_collecteur_mareyeurManager->delete($id);         
+            $delete = $this->SIP_sequence_pij_peche_crevetteManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,

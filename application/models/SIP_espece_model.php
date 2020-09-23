@@ -90,6 +90,23 @@ class SIP_espece_model extends CI_Model {
         }                 
     }
 
+    public function find_all_eau_douce_marine($id_type_espece1, $id_type_espece2) {
+               
+        $result =  $this->db->select('*')
+                        ->from($this->table)
+                        ->order_by('nom')
+                        ->where("type_espece", $id_type_espece1)
+                        ->or_where("type_espece", $id_type_espece2)
+                        ->get()
+                        ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+
 	public function find_all_by_navire($id_navire) {
         $requete="select distinct esp.id,esp.code,esp.nom,esp.type_espece,esp.nom_francaise, esp.nom_scientifique,esp.nom_francaise,esp.nom_local
 			         from sip_espece as esp,sip_autorisation_navire as nav  
