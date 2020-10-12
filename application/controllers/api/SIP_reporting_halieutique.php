@@ -14,9 +14,73 @@ class SIP_reporting_halieutique extends REST_Controller {
 
     public function index_get() 
     {
-        $id = $this->get('id');
+        $etat = $this->get('etat');
 
-         $data = $this->halManager->get_somme_capture_all_espece_by_dist();
+        switch ($etat) 
+        {
+            case 'sip_get_somme_capture_all_espece_by_dist':
+            {
+
+                $data = $this->halManager->get_somme_capture_all_espece_by_dist();
+                break;
+            }
+
+            case 'sip_quantite_collecte_region':
+            {
+
+                $data = $this->halManager->sip_quantite_collecte_region();
+                break;
+            }
+
+            case 'sip_quantite_collecte_mois':
+            {
+
+                $data = $this->halManager->sip_quantite_collecte_mois();
+                break;
+            }
+
+            case 'sip_quantite_collecte_operateur':
+            {
+
+                $data = $this->halManager->sip_quantite_collecte_operateur();
+                break;
+            }
+            case 'sip_quantite_collecte_espece':
+            {
+
+                $data = $this->halManager->sip_quantite_collecte_espece();
+                break;
+            }
+
+            case 'sip_prix_moyenne_mois':
+            {
+
+                $data = $this->halManager->sip_prix_moyenne_mois();
+                break;
+            }
+
+            case 'sip_prix_moyenne_district':
+            {
+
+                $data = $this->halManager->sip_prix_moyenne_district();
+                break;
+            }
+
+            case 'sip_prix_moyenne_region':
+            {
+
+                $data = $this->halManager->sip_prix_moyenne_region();
+                break;
+            }
+
+
+            
+            default:
+               
+                break;
+        }
+
+         
     
          
         if ($data) 
