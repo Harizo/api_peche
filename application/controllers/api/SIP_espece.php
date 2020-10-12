@@ -18,6 +18,10 @@ class SIP_espece extends REST_Controller {
         $id_type_espece = $this->get('id_type_espece');
         $id_famille = $this->get('id_famille');
         $id_navire = $this->get('id_navire');
+
+        $eau_douce_marine =  $this->get('eau_douce_marine');
+        $id_type_espece1 = $this->get('id_type_espece1');
+        $id_type_espece2 = $this->get('id_type_espece2');
         $data = array();
         
         if (($id_type_espece)||($id_navire)||($id_famille)) {
@@ -51,7 +55,14 @@ class SIP_espece extends REST_Controller {
             }  
             else
             {
-                $data=$this->SIP_especeManager->findAll();
+
+                if ($eau_douce_marine) 
+                {
+                    $data=$this->SIP_especeManager->find_all_eau_douce_marine($id_type_espece1, $id_type_espece2);
+                }
+                else
+                    $data=$this->SIP_especeManager->findAll();
+
             }
         }
 

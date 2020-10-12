@@ -70,7 +70,8 @@ class SIP_engin_carte_pecheur extends REST_Controller {
                     'largeur'                   =>      $this->post('largeur'),
                     'hauteur'                   =>      $this->post('hauteur'),
                     'maille'                    =>      $this->post('maille'),
-                    'hamecon'                   =>      $this->post('hamecon')
+                    'hamecon'                   =>      $this->post('hamecon'),
+                    'etat_principale'           =>      $this->post('etat_principale')
                 );
 
                 if (!$data) {
@@ -106,7 +107,8 @@ class SIP_engin_carte_pecheur extends REST_Controller {
                     'largeur'                   =>      $this->post('largeur'),
                     'hauteur'                   =>      $this->post('hauteur'),
                     'maille'                    =>      $this->post('maille'),
-                    'hamecon'                   =>      $this->post('hamecon')
+                    'hamecon'                   =>      $this->post('hamecon'),
+                    'etat_principale'           =>      $this->post('etat_principale')
                 );
 
                 if (!$data || !$id) {

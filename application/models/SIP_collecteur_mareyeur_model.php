@@ -59,6 +59,37 @@ class SIP_collecteur_mareyeur_model extends CI_Model {
             return null;
         }                 
     }
+
+    public function findAllby_district_permis($id_district) {
+               
+        $result = $this->db->select(
+                                        '
+                                            scm.id as id,
+                                            scm.code as code,
+                                            scm.type_genre as type_genre,
+                                            scm.nom,
+                                            scm.adresse as adresse,
+                                            scm.ref_autorisation as ref_autorisation,
+                                            scm.is_mareyeur as is_mareyeur,
+                                            scm.is_coll_marine as is_coll_marine,
+                                            scm.is_coll_eau_douce
+
+                                        '
+                                    )
+                            ->from('sip_collecteurs_mareyeur as scm')
+                            ->join('sip_permis as sp', 'scm.id = sp.id_collecteur_mareyeur')
+                            ->where("sp.id_district", $id_district)
+                            ->order_by('scm.nom')
+                            ->get()
+                            ->result();
+        if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }                 
+    }
+
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);
