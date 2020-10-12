@@ -25,7 +25,9 @@ class SIP_poissonnerie_model extends CI_Model {
     }
     public function _set($SIP_poissonnerie) {
         return array(
-            'id_region'     =>      $SIP_poissonnerie['id_region'],              
+            'id_region'     =>      $SIP_poissonnerie['id_region'],
+            'id_district'   =>      $SIP_poissonnerie['id_district'],              
+            'id_commune'    =>      $SIP_poissonnerie['id_commune'],
             'nom'           =>      $SIP_poissonnerie['nom'],
            'localisation'   =>      $SIP_poissonnerie['localisation'],                 
             'adresse'      	=>      $SIP_poissonnerie['adresse'],                 
@@ -55,14 +57,6 @@ class SIP_poissonnerie_model extends CI_Model {
                         ->get()
                         ->result() ;  
       
-        
-        /*
-          $result =  $this->db->select('*')
-                        ->from($this->table)
-                        ->order_by('nom')
-                        ->get()
-                        ->result();
-        */
         if($result)
         {
             return $result;
@@ -119,28 +113,43 @@ class SIP_poissonnerie_model extends CI_Model {
         }  
     }
 
-   
-    
     public function findCleRegion($id_region)
     {
-       
-        $sql = " select *
-            FROM SIP_poissonnerie
-            WHERE SIP_poissonnerie.id_region = ".$id_region."
+      
+      $sql = " select ps.id as id,
+                    dist.nom as districts,
+                    comm.nom as communes, 
+                    ps.nom, 
+                    ps.localisation, 
+                    ps.adresse, 
+                    ps.rcs, 
+                    ps.stat,
+                    ps.nif,
+                    ps.tel , 
+                    
+                    re.id as id_region,
+                    re.nom as nom_region,
+                    
+                    dist.id as id_district,
+                    
+                    comm.id as id_commune
+                               
+            FROM sip_poissonnerie as ps, 
+                    region as re, 
+                    commune as comm, 
+                    district as dist
+            
+            WHERE ps.id_region= re.id AND 
+                    ps.id_region = ".$id_region." AND
+                    ps.id_district = dist.id AND
+                    ps.id_commune = comm.id
+            
+            ORDER BY re.nom
         ";
 
         return $this->db->query($sql)->result();
-        
-        /*
-        $result =  $this->db->select('ps.nom, ps.localisation, ps.adresse, ps.rcs, ps.stat,
-                                    ps.nif,ps.tel , re.nom as nom_region, re.id as id_region
-                                ')
-                        ->from('region as re', 'sip_poissonnerie as ps')
-                        ->where("ps.id_region=", $id_region)
-                        ->order_by('re.nom')
-                        ->get()
-                        ->result();       
-        */                 
+             
+                        
         if($result)
         {
             return $result;
@@ -152,4 +161,102 @@ class SIP_poissonnerie_model extends CI_Model {
 
     }
     
+    public function findByRegionDistrictCommune($id_region,$id_district,$id_commune)
+    {
+      
+      $sql = " select ps.id as id,
+                   dist.nom as districts,
+                    comm.nom as communes, 
+                    ps.nom, 
+                    ps.localisation, 
+                    ps.adresse, 
+                    ps.rcs, 
+                    ps.stat,
+                    ps.nif,
+                    ps.tel , 
+                    
+                    re.id as id_region,
+                    re.nom as nom_region,
+                    
+                    dist.id as id_district,
+                    
+                    comm.id as id_commune
+
+            FROM sip_poissonnerie as ps, 
+                    region as re, 
+                    district as dist, 
+                    commune as comm
+            
+            WHERE ps.id_region= re.id AND 
+                    ps.id_region = ".$id_region." AND
+                    ps.id_commune = ".$id_commune." AND
+                    comm.id=ps.id_commune AND
+                    ps.id_district = ".$id_district." AND
+                    dist.id=ps.id_district
+            
+            ORDER BY re.nom
+        ";
+
+        return $this->db->query($sql)->result();
+             
+                        
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+   
+     public function findByRegionDistrict($id_region,$id_district)
+    {
+      
+      $sql = " select ps.id as id,
+                    dist.nom as districts,
+                    comm.nom as communes, 
+                    ps.nom, 
+                    ps.localisation, 
+                    ps.adresse, 
+                    ps.rcs, 
+                    ps.stat,
+                    ps.nif,
+                    ps.tel , 
+                    
+                    re.id as id_region,
+                    re.nom as nom_region,
+                    
+                    dist.id as id_district,
+                    
+                    comm.id as id_commune
+
+            FROM sip_poissonnerie as ps, 
+                    region as re, 
+                    district as dist,
+                    commune as comm 
+            
+            WHERE ps.id_region= re.id AND 
+                    ps.id_region = ".$id_region." AND
+                    ps.id_district = ".$id_district." AND
+                    dist.id = ps.id_district AND
+                    ps.id_commune = comm.id
+            
+            ORDER BY re.nom
+        ";
+
+        return $this->db->query($sql)->result();
+             
+                        
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
 }

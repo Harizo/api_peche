@@ -15,48 +15,79 @@ class SIP_saisie_vente_poissonnerie extends REST_Controller {
     public function index_get() 
     {
         $id                 = $this->get('id');
+        $mois               = $this->get('mois');
+        $annee              = $this->get('annee');
         $id_poissonnerie    = $this->get('id_poissonnerie');
         $id_presentation    = $this->get('id_presentation');
         $id_conservation    = $this->get('id_conservation');
         $famille_rh         = $this->get('famille_rh');
         $data   =   array();
+        $sad = '';
+        
+        if ($id_poissonnerie)
+        {       
+             //   METY AU NIVEAU SUPPRESION AN'NY POISSONNERIE
+            if ( ($mois&&$annee) && ($mois!='-'&&$mois!='null') && ($annee!=''&&$annee!='null'&&$annee!='undefined') ) {
+                
+                $data = $this->SIP_saisie_vente_poissonnerieManager->findPoissonnerieByAnneeMois($id_poissonnerie,$annee,$mois);
 
-        if (($id_presentation)||($id_conservation)||($id_poissonnerie)||($famille_rh))
-        {
-            if ($id_presentation) 
-            {
-                $data = $this->SIP_saisie_vente_poissonnerieManager->findClePresentation($id_presentation);               
+                $sad = "str1"   ;
+            } 
+
+            elseif ( ($annee==''||$annee=='null'||$annee=='undefined')&&$mois!='-'&&$mois!='null') { 
+                    
+                    $data = $this->SIP_saisie_vente_poissonnerieManager->findPoissonnerieByMois($id_poissonnerie,$mois);
+                    $sad = "str2"   ;
+            }
+            
+            elseif (($mois=='-'||$mois=='null')&&$annee!=''&&$annee!='null'&&$annee!='undefined') {
+                
+                
+                    $data = $this->SIP_saisie_vente_poissonnerieManager->findPoissonnerieByAnne($id_poissonnerie,$annee);  
+                    $sad = "str3"   ;
             }
 
-            if ($id_conservation)
-            {
-                $data = $this->SIP_saisie_vente_poissonnerieManager->findCleConservation($id_conservation);
-            }
-
-            if ($id_poissonnerie)
-            {
+            else {
                 $data = $this->SIP_saisie_vente_poissonnerieManager->findClePoissonnerie($id_poissonnerie);
-            }
-
-            if ($famille_rh)
-            {
-                $data = $this->SIP_saisie_vente_poissonnerieManager->findCleFamille($famille_rh);
+                $sad = "str4"   ;
             }
         }
-        else
-        {
-            if ($id) 
+        else{
+
+            if (($id_presentation)||($id_conservation)||($famille_rh))
             {
-                $data = $this->SIP_saisie_vente_poissonnerieManager->findByid($id);
-            } 
-           
-            else 
-            {
-               $response = $this->SIP_saisie_vente_poissonnerieManager->findAll();
-                if ($response) 
+                if ($id_presentation) 
                 {
-                    $data = $response ;
-                }           
+                    $data = $this->SIP_saisie_vente_poissonnerieManager->findClePresentation($id_presentation);               
+                }
+
+                if ($id_conservation)
+                {
+                    $data = $this->SIP_saisie_vente_poissonnerieManager->findCleConservation($id_conservation);
+                }
+
+                
+
+                if ($famille_rh)
+                {
+                    $data = $this->SIP_saisie_vente_poissonnerieManager->findCleFamille($famille_rh);
+                }
+            }
+            else
+            {
+                if ($id) 
+                {
+                    $data = $this->SIP_saisie_vente_poissonnerieManager->findByid($id);
+                } 
+               
+                else 
+                { 
+                   $response = $this->SIP_saisie_vente_poissonnerieManager->findAll();
+                    if ($response) 
+                    {
+                        $data = $response ;
+                    }           
+                }
             }
         }
         
@@ -65,7 +96,8 @@ class SIP_saisie_vente_poissonnerie extends REST_Controller {
             $this->response([
                 'status' => TRUE,
                 'response' => $data,
-                'message' => 'Get data success',
+                'teste' => $sad,
+                'message' => 'Get data success'
             ], REST_Controller::HTTP_OK);
         } 
         else 
@@ -92,6 +124,9 @@ class SIP_saisie_vente_poissonnerie extends REST_Controller {
                 'id_conservation'           =>$this->post('id_conservation'),
                 'designation_article'       =>$this->post('designation_article'),
                 'quantite_vendu'            =>$this->post('quantite_vendu'),
+                'type_famille'              =>$this->post('type_famille'),
+                'mois'                      =>$this->post('mois'),
+                'annee'                     =>$this->post('annee') ,   
                 'id_presentation'           =>$this->post('id_presentation'),
                 'chiffre_affaire'           =>$this->post('chiffre_affaire'),
                 'prix_kg'                   =>$this->post('prix_kg') ,   

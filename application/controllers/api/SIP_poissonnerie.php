@@ -17,20 +17,37 @@ class SIP_poissonnerie extends REST_Controller {
     {
         $id = $this->get('id');
         $id_region    = $this->get('id_region');
+        $id_district  = $this->get('id_district');
+        $id_commune   = $this->get('id_commune');
         $data = array();
         
         if ($id_region)
-        {
-            $data = $this->SIP_poissonnerieManager->findCleRegion($id_region);
+        { 
+            if ( $id_district && $id_commune && $id_commune!='null' && $id_district!='null' ) 
+                $data = $this->SIP_poissonnerieManager->findByRegionDistrictCommune($id_region,$id_district,$id_commune);
+             
+            else
+            {
+                if ( $id_district &&$id_district!='null'&&$id_commune=='null') 
+                $data = $this->SIP_poissonnerieManager->findByRegionDistrict($id_region,$id_district);
+            
+
+                else  {
+                    $data = $this->SIP_poissonnerieManager->findCleRegion($id_region);
+                 } 
+                    
+            }
+            
+            
         }
 
         else {
             if ($id) 
-            {
+            { 
                  $data = $this->SIP_poissonnerieManager->findById($id);
             } 
             else 
-            {
+            { 
                 $response = $this->SIP_poissonnerieManager->findAll();
                 if ($response) 
                 {
@@ -66,7 +83,9 @@ class SIP_poissonnerie extends REST_Controller {
         if ($supprimer == 0) 
         {
             $data = array(
-                'id_region'     =>      $this->post('id_region'),              
+                'id_region'     =>      $this->post('id_region'),
+                'id_district'   =>      $this->post('id_district'),
+                'id_commune'    =>      $this->post('id_commune'),              
                 'nom'           =>      $this->post('nom'),
                 'localisation'  =>      $this->post('localisation'),                 
                 'adresse'       =>      $this->post('adresse'),                 
