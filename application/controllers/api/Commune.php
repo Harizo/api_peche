@@ -18,6 +18,14 @@ class Commune extends REST_Controller {
         $id_region = $this->get('id_region');
         $cle_etrangere = $this->get('cle_etrangere');
 		$taiza="";
+
+        if ($id_region) {
+
+           $data = $this->CommuneManager->findCleRegion($id_region);
+        } 
+        
+        else {
+
             if ($id)  {
                 $data = array();
                 $commune = $this->CommuneManager->findById($id);
@@ -50,6 +58,7 @@ class Commune extends REST_Controller {
                         $data = array();
                 }
             }
+        }
         
         if (count($data)>0) {
             $this->response([

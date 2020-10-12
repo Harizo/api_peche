@@ -67,6 +67,33 @@ class Commune_model extends CI_Model {
         }                 
     }
 
+    public function findCleRegion($id_region)
+    {
+        $sql = "select 
+                cm.id, 
+                cm.nom as communes, 
+                d.nom as districts, 
+                r.nom as nom_region
+           
+            FROM commune AS cm
+            LEFT JOIN district AS d ON d.id = cm.id_district
+            RIGHT JOIN region AS r ON r.id = d.id_region
+            WHERE r.id = ".$id_region." 
+            
+            ORDER BY cm.nom" ;
+        return $this->db->query($sql)->result();
+             
+                        
+        if($result)
+        {
+            return $result;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public function findById($id) {
         $result =  $this->db->select('*')
                         ->from($this->table)
