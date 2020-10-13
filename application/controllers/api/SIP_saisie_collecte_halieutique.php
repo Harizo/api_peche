@@ -114,6 +114,7 @@ class SIP_saisie_collecte_halieutique extends REST_Controller {
             else 
             {
                 $data = array(
+                    'id_espece'                    => $this->post('id_espece'),
                     'id_permis'                    => $this->post('id_permis'),
                     'annee'                             => $this->post('annee'),
                     'mois'                              => $this->post('mois'),
