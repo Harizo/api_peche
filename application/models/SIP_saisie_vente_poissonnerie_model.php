@@ -121,15 +121,23 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                         vp.annee,
                         vp.mois,
                         vp.reference_fournisseur, 
-                        vp.origine_produits, 
-                        fm.libelle AS libelle_famille, 
+                        vp.origine_produits,
+
+                        vp.famille_rh, 
+                        fm.libelle AS libelle_famille,
+
                         vp.type_famille,
                         vp.designation_article, 
+                        
+                        vp.id_presentation,
                         pres.libelle AS libelle_presentation,
+
+                        vp.id_conservation,
                         cons.libelle AS libelle_conservation,
-                        CONCAT(ROUND(vp.quantite_vendu,2), ' Kg') AS quantite_vendu,
-                        CONCAT(ROUND(vp.chiffre_affaire,2), ' Ar') AS chiffre_affaire, 
-                        CONCAT(ROUND(vp.prix_kg,2), ' Ar/kg') AS prix_kg,
+                        
+                        vp.quantite_vendu AS quantite_vendu,
+                        vp.chiffre_affaire AS chiffre_affaire, 
+                        vp.prix_kg AS prix_kg,
                         vp.observations
             
                 FROM    sip_saisie_vente_poisonnerie AS vp, 
@@ -163,14 +171,22 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                         vp.mois,
                         vp.reference_fournisseur, 
                         vp.origine_produits, 
-                        fm.libelle AS libelle_famille, 
+                        
+                        vp.famille_rh, 
+                        fm.libelle AS libelle_famille,
+
                         vp.type_famille,
                         vp.designation_article, 
+                        
+                        vp.id_presentation,
                         pres.libelle AS libelle_presentation,
+
+                        vp.id_conservation,
                         cons.libelle AS libelle_conservation,
-                        CONCAT(ROUND(vp.quantite_vendu,2), ' Kg') AS quantite_vendu,
-                        CONCAT(ROUND(vp.chiffre_affaire,2), ' Ar') AS chiffre_affaire, 
-                        CONCAT(ROUND(vp.prix_kg,2), ' Ar/kg') AS prix_kg, 
+                        
+                        vp.quantite_vendu AS quantite_vendu,
+                        vp.chiffre_affaire AS chiffre_affaire, 
+                        vp.prix_kg AS prix_kg,
                         vp.observations
             
                 FROM    sip_saisie_vente_poisonnerie AS vp, 
@@ -206,14 +222,22 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                         vp.mois,
                         vp.reference_fournisseur, 
                         vp.origine_produits, 
-                        fm.libelle AS libelle_famille, 
+                        
+                        vp.famille_rh, 
+                        fm.libelle AS libelle_famille,
+
                         vp.type_famille,
                         vp.designation_article, 
+                        
+                        vp.id_presentation,
                         pres.libelle AS libelle_presentation,
+
+                        vp.id_conservation,
                         cons.libelle AS libelle_conservation,
-                        CONCAT(ROUND(vp.quantite_vendu,2), ' Kg') AS quantite_vendu,
-                        CONCAT(ROUND(vp.chiffre_affaire,2), ' Ar') AS chiffre_affaire, 
-                        CONCAT(ROUND(vp.prix_kg,2), ' Ar/kg') AS prix_kg,
+                        
+                        vp.quantite_vendu AS quantite_vendu,
+                        vp.chiffre_affaire AS chiffre_affaire, 
+                        vp.prix_kg AS prix_kg,
                         vp.observations
             
                 FROM    sip_saisie_vente_poisonnerie AS vp, 
@@ -247,15 +271,23 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                         vp.annee,
                         vp.mois,
                         vp.reference_fournisseur, 
-                        vp.origine_produits, 
-                        fm.libelle AS libelle_famille, 
+                        vp.origine_produits,
+
+                        vp.famille_rh, 
+                        fm.libelle AS libelle_famille,
+
                         vp.type_famille,
                         vp.designation_article, 
+                        
+                        vp.id_presentation,
                         pres.libelle AS libelle_presentation,
+
+                        vp.id_conservation,
                         cons.libelle AS libelle_conservation,
-                        CONCAT(ROUND(vp.quantite_vendu,2), ' Kg') AS quantite_vendu,
-                        CONCAT(ROUND(vp.chiffre_affaire,2), ' Ar') AS chiffre_affaire, 
-                        CONCAT(ROUND(vp.prix_kg,2), ' Ar/kg') AS prix_kg, 
+                        
+                        vp.quantite_vendu AS quantite_vendu,
+                        vp.chiffre_affaire AS chiffre_affaire, 
+                        vp.prix_kg AS prix_kg,
                         vp.observations
             
                 FROM    sip_saisie_vente_poisonnerie AS vp, 
@@ -280,94 +312,5 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
         else
             return null;
 
-    }
-
-//  MITOVY NY qte_vendues_par_poissonneries SY NY qte_vendues_par_poissonneries_mois
-    // FA NY RAY MISY MOIS NY RAY TSISI
-
-    public function qte_vendues_par_poissonneries()
-    {
-       $sql = " CALL sip_vente_poissonnerie_req_1()  ";
-
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-            return $result;
-        else
-            return null;
-    }
-
-     public function qte_vendues_par_poissonneries_mois()
-    {
-       $sql = " CALL sip_vente_poissonnerie_req_2() " ;
-
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-            return $result;
-        else
-            return null;
-    }
-
-    
-// misy erreur ato
-    public function qte_vendues_par_famille()
-    {
-        $sql = " CALL sip_vente_poissonnerie_req_4() " ;
-
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-            return $result;
-        else
-            return null;
-    }
-
-    public function qte_vendues_produit_par_poissonneries()
-    {
-        $sql = " CALL sip_vente_poissonnerie_req_7() " ;
-
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-            return $result;
-        else
-            return null;
-    }
-
-    public function prix_moyen_prod_par_poissonnerie()
-    {
-        $sql = " CALL sip_vente_poissonnerie_req_3() " ;
-
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-            return $result;
-        else
-            return null;
-    }
-
-    public function prix_moyenne_par_famille($value='')
-    {
-        $sql = " CALL sip_vente_poissonnerie_req_5() " ;
-        
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-            return $result;
-        else
-            return null;
-    }
-
-     public function chif_aff_par_produit_poissonneries($value='')
-    {
-        $sql = " CALL sip_vente_poissonnerie_req_6() " ;
-        
-        return $this->db->query($sql)->result();
-                                
-        if($result)
-            return $result;
-        else
-            return null;
     }
 }
