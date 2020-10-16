@@ -4,11 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_reporting_vente_poissonnerie extends REST_Controller {
+class SIP_reporting_collecte_culture_algues extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_reporting_vente_poissonnerie_model', 'SIP_reporting_vente_poissonnerieManager');  
+        $this->load->model('SIP_reporting_collecte_culture_algues_model', 'SIP_reporting_collecte_culture_alguesManager');  
     }
    
     public function index_get() 
@@ -20,43 +20,32 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
         $repertoire = $this->get('repertoire');
         $data = array();
         
-        //  requête : REQ_1
-            if ($pivot=="req_1_vente_poissonneries") 
-                $data = $this->SIP_reporting_vente_poissonnerieManager->qte_vendues_par_poissonneries(); 
-        // fin requête : REQ_1
+        //  requête : REQ_8_1
+            if ($pivot=="req8_1_quantite_par_mois_culture_dalgues") 
+                $data = $this->SIP_reporting_collecte_culture_alguesManager->quantite_par_mois_culture_dalgues(); 
+        // fin requête : REQ_8_1
 
-        //  requête : REQ_2
-            if ($pivot=='req_2_vente_poissonneries') 
-                $data = $this->SIP_reporting_vente_poissonnerieManager->qte_vendues_par_poissonneries_mois();
-        // fin requête : REQ_2
+        //  requête : REQ_8_2
+            if ($pivot=='req8_2_quantite_par_villagee_culture_dalgues') 
+                $data = $this->SIP_reporting_collecte_culture_alguesManager->quantite_par_villagee_culture_dalgues();
+        // fin requête : REQ_8_2
     
 
-        //  requête : REQ_3
-            if ($pivot=='req_3_vente_poissonneries') 
-                $data = $this->SIP_reporting_vente_poissonnerieManager->prix_moyen_prod_par_poissonnerie();
-        // fin requête : REQ_3
+        //  requête : REQ_8_3
+            if ($pivot=='req8_3_quantite_par_commune_culture_dalgues') 
+                $data = $this->SIP_reporting_collecte_culture_alguesManager->quantite_par_commune_culture_dalgues();
+        // fin requête : REQ_8_3
 
-        //  requête : REQ_4
+        //  requête : REQ_8_4
             // misy erreur  ato
-            if ($pivot=='req_4_vente_poissonneries') 
-                $data = $this->SIP_reporting_vente_poissonnerieManager->qte_vendues_par_famille();
-        // fin requête : REQ_4
+            if ($pivot=='req8_4_montant_par_mois_culture_dalgues') 
+                $data = $this->SIP_reporting_collecte_culture_alguesManager->montant_par_mois_culture_dalgues();
+        // fin requête : REQ_8_4
 
-        //  requête : REQ_5
-            if ($pivot=='req_5_vente_poissonneries') 
-                $data = $this->SIP_reporting_vente_poissonnerieManager->prix_moyenne_par_famille();
-        // fin requête : REQ_5
-
-        //  requête : REQ_6
-            if ($pivot=='req_6_vente_poissonneries') 
-                 $data = $this->SIP_reporting_vente_poissonnerieManager->chif_aff_par_produit_poissonneries();
-        // fin requête : REQ_6
-
-    
-        //  requête : REQ_7
-            if ($pivot=='req_7_vente_poissonneries') 
-                $data = $this->SIP_reporting_vente_poissonnerieManager->qte_vendues_produit_par_poissonneries();
-        // fin requête : REQ_7
+        //  requête : REQ_8_5
+            if ($pivot=='req8_5_montant_par_village_culture_dalgues') 
+                $data = $this->SIP_reporting_collecte_culture_alguesManager->montant_par_village_culture_dalgues();
+        // fin requête : REQ_8_5
 
         //********************************* FIN ****************************************
             
@@ -99,12 +88,11 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
             $part = chunk_split($inverse, 3, ' ') ; // ajout un espace à chaque 3 lettrede la chaine
             $part = strrev($part) ; // reenverse la chaine
           }
-          if($part==''){
+        }
+        if ($part=='') {
             $inverse = strrev($res); // renverse la chaine
             $part = chunk_split($inverse, 3, ' ') ; // ajout un espace à chaque 3 lettrede la chaine
             $part = strrev($part) ; // reenverse la chaine
-
-          }
         }
         return $res = $part.$val ;
     }
@@ -123,11 +111,11 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("Myexcel")
                     ->setLastModifiedBy("Me")
-                    ->setTitle("reporting_vente_poissonnerie")
-                    ->setSubject("reporting_vente_poissonnerie")
-                    ->setDescription("reporting_vente_poissonnerie")
-                    ->setKeywords("reporting_vente_poissonnerie")
-                    ->setCategory("reporting_vente_poissonnerie");
+                    ->setTitle("reporting_collecte_culture_dalgues")
+                    ->setSubject("reporting_collecte_culture_dalgues")
+                    ->setDescription("reporting_collecte_culture_dalgues")
+                    ->setKeywords("reporting_collecte_culture_dalgues")
+                    ->setCategory("reporting_collecte_culture_dalgues");
 
         $ligne=1;            
         // Set Orientation, size and scaling
@@ -139,11 +127,7 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
         $objPHPExcel->getActiveSheet()->getPageSetup()->setFitToWidth(1);
         $objPHPExcel->getActiveSheet()->getPageSetup()->setFitToHeight(0);
         $objPHPExcel->getActiveSheet()->getPageMargins()->SetLeft(0.64); //***pour marge gauche
-        $objPHPExcel->getActiveSheet()->getPageMargins()->SetRight(0.64); //*** pour marge droite
-
-        for ($alphabet=65; $alphabet <87 ; $alphabet++) 
-            $objPHPExcel->getActiveSheet()->getColumnDimension(chr($alphabet))->setautoSize(true);
-            
+        $objPHPExcel->getActiveSheet()->getPageMargins()->SetRight(0.64); //*** pour marge droite   
 
         $objPHPExcel->getActiveSheet()->setTitle("Requête_poissonnerie_reporting");
         $objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter('&R&11&B Page &P / &N');
@@ -216,69 +200,56 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
             )
         );
          
-            if ($pivot=='req_1_vente_poissonneries') {
+            if ($pivot=='req8_1_quantite_par_mois_culture_dalgues') {
 
                 $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
                 $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
                 $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité vendues par poissonneries');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité par mois culture d\'algues');
             }
                
-            if ($pivot=='req_2_vente_poissonneries') {
+            if ($pivot=='req8_2_quantite_par_villagee_culture_dalgues') {
 
                 $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
                 $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
                 $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité vendues par poissonneries mois');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité par village culture d\'algues');
             }
 
-            if ($pivot=='req_3_vente_poissonneries') {
+            if ($pivot=='req8_3_quantite_par_commune_culture_dalgues') {
 
                 $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
                 $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
                 $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Prix moyenne produits par poissonneries');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité par commune culture d\'algues');
              }
 
-            if ($pivot=='req_4_vente_poissonneries') {
+            if ($pivot=='req8_4_montant_par_mois_culture_dalgues') {
 
                 $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
                 $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
                 $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité vendues par familles');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Montant par mois culture d\'algues');
              }
 
-            if ($pivot=='req_5_vente_poissonneries') {
+            if ($pivot=='req8_5_montant_par_village_culture_dalgues') {
 
                 $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
                 $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
                 $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Prix moyenne par famille');
-            }
-
-            if ($pivot=='req_6_vente_poissonneries') {
-
-                $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Chiffre d\'affaire par produits poissonneries');
-             }
-
-             if ($pivot=='req_7_vente_poissonneries') {
-
-                $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité vendues par produit poissonneries');
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Montant par village culture d\'algues');
             }
 
             $ligne++;
             $alphabet = 65 ;
 
-            /* ENTETE */
+            /* ENTETE */ 
             foreach ($data[0] as $key => $value) {
+                if ($key=='Total_de_somme_de_montant'||$key=='Total_de_somme_de_quantite') 
+                    $objPHPExcel->getActiveSheet()->getColumnDimension(chr($alphabet))->setWidth(30);
+                else
+                    $objPHPExcel->getActiveSheet()->getColumnDimension(chr($alphabet))->setautoSize(true);
                 $key = str_replace('_', ' ', $key) ;
-
                 $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->getAlignment()->setWrapText(true);
                 $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->applyFromArray($styleSousTitre);
                 $objPHPExcel->getActiveSheet()->mergeCells(chr($alphabet).$ligne.":".chr($alphabet).$ligne);
@@ -308,7 +279,7 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
         try
         {
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-            $objWriter->save(dirname(__FILE__) . "/../../../../export_excel/reporting_vente_poissonnerie/".$nom_file.".xlsx");
+            $objWriter->save(dirname(__FILE__) . "/../../../../export_excel/reporting_collecte_culture_dalgues/".$nom_file.".xlsx");
             
             $this->response([
                 'status' => TRUE,
