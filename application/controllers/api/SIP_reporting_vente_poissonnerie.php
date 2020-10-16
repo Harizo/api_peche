@@ -4,12 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH . '/libraries/REST_Controller.php';
 
-class vente_poissonnerie_reporting extends REST_Controller {
+class SIP_reporting_vente_poissonnerie extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_poissonnerie_model', 'SIP_poissonnerieManager');
-        $this->load->model('SIP_saisie_vente_poissonnerie_model', 'SIP_saisie_vente_poissonnerieManager');  
+        $this->load->model('SIP_reporting_vente_poissonnerie_model', 'SIP_reporting_vente_poissonnerieManager');  
     }
    
     public function index_get() 
@@ -20,50 +19,43 @@ class vente_poissonnerie_reporting extends REST_Controller {
         $menu_excel = $this->get('menu_excel');
         $repertoire = $this->get('repertoire');
         $data = array();
-        $eff_annee = 0 ;
-        $eff_mois = 0 ;
-        $eff_poiss = 0 ;
-        $poiss_val = array() ;
-        $mois_val = array() ;
-        $annee_val = array() ;
-        $donnee = array() ;
         
         //  requête : REQ_1
             if ($pivot=="req_1_vente_poissonneries") 
-                $data = $this->SIP_saisie_vente_poissonnerieManager->qte_vendues_par_poissonneries(); 
+                $data = $this->SIP_reporting_vente_poissonnerieManager->qte_vendues_par_poissonneries(); 
         // fin requête : REQ_1
 
         //  requête : REQ_2
             if ($pivot=='req_2_vente_poissonneries') 
-                $data = $this->SIP_saisie_vente_poissonnerieManager->qte_vendues_par_poissonneries_mois();
+                $data = $this->SIP_reporting_vente_poissonnerieManager->qte_vendues_par_poissonneries_mois();
         // fin requête : REQ_2
     
 
         //  requête : REQ_3
             if ($pivot=='req_3_vente_poissonneries') 
-                $data = $this->SIP_saisie_vente_poissonnerieManager->prix_moyen_prod_par_poissonnerie();
+                $data = $this->SIP_reporting_vente_poissonnerieManager->prix_moyen_prod_par_poissonnerie();
         // fin requête : REQ_3
 
         //  requête : REQ_4
             // misy erreur  ato
             if ($pivot=='req_4_vente_poissonneries') 
-                $data = $this->SIP_saisie_vente_poissonnerieManager->qte_vendues_par_famille();
+                $data = $this->SIP_reporting_vente_poissonnerieManager->qte_vendues_par_famille();
         // fin requête : REQ_4
 
         //  requête : REQ_5
             if ($pivot=='req_5_vente_poissonneries') 
-                $data = $this->SIP_saisie_vente_poissonnerieManager->prix_moyenne_par_famille();
+                $data = $this->SIP_reporting_vente_poissonnerieManager->prix_moyenne_par_famille();
         // fin requête : REQ_5
 
         //  requête : REQ_6
             if ($pivot=='req_6_vente_poissonneries') 
-                 $data = $this->SIP_saisie_vente_poissonnerieManager->chif_aff_par_produit_poissonneries();
+                 $data = $this->SIP_reporting_vente_poissonnerieManager->chif_aff_par_produit_poissonneries();
         // fin requête : REQ_6
 
     
         //  requête : REQ_7
             if ($pivot=='req_7_vente_poissonneries') 
-                $data = $this->SIP_saisie_vente_poissonnerieManager->qte_vendues_produit_par_poissonneries();
+                $data = $this->SIP_reporting_vente_poissonnerieManager->qte_vendues_produit_par_poissonneries();
         // fin requête : REQ_7
 
         //********************************* FIN ****************************************
@@ -94,52 +86,6 @@ class vente_poissonnerie_reporting extends REST_Controller {
         }
     }
 
-    public function affichage_mois($mois_int)
-    {
-        switch ($mois_int) {
-            case '1':
-                return "Janvier";
-                break;
-            case '2':
-                return "Février";
-                break;
-            case '3':
-                return "Mars";
-                break;
-            case '4':
-                return "Avril";
-                break;
-            case '5':
-                return "Mai";
-                break;
-            case '6':
-                return "Juin";
-                break;
-            case '7':
-                return "Juillet";
-                break;
-            case '8':
-                return "Août";
-                break;
-            case '9':
-                return "Septembre";
-                break;
-            case '10':
-                return "Octobre";
-                break;
-            case '11':
-                return "Novembre";
-                break;
-            case '12':
-                return "Décembre";
-                break;
-            
-            default:
-                return "";
-                break;
-        }
-    }
-
     public function nombreFormat($res)
     {
         $data = str_ireplace('.', ',', $res) ; // remplace point en virgule
@@ -152,6 +98,12 @@ class vente_poissonnerie_reporting extends REST_Controller {
             $inverse = strrev($part); // renverse la chaine
             $part = chunk_split($inverse, 3, ' ') ; // ajout un espace à chaque 3 lettrede la chaine
             $part = strrev($part) ; // reenverse la chaine
+          }
+          if($part==''){
+            $inverse = strrev($res); // renverse la chaine
+            $part = chunk_split($inverse, 3, ' ') ; // ajout un espace à chaque 3 lettrede la chaine
+            $part = strrev($part) ; // reenverse la chaine
+
           }
         }
         return $res = $part.$val ;
@@ -326,10 +278,7 @@ class vente_poissonnerie_reporting extends REST_Controller {
             /* ENTETE */
             foreach ($data[0] as $key => $value) {
                 $key = str_replace('_', ' ', $key) ;
-                if ($key>0 && $key<=12)
-                    $key= $this->affichage_mois($key) ;
-               
-               // $objPHPExcel->getActiveSheet()->getColumnDimension(chr($alphabet))->setautoWidth(true);
+
                 $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->getAlignment()->setWrapText(true);
                 $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->applyFromArray($styleSousTitre);
                 $objPHPExcel->getActiveSheet()->mergeCells(chr($alphabet).$ligne.":".chr($alphabet).$ligne);

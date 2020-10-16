@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Export_vente_poissonnerie extends REST_Controller
+class SIP_export_vente_poissonnerie extends REST_Controller
 {
     public function __construct()
     {
@@ -676,11 +676,11 @@ class Export_vente_poissonnerie extends REST_Controller
 
 			$objPHPExcel->getActiveSheet()->mergeCells(chr($ABC).$ligne.":".chr($ABC).$ligne);
 			$objPHPExcel->getActiveSheet()->getStyle(chr($ABC).$ligne.":".chr($ABC).$ligne)->applyFromArray($styleSousTitre);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne, "CHIFFRE D'AFFAIRE"); $ABC++ ; 
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne, "PRIX"); $ABC++ ; 
 
 			$objPHPExcel->getActiveSheet()->mergeCells(chr($ABC).$ligne.":".chr($ABC).$ligne);
 			$objPHPExcel->getActiveSheet()->getStyle(chr($ABC).$ligne.":".chr($ABC).$ligne)->applyFromArray($styleSousTitre);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne, "PRIX"); $ABC++ ; 
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne, "CHIFFRE D'AFFAIRE"); $ABC++ ; 
 
 			$objPHPExcel->getActiveSheet()->mergeCells(chr($ABC).$ligne.":".chr($ABC).$ligne);
 			$objPHPExcel->getActiveSheet()->getStyle(chr($ABC).$ligne.":".chr($ABC).$ligne)->applyFromArray($styleSousTitre);
@@ -715,8 +715,8 @@ class Export_vente_poissonnerie extends REST_Controller
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->libelle_presentation); $ABC++ ; 
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->libelle_conservation);$ABC++ ;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->quantite_vendu); $ABC++ ;	 
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->chiffre_affaire); $ABC++ ; 		 
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->prix_kg); $ABC++ ; 
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->chiffre_affaire); $ABC++ ; 		 
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->observations);
 			
 		}
