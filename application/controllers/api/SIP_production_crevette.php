@@ -65,6 +65,7 @@ class SIP_production_crevette extends REST_Controller {
                     'num_maree'              =>      $this->post('num_maree'),      
                     'maree'                  =>      $this->post('maree'),      
                     'qte_crevette'           =>      $this->post('qte_crevette'),      
+                    'qte_poisson'           =>      $this->post('qte_poisson'),      
                     'nbr_fiche'              =>      $this->post('nbr_fiche')
                 );
 
@@ -99,6 +100,7 @@ class SIP_production_crevette extends REST_Controller {
                     'num_maree'              =>      $this->post('num_maree'),      
                     'maree'                  =>      $this->post('maree'),      
                     'qte_crevette'           =>      $this->post('qte_crevette'),      
+                    'qte_poisson'           =>      $this->post('qte_poisson'),      
                     'nbr_fiche'              =>      $this->post('nbr_fiche')
                 );
 

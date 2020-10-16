@@ -31,6 +31,7 @@ class SIP_production_crevette_model extends CI_Model {
             'num_maree'              =>      $SIP_production_crevette['num_maree'],      
             'maree'                  =>      $SIP_production_crevette['maree'],      
             'qte_crevette'           =>      $SIP_production_crevette['qte_crevette'],      
+            'qte_poisson'           =>      $SIP_production_crevette['qte_poisson'],      
             'nbr_fiche'              =>      $SIP_production_crevette['nbr_fiche']
 
         );

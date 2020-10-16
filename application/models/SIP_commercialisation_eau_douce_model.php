@@ -37,7 +37,25 @@ class SIP_commercialisation_eau_douce_model extends CI_Model {
 
             'vl_qte'                            =>      $SIP_commercialisation_eau_douce['vl_qte'],
             'vl_prix_par_kg'                    =>      $SIP_commercialisation_eau_douce['vl_prix_par_kg'],
-            'vl_poids_vif'                      =>      $SIP_commercialisation_eau_douce['vl_poids_vif']
+            'vl_poids_vif'                      =>      $SIP_commercialisation_eau_douce['vl_poids_vif'],
+
+            'exp_qte'                           =>      $SIP_commercialisation_eau_douce['exp_qte'],
+            'exp_prix_par_kg'                   =>      $SIP_commercialisation_eau_douce['exp_prix_par_kg'],
+            'exp_poids_vif'                     =>      $SIP_commercialisation_eau_douce['exp_poids_vif'],
+            'exp_destination'                   =>      $SIP_commercialisation_eau_douce['exp_destination'],
+
+            'export_qte'                        =>      $SIP_commercialisation_eau_douce['export_qte'],
+            'export_prix_par_kg'                =>      $SIP_commercialisation_eau_douce['export_prix_par_kg'],
+            'export_poids_vif'                  =>      $SIP_commercialisation_eau_douce['export_poids_vif'],
+            'export_destination'                =>      $SIP_commercialisation_eau_douce['export_destination'],
+
+            'date_expedition'                   =>      $SIP_commercialisation_eau_douce['date_expedition'],
+
+            'nbr_colis'                         =>      $SIP_commercialisation_eau_douce['nbr_colis'],
+            'nom_dest'                          =>      $SIP_commercialisation_eau_douce['nom_dest'],
+            'adresse_dest'                      =>      $SIP_commercialisation_eau_douce['adresse_dest'],
+            'lieu_exped'                        =>      $SIP_commercialisation_eau_douce['lieu_exped'],
+            'moyen_transport'                   =>      $SIP_commercialisation_eau_douce['moyen_transport']
 
 
         );
@@ -96,7 +114,24 @@ class SIP_commercialisation_eau_douce_model extends CI_Model {
 
                 sch.vl_qte,
                 sch.vl_prix_par_kg,
-                sch.vl_poids_vif
+                sch.vl_poids_vif,
+
+                sch.exp_qte,
+                sch.exp_prix_par_kg,
+                sch.exp_poids_vif,
+                sch.exp_destination,
+
+                sch.export_qte,
+                sch.export_prix_par_kg,
+                sch.export_poids_vif,
+                sch.export_destination,
+                
+                sch.date_expedition,
+                sch.nbr_colis,
+                sch.nom_dest,
+                sch.adresse_dest,
+                sch.lieu_exped,
+                sch.moyen_transport
                
 
             from

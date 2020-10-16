@@ -96,7 +96,25 @@ class SIP_commercialisation_eau_douce extends REST_Controller {
 
                     'vl_qte'                            =>      $this->post('vl_qte'),
                     'vl_prix_par_kg'                    =>      $this->post('vl_prix_par_kg'),
-                    'vl_poids_vif'                      =>      $this->post('vl_poids_vif')
+                    'vl_poids_vif'                      =>      $this->post('vl_poids_vif'),
+
+                    'exp_qte'                           =>      $this->post('exp_qte'),
+                    'exp_prix_par_kg'                   =>      $this->post('exp_prix_par_kg'),
+                    'exp_poids_vif'                     =>      $this->post('exp_poids_vif'),
+                    'exp_destination'                   =>      $this->post('exp_destination'),
+
+                    'export_qte'                           =>      $this->post('export_qte'),
+                    'export_prix_par_kg'                   =>      $this->post('export_prix_par_kg'),
+                    'export_poids_vif'                     =>      $this->post('export_poids_vif'),
+                    'export_destination'                   =>      $this->post('export_destination'),
+
+                    'date_expedition'                   =>      $this->post('date_expedition'),
+                    
+                    'nbr_colis'                         =>      $this->post('nbr_colis'),
+                    'nom_dest'                          =>      $this->post('nom_dest'),
+                    'adresse_dest'                      =>      $this->post('adresse_dest'),
+                    'lieu_exped'                        =>      $this->post('lieu_exped'),
+                    'moyen_transport'                   =>      $this->post('moyen_transport')
                 );
                 if (!$data) {
                     $this->response([
@@ -135,7 +153,25 @@ class SIP_commercialisation_eau_douce extends REST_Controller {
 
                     'vl_qte'                            =>      $this->post('vl_qte'),
                     'vl_prix_par_kg'                    =>      $this->post('vl_prix_par_kg'),
-                    'vl_poids_vif'                      =>      $this->post('vl_poids_vif')
+                    'vl_poids_vif'                      =>      $this->post('vl_poids_vif'),
+
+                    'exp_qte'                           =>      $this->post('exp_qte'),
+                    'exp_prix_par_kg'                   =>      $this->post('exp_prix_par_kg'),
+                    'exp_poids_vif'                     =>      $this->post('exp_poids_vif'),
+                    'exp_destination'                   =>      $this->post('exp_destination'),
+
+                    'export_qte'                           =>      $this->post('export_qte'),
+                    'export_prix_par_kg'                   =>      $this->post('export_prix_par_kg'),
+                    'export_poids_vif'                     =>      $this->post('export_poids_vif'),
+                    'export_destination'                   =>      $this->post('export_destination'),
+
+                    'date_expedition'                   =>      $this->post('date_expedition'),
+                    
+                    'nbr_colis'                         =>      $this->post('nbr_colis'),
+                    'nom_dest'                          =>      $this->post('nom_dest'),
+                    'adresse_dest'                      =>      $this->post('adresse_dest'),
+                    'lieu_exped'                        =>      $this->post('lieu_exped'),
+                    'moyen_transport'                   =>      $this->post('moyen_transport')
                 );
 
                 if (!$data || !$id) {
