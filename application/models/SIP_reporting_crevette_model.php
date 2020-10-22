@@ -132,6 +132,76 @@ class SIP_reporting_crevette_model extends CI_Model {
         //FIN COMMERCE
 
 
+        //EXPORTATION
+        public function sip_qte_par_espece_exportation_crevette()
+        {
+
+            $sql = 
+            "
+                CALL sip_qte_par_espece_exportation_crevette 
+
+            " ;
+            return $this->db->query($sql)->result();
+        }
+
+        public function sip_qte_par_mois_exportation_crevette()
+        {
+
+            $sql = 
+            "
+                CALL sip_qte_par_mois_exportation_crevette 
+
+            " ;
+            return $this->db->query($sql)->result();
+        }
+
+        public function sip_qte_par_destination_exportation_crevette()
+        {
+
+            $sql = 
+            "
+                CALL sip_qte_par_destination_exportation_crevette 
+
+            " ;
+            return $this->db->query($sql)->result();
+        }
+
+        public function sip_qte_par_societe_exportation_crevette()
+        {
+
+            $sql = 
+            "
+                CALL sip_qte_par_societe_exportation_crevette 
+
+            " ;
+            return $this->db->query($sql)->result();
+        }
+
+        public function sip_valeurs_par_espece_exportation_crevette()
+        {
+
+            $sql = 
+            "
+                CALL sip_valeurs_par_espece_exportation_crevette 
+
+            " ;
+            return $this->db->query($sql)->result();
+        }
+
+        public function sip_valeurs_en_devise_par_mois_exportation_crevette()
+        {
+
+            $sql = 
+            "
+                CALL sip_valeurs_en_devise_par_mois_exportation_crevette 
+
+            " ;
+            return $this->db->query($sql)->result();
+        }
+
+        //FIN EXPORTATION
+
+
     //FIN RELEVE CAPTURE
 
     

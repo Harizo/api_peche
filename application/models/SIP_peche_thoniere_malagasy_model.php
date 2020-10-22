@@ -58,9 +58,19 @@ class SIP_peche_thoniere_malagasy_model extends CI_Model {
 
         $requete="select pthm.id,pthm.id_navire,n.immatricule,n.nom as nom_navire,pthm.numfp,pthm.nom_capitaine,pthm.nbr_equipage,             
             pthm.date_rapport,pthm.nom_declarant,pthm.date_depart,pthm.date_arrive,pthm.port,              
-            pthm.nbr_jour_en_mer,pthm.nbr_peche,pthm.nbr_peche_zee_mdg 
+            pthm.nbr_jour_en_mer,pthm.nbr_peche,pthm.nbr_peche_zee_mdg,0 as detail_sequence_charge  
 			 from sip_peche_thoniere_malagasy as pthm 
 			  join sip_navire as n on n.id=pthm.id_navire";
+		return $this->db->query($requete)->result();			  
+    }
+    public function SelectByDatedepart_Datearrivee($date_depart,$date_arrive) {
+
+        $requete="select pthm.id,pthm.id_navire,n.immatricule,n.nom as nom_navire,pthm.numfp,pthm.nom_capitaine,pthm.nbr_equipage,             
+            pthm.date_rapport,pthm.nom_declarant,pthm.date_depart,pthm.date_arrive,pthm.port,              
+            pthm.nbr_jour_en_mer,pthm.nbr_peche,pthm.nbr_peche_zee_mdg,0 as detail_sequence_charge  
+			 from sip_peche_thoniere_malagasy as pthm 
+			  join sip_navire as n on n.id=pthm.id_navire  
+			  where pthm.date_depart>='".$date_depart."' and pthm.date_arrive<='".$date_arrive."'";
 		return $this->db->query($requete)->result();			  
     }
     public function findById($id)  {
@@ -90,5 +100,12 @@ class SIP_peche_thoniere_malagasy_model extends CI_Model {
         }
 
     }
+    public function SelectAnnee()  {
+		$requete="select distinct year(date_depart) as annee from sip_peche_thoniere_malagasy"
+		." union "
+		."select distinct year(date_arrive) as annee from sip_peche_thoniere_malagasy"
+		." order by annee";
+		return $this->db->query($requete)->result();			  
+	}
 
 }

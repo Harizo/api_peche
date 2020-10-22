@@ -39,10 +39,6 @@ class SIP_sortie_peche_artisanale_model extends CI_Model {
             'date_arrive'    =>      $sip_sortie_peche_artisanale['date_arrive'],
             'annee'          =>      $sip_sortie_peche_artisanale['annee'],
             'mois'           =>      $sip_sortie_peche_artisanale['mois'],
-            'id_espece'   	 =>      $sip_sortie_peche_artisanale['id_espece'],                 
-            'quantite'       =>      $sip_sortie_peche_artisanale['quantite']        
-
-
         );
     }
     public function delete($id) {
@@ -57,11 +53,26 @@ class SIP_sortie_peche_artisanale_model extends CI_Model {
     public function findAll() {
 
         $requete="select pthe.id,pthe.id_navire,n.immatricule,n.nom as nom_navire,pthe.nom_capitaine,pthe.port,             
-             pthe.num_maree,pthe.date_depart,pthe.date_arrive,pthe.annee,pthe.mois,pthe.id_espece,              
-            pthe.quantite,e.nom as nom_espece,e.code as code_espece   
+             pthe.num_maree,pthe.date_depart,pthe.date_arrive,pthe.annee,pthe.mois                 
 			 from sip_sortie_peche_artisanale as pthe 
-			  join sip_navire as n on n.id=pthe.id_navire  
-			  join sip_espece as e on e.id=pthe.id_espece";
+			  join sip_navire as n on n.id=pthe.id_navire "; 
+		return $this->db->query($requete)->result();			  
+	}
+    public function SelectByFiltre($filtre) {
+
+        $requete="select pthe.id,pthe.id_navire,n.immatricule,n.nom as nom_navire,pthe.nom_capitaine,pthe.port,             
+             pthe.num_maree,pthe.date_depart,pthe.date_arrive,pthe.annee,pthe.mois                 
+			 from sip_sortie_peche_artisanale as pthe 
+			  join sip_navire as n on n.id=pthe.id_navire ".$filtre; 
+		return $this->db->query($requete)->result();			  
+	}
+    public function SelectAnnee()  {
+		$requete="select distinct year(date_depart) as annee from sip_sortie_peche_artisanale"
+		." union "
+		."select distinct year(date_arrive) as annee from sip_sortie_peche_artisanale"
+		." union "
+		."select distinct annee from sip_sortie_peche_artisanale"
+		." order by annee";
 		return $this->db->query($requete)->result();			  
 	}
     public function findById($id)  {
@@ -93,7 +104,7 @@ class SIP_sortie_peche_artisanale_model extends CI_Model {
 
     }
 
-    public function findCleEspece($id_espece)
+    public function findCleEspecce($id_espece)
     {
         $sql = " select *
             FROM sip_sortie_peche_artisanale

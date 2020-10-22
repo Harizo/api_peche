@@ -5,50 +5,50 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // afaka fafana refa ts ilaina
 require APPPATH . '/libraries/REST_Controller.php';
 
-class SIP_sortie_peche_artisanale extends REST_Controller {
+class SIP_sequence_peche_thon_etranger_pi extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('SIP_sortie_peche_artisanale_model', 'SIP_sortie_peche_artisanaleManager');
+        $this->load->model('SIP_sequence_peche_thon_etranger_pi_model', 'SIP_sequence_peche_thon_etrangerManager');
     }
 
     public function index_get() 
     {
         $id = $this->get('id');
-        $date_depart = $this->get('date_depart');
-        $date_arrive = $this->get('date_arrive');
-        $mois = $this->get('mois');
-        $annee = $this->get('annee');
-        $liste_annee = $this->get('liste_annee');
+        $id_sequence_peche_thon_etranger = $this->get('id_sequence_peche_thon_etranger');
             $data = array();
             if ($id) 
-            {               
-                $data = $this->SIP_sortie_peche_artisanaleManager->findById($id);               
+            {
+                
+                $data = $this->SIP_sequence_peche_thon_etrangerManager->findById($id);
+                
             } 
-			else if($liste_annee) {
-                $response = $this->SIP_sortie_peche_artisanaleManager->SelectAnnee();
-                if ($response) 
-                {
-                    $data = $response ;
-                }				
-			} 
-            else if( $date_depart || $date_arrive || $annee || $mois) {
-				$filtre=" where date_depart>='".$date_depart."' and date_arrive<='".$date_arrive."'";
-				if($annee && $annee!="*" && intval($annee) >0) {
-					$filtre=$filtre." and annee=".$annee;
-				}
-				if($mois && $mois!="*" && intval($mois) >0) {
-					$filtre=$filtre." and mois=".$mois;
-				}
-				$data = $this->SIP_sortie_peche_artisanaleManager->SelectByFiltre($filtre);
-			}
             else 
             {
-                $response = $this->SIP_sortie_peche_artisanaleManager->findAll();
-                if ($response) 
+                if ($id_sequence_peche_thon_etranger) 
                 {
-                    $data = $response ;
+                    $response = $this->SIP_sequence_peche_thon_etrangerManager->findAll_by_sequence_peche_thon_etranger_pi($id_sequence_peche_thon_etranger);
+                    if ($response) 
+                    {
+                        $data = $response ;
+                    }
                 }
+                else
+                {
+
+                    if ($get_nbr_sequence_peche == 1) 
+                    {
+                        $response = $this->SIP_sequence_peche_thon_etrangerManager->get_nbr_sequence_peche($annee);
+                        if ($response) 
+                        {
+                            $data = $response ;
+                        }
+                    }
+                    else
+
+                        $data = $this->SIP_sequence_peche_thon_etrangerManager->findAll();
+                }
+
             }
         if (count($data)>0) 
         {
@@ -73,15 +73,18 @@ class SIP_sortie_peche_artisanale extends REST_Controller {
         $supprimer = $this->post('supprimer') ;
         if ($supprimer == 0) 
         {
-			$data = array(                   
-				'id_navire'         =>  $this->post('id_navire'),              
-				'nom_capitaine'     =>  $this->post('nom_capitaine'),              
-				'port'              =>  $this->post('port'),              
-				'num_maree'         =>  $this->post('num_maree'),              
-				'date_depart'       =>  $this->post('date_depart'),              
-				'date_arrive'       =>  $this->post('date_arrive'),              
-				'annee'             =>  $this->post('annee'),              
-				'mois'              =>  $this->post('mois'),              
+			$data = array(
+				'id_sequence_peche_thon_etranger' => $this->post('id_sequence_peche_thon_etranger'),
+				'date_pi'                         => $this->post('date_pi'),
+				// 'annee'                           => $this->post('annee'),
+				// 'jour'                            => $this->post('jour'),
+				// 'mois'                            => $this->post('mois'),
+				'postlatitude'                    => $this->post('postlatitude'),
+				'postlongitude'                   => $this->post('postlongitude'),
+				'temperature'                     => $this->post('temperature'),
+				'nb_ham_util'                     => $this->post('nb_ham_util'),
+				'total_estime'                    => $this->post('total_estime'),
+				'total_debarque'                  => $this->post('total_debarque'),
 			);
             if ($id == 0) 
             {
@@ -92,7 +95,7 @@ class SIP_sortie_peche_artisanale extends REST_Controller {
                         'message' => 'No request found'
                             ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $dataId = $this->SIP_sortie_peche_artisanaleManager->add($data);
+                $dataId = $this->SIP_sequence_peche_thon_etrangerManager->add($data);
                 if (!is_null($dataId)) {
                     $this->response([
                         'status' => TRUE,
@@ -116,7 +119,7 @@ class SIP_sortie_peche_artisanale extends REST_Controller {
                         'message' => 'No request found'
                     ], REST_Controller::HTTP_BAD_REQUEST);
                 }
-                $update = $this->SIP_sortie_peche_artisanaleManager->update($id, $data);
+                $update = $this->SIP_sequence_peche_thon_etrangerManager->update($id, $data);
                 if(!is_null($update)) {
                     $this->response([
                         'status' => TRUE,
@@ -140,7 +143,7 @@ class SIP_sortie_peche_artisanale extends REST_Controller {
                     'message' => 'No request found'
                         ], REST_Controller::HTTP_BAD_REQUEST);
             }
-            $delete = $this->SIP_sortie_peche_artisanaleManager->delete($id);         
+            $delete = $this->SIP_sequence_peche_thon_etrangerManager->delete($id);         
             if (!is_null($delete)) {
                 $this->response([
                     'status' => TRUE,

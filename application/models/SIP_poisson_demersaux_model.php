@@ -34,8 +34,6 @@ class SIP_poisson_demersaux_model extends CI_Model {
             'annee'	                => $SIP_poisson_demersaux['annee'],              
             'mois'	                => $SIP_poisson_demersaux['mois'],              
             'reference_produit'	    => $SIP_poisson_demersaux['reference_produit'],              
-            'id_espece'	            => $SIP_poisson_demersaux['id_espece'],              
-            'quantite'	            => $SIP_poisson_demersaux['quantite'],              
         );
     }
     public function delete($id) {
@@ -49,13 +47,29 @@ class SIP_poisson_demersaux_model extends CI_Model {
     }
     public function findAll() {
         $requete="select pthe.id,pthe.id_navire,n.immatricule,n.nom as nom_navire,pthe.nom_capitaine,pthe.port,             
-             pthe.num_maree,pthe.date_depart,pthe.date_arrive,pthe.annee,pthe.mois,pthe.id_espece,              
-            pthe.quantite,e.nom as nom_espece,e.code as code_espece,pthe.reference_produit    
+             pthe.num_maree,pthe.date_depart,pthe.date_arrive,pthe.annee,pthe.mois,              
+           pthe.reference_produit    
 			 from sip_poisson_demersaux as pthe 
-			  join sip_navire as n on n.id=pthe.id_navire  
-			  join sip_espece as e on e.id=pthe.id_espece";
+			  join sip_navire as n on n.id=pthe.id_navire "; 
 		return $this->db->query($requete)->result();			  
     }
+    public function SelectByFiltre($filtre) {
+        $requete="select pthe.id,pthe.id_navire,n.immatricule,n.nom as nom_navire,pthe.nom_capitaine,pthe.port,             
+             pthe.num_maree,pthe.date_depart,pthe.date_arrive,pthe.annee,pthe.mois,              
+           pthe.reference_produit    
+			 from sip_poisson_demersaux as pthe 
+			  join sip_navire as n on n.id=pthe.id_navire ".$filtre; 
+		return $this->db->query($requete)->result();			  
+    }
+    public function SelectAnnee()  {
+		$requete="select distinct year(date_depart) as annee from sip_poisson_demersaux"
+		." union "
+		."select distinct year(date_arrive) as annee from sip_poisson_demersaux"
+		." union "
+		."select distinct annee from sip_poisson_demersaux"
+		." order by annee";
+		return $this->db->query($requete)->result();			  
+	}
     public function findById($id)  {
         $this->db->where("id", $id);
         $q = $this->db->get($this->table);

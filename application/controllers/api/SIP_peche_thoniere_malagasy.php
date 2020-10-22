@@ -15,20 +15,28 @@ class SIP_peche_thoniere_malagasy extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
-        $id_navire       = $this->get('id_navire');
-        $data = array();      
-        if($id_navire)
-        {
-            $data = $this->SIP_peche_thoniere_malagasyManager->findCleNavire($id_navire);
-           
-        }
-       
-        else
-        {
+		$date_depart = $this->get('date_depart');
+		$date_arrive = $this->get('date_arrive');
+        $liste_annee = $this->get('liste_annee');		
+            $data = array();
             if ($id) 
             {               
-                $data = $this->SIP_peche_thoniere_malagasyManager->findById($id);               
+                $data = $this->SIP_peche_thoniere_malagasyManager->findById($id);  
             } 
+			else if($liste_annee) {
+                $response = $this->SIP_peche_thoniere_malagasyManager->SelectAnnee();
+                if ($response) 
+                {
+                    $data = $response ;
+                }				
+			} 			
+            else if($date_depart && $date_arrive) {
+				$response = $this->SIP_peche_thoniere_malagasyManager->SelectByDatedepart_Datearrivee($date_depart,$date_arrive);
+                if ($response) 
+                {
+                    $data = $response ;
+                }				
+			}
             else 
             {
                 $response = $this->SIP_peche_thoniere_malagasyManager->findAll();
@@ -36,8 +44,7 @@ class SIP_peche_thoniere_malagasy extends REST_Controller {
                 {
                     $data = $response ;
                 }
-            }
-        }
+           }
         if (count($data)>0) 
         {
             $this->response([
@@ -61,22 +68,22 @@ class SIP_peche_thoniere_malagasy extends REST_Controller {
         $supprimer = $this->post('supprimer') ;
         if ($supprimer == 0) 
         {
+			$data = array(                   
+				'id_navire'         =>  $this->post('id_navire'),              
+				'numfp'             =>  $this->post('numfp'),              
+				'nom_capitaine'     =>  $this->post('nom_capitaine'),              
+				'nbr_equipage'      =>  $this->post('nbr_equipage'),              
+				'date_rapport'      =>  $this->post('date_rapport'),              
+				'nom_declarant'     =>  $this->post('nom_declarant'),              
+				'date_depart'       =>  $this->post('date_depart'),              
+				'date_arrive'       =>  $this->post('date_arrive'),              
+				'port'              =>  $this->post('port'),              
+				'nbr_jour_en_mer'   =>  $this->post('nbr_jour_en_mer'),              
+				'nbr_peche'         =>  $this->post('nbr_peche'),              
+				'nbr_peche_zee_mdg' =>  $this->post('nbr_peche_zee_mdg'),              
+			);
             if ($id == 0) 
             {
-                $data = array(                   
-                    'id_navire'         =>  $this->post('id_navire'),              
-                    'numfp'             =>  $this->post('numfp'),              
-                    'nom_capitaine'     =>  $this->post('nom_capitaine'),              
-                    'nbr_equipage'      =>  $this->post('nbr_equipage'),              
-                    'date_rapport'      =>  $this->post('date_rapport'),              
-                    'nom_declarant'     =>  $this->post('nom_declarant'),              
-                    'date_depart'       =>  $this->post('date_depart'),              
-                    'date_arrive'       =>  $this->post('date_arrive'),              
-                    'port'              =>  $this->post('port'),              
-                    'nbr_jour_en_mer'   =>  $this->post('nbr_jour_en_mer'),              
-                    'nbr_peche'         =>  $this->post('nbr_peche'),              
-                    'nbr_peche_zee_mdg' =>  $this->post('nbr_peche_zee_mdg'),              
-                );
                 if (!$data) {
                     $this->response([
                         'status' => FALSE,
@@ -101,20 +108,6 @@ class SIP_peche_thoniere_malagasy extends REST_Controller {
             } 
             else 
             {
-                $data = array(                   
-                    'id_navire'         =>  $this->post('id_navire'),              
-                    'numfp'             =>  $this->post('numfp'),              
-                    'nom_capitaine'     =>  $this->post('nom_capitaine'),              
-                    'nbr_equipage'      =>  $this->post('nbr_equipage'),              
-                    'date_rapport'      =>  $this->post('date_rapport'),              
-                    'nom_declarant'     =>  $this->post('nom_declarant'),              
-                    'date_depart'       =>  $this->post('date_depart'),              
-                    'date_arrive'       =>  $this->post('date_arrive'),              
-                    'port'              =>  $this->post('port'),              
-                    'nbr_jour_en_mer'   =>  $this->post('nbr_jour_en_mer'),              
-                    'nbr_peche'         =>  $this->post('nbr_peche'),              
-                    'nbr_peche_zee_mdg' =>  $this->post('nbr_peche_zee_mdg'),              
-                );
                 if (!$data || !$id) {
                     $this->response([
                         'status' => FALSE,

@@ -15,12 +15,34 @@ class SIP_poisson_demersaux extends REST_Controller {
     public function index_get() 
     {
         $id = $this->get('id');
+        $date_depart = $this->get('date_depart');
+        $date_arrive = $this->get('date_arrive');
+        $mois = $this->get('mois');
+        $annee = $this->get('annee');
+		$liste_annee = $this->get('liste_annee');
             $data = array();
             if ($id) 
             {               
                 $data = $this->SIP_poisson_demersauxManager->findById($id);               
             } 
-            else 
+			else if($liste_annee) {
+                $response = $this->SIP_poisson_demersauxManager->SelectAnnee();
+                if ($response) 
+                {
+                    $data = $response ;
+                }				
+			} 
+            else if( $date_depart || $date_arrive || $annee || $mois) {
+				$filtre=" where date_depart>='".$date_depart."' and date_arrive<='".$date_arrive."'";
+				if($annee && $annee!="*" && intval($annee) >0) {
+					$filtre=$filtre." and annee=".$annee;
+				}
+				if($mois && $mois!="*" && intval($mois) >0) {
+					$filtre=$filtre." and mois=".$mois;
+				}
+				$data = $this->SIP_poisson_demersauxManager->SelectByFiltre($filtre);
+			}
+			else 
             {
                 $response = $this->SIP_poisson_demersauxManager->findAll();
                 if ($response) 
@@ -61,8 +83,6 @@ class SIP_poisson_demersaux extends REST_Controller {
 				'annee'             =>  $this->post('annee'),              
 				'mois'              =>  $this->post('mois'),              
 				'reference_produit' =>  $this->post('reference_produit'),              
-				'id_espece'         =>  $this->post('id_espece'),              
-				'quantite'          =>  $this->post('quantite'),              
 			);
             if ($id == 0) 
             {
