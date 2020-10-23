@@ -16,8 +16,10 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
        // set_time_limit(0);
        // ini_set ('memory_limit', '4096M');
         $pivot = $this->get('menu');
+        $etat_excel = $this->get('etat_excel');
         $menu_excel = $this->get('menu_excel');
         $repertoire = $this->get('repertoire');
+        $choix_requete = $this->get('choix_requete');
         $data = array();
         
         //  requête : REQ_1
@@ -63,8 +65,8 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
 
         if (count($data)>0) {
            
-            if ($menu_excel=="excel_requetes")
-                $this->genererexcel($pivot, $menu_excel, $data, $repertoire);
+            if ($menu_excel=="excel_requetes" && $etat_excel==1)
+                $this->genererexcel($pivot, $menu_excel, $data, $repertoire, $choix_requete);
             else 
             {
                 
@@ -109,11 +111,11 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
         return $res = $part.$val ;
     }
 
-    public function genererexcel($pivot, $menu_excel,$data,$repertoire)
+    public function genererexcel($pivot, $menu_excel,$data,$repertoire, $choix_requete)
     {   require_once 'Classes/PHPExcel.php';
         require_once 'Classes/PHPExcel/IOFactory.php';
 
-        $nom_file='fiche_requête_vente_poissonnerie_reporting';
+        $nom_file="Fiche reporting vente poissonnerie ".$pivot ;
         $directoryName = dirname(__FILE__) ."/../../../../export_excel/".$repertoire;
         //Check if the directory already exists.
         if(!is_dir($directoryName))
@@ -121,13 +123,13 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
             mkdir($directoryName, 0777,true);
         }
         $objPHPExcel = new PHPExcel();
-        $objPHPExcel->getProperties()->setCreator("Myexcel")
-                    ->setLastModifiedBy("Me")
-                    ->setTitle("reporting_vente_poissonnerie")
-                    ->setSubject("reporting_vente_poissonnerie")
-                    ->setDescription("reporting_vente_poissonnerie")
-                    ->setKeywords("reporting_vente_poissonnerie")
-                    ->setCategory("reporting_vente_poissonnerie");
+        $objPHPExcel->getProperties()->setCreator("S.I.P Madagascar")
+                    ->setLastModifiedBy("S.I.P Madagascar")
+                    ->setTitle("reporting vente poissonnerie")
+                    ->setSubject("reporting vente poissonnerie")
+                    ->setDescription("reporting vente poissonnerie")
+                    ->setKeywords("reporting vente poissonnerie")
+                    ->setCategory("reporting vente poissonnerie");
 
         $ligne=1;            
         // Set Orientation, size and scaling
@@ -141,9 +143,12 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
         $objPHPExcel->getActiveSheet()->getPageMargins()->SetLeft(0.64); //***pour marge gauche
         $objPHPExcel->getActiveSheet()->getPageMargins()->SetRight(0.64); //*** pour marge droite
 
-        for ($alphabet=65; $alphabet <87 ; $alphabet++) 
+        $entete = array_keys((array)$data[0]) ;
+        $alphabet = 64 ;
+        foreach ($entete as $key => $value) {
+            $alphabet++ ;
             $objPHPExcel->getActiveSheet()->getColumnDimension(chr($alphabet))->setautoSize(true);
-            
+        }
 
         $objPHPExcel->getActiveSheet()->setTitle("Requête_poissonnerie_reporting");
         $objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter('&R&11&B Page &P / &N');
@@ -187,7 +192,6 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
 
             )
 
-            
         );
         $styleSousTitre = array
         (
@@ -197,6 +201,11 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
                 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
             ),
 
+            'font' => array
+            (
+                'bold'  => true,
+                'size'  => 11,
+            ),
             'borders' => array
             (
                 'allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN)
@@ -215,93 +224,46 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
                 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
             )
         );
-         
-            if ($pivot=='req_1_vente_poissonneries') {
+        
+        $fin_colonne = count($entete)-1;
+        $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
+        $objPHPExcel->getActiveSheet()->mergeCells(chr(65).$ligne.":".chr(65+$fin_colonne).$ligne);
+        $objPHPExcel->getActiveSheet()->getStyle(chr(65).$ligne.":".chr(65+$fin_colonne).$ligne)->applyFromArray($styleTitre);
+        $objPHPExcel->getActiveSheet()->getStyle(chr(65).$ligne.":".chr(65+$fin_colonne). $ligne)->getAlignment()->setWrapText(true);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(65).$ligne, "Reporting vente poissonnerie ".$choix_requete);
+    
+    $ligne+=2;
+    $alphabet = 65 ;
 
-                $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité vendues par poissonneries');
-            }
-               
-            if ($pivot=='req_2_vente_poissonneries') {
+    /* ENTETE */
+    foreach ($data[0] as $key => $value) {
+        $key = str_replace('_', ' ', $key) ;
 
-                $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité vendues par poissonneries mois');
-            }
+        $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->getAlignment()->setWrapText(true);
+        $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->applyFromArray($styleSousTitre);
+        $objPHPExcel->getActiveSheet()->mergeCells(chr($alphabet).$ligne.":".chr($alphabet).$ligne);
+        $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet).$ligne)->applyFromArray($styleSousTitre);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($alphabet).$ligne, $key);
+        $alphabet ++ ;
+    }
 
-            if ($pivot=='req_3_vente_poissonneries') {
+    /* CORPS */
 
-                $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Prix moyenne produits par poissonneries');
-             }
-
-            if ($pivot=='req_4_vente_poissonneries') {
-
-                $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité vendues par familles');
-             }
-
-            if ($pivot=='req_5_vente_poissonneries') {
-
-                $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Prix moyenne par famille');
-            }
-
-            if ($pivot=='req_6_vente_poissonneries') {
-
-                $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Chiffre d\'affaire par produits poissonneries');
-             }
-
-             if ($pivot=='req_7_vente_poissonneries') {
-
-                $objPHPExcel->getActiveSheet()->getRowDimension($ligne)->setRowHeight(40);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr(66).$ligne.":".chr(75).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr(66).$ligne.":".chr(75).$ligne)->applyFromArray($styleTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(66).$ligne, 'Quantité vendues par produit poissonneries');
-            }
-
-            $ligne++;
+        for ($i=0; $i <count($data) ; $i++) {
             $alphabet = 65 ;
-
-            /* ENTETE */
-            foreach ($data[0] as $key => $value) {
-                $key = str_replace('_', ' ', $key) ;
+            $ligne ++;
+            foreach ($entete as $key => $value) {
+                $contenu = $data[$i]->$value ;
+                if ($contenu>0)
+                    $contenu = $this-> nombreFormat($contenu);
 
                 $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->getAlignment()->setWrapText(true);
-                $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->applyFromArray($styleSousTitre);
-                $objPHPExcel->getActiveSheet()->mergeCells(chr($alphabet).$ligne.":".chr($alphabet).$ligne);
-                $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet).$ligne)->applyFromArray($styleSousTitre);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($alphabet).$ligne, $key);
+                $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->applyFromArray($stylecontenu);
+
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($alphabet).$ligne, $contenu);
                 $alphabet ++ ;
             }
-
-            /* CORPS */
-            for ($i=0; $i <count($data) ; $i++){
-                $ligne ++;
-                $alphabet = 65 ;
-                foreach ($data[$i] as $key => $value) {
-                    if ($value>0)
-                        $value = $this-> nombreFormat($value);
-
-                    $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->getAlignment()->setWrapText(true);
-                    $objPHPExcel->getActiveSheet()->getStyle(chr($alphabet).$ligne.":".chr($alphabet). $ligne)->applyFromArray($stylecontenu);
-
-                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($alphabet).$ligne, $value );
-                    $alphabet ++ ;
-                }
-            }
+        } 
 
         // AJOUTER LE NOM DU FICHIER EN nom_file + entete par exemple
         
@@ -309,7 +271,7 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
         {
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             $objWriter->save(dirname(__FILE__) . "/../../../../export_excel/reporting_vente_poissonnerie/".$nom_file.".xlsx");
-            
+
             $this->response([
                 'status' => TRUE,
                 'nom_file' => $nom_file.".xlsx",
