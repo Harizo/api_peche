@@ -230,7 +230,7 @@ class SIP_reporting_vente_poissonnerie extends REST_Controller {
         $objPHPExcel->getActiveSheet()->mergeCells(chr(65).$ligne.":".chr(65+$fin_colonne).$ligne);
         $objPHPExcel->getActiveSheet()->getStyle(chr(65).$ligne.":".chr(65+$fin_colonne).$ligne)->applyFromArray($styleTitre);
         $objPHPExcel->getActiveSheet()->getStyle(chr(65).$ligne.":".chr(65+$fin_colonne). $ligne)->getAlignment()->setWrapText(true);
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(65).$ligne, "Reporting vente poissonnerie ".$choix_requete);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr(65).$ligne, "Reporting vente poissonnerie: ".$choix_requete);
     
     $ligne+=2;
     $alphabet = 65 ;
