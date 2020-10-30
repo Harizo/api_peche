@@ -17,9 +17,9 @@ class SIP_reporting_peche_artisanale_model extends CI_Model {
 	public function reporting_artisanale_demersaux_par_espece_par_mois($debut,$fin,$table_en_tete,$table_detail,$cle_etrangere_detail) {
 		 // PAR ESPECE PAR MOIS
 		 // Reporting ACCESS 11.3
-		$requete="select fin.annee,fin.code_espece,fin.nom_espece,"
+		$requete="select fin.annee as Année,fin.nom_espece as Espèce,"
 				." (fin.janvier + fin.fevrier + fin.mars + fin.avril + fin.mai + fin.juin + fin.juillet + fin.aout + fin.septembre + fin.octobre + fin.novembre + fin.decembre) as Total,"
-			." fin.janvier,fin.fevrier,fin.mars,fin.avril,fin.mai,fin.juin,fin.juillet,fin.aout,fin.septembre,fin.octobre,fin.novembre,fin.decembre"	
+			." fin.janvier as Janv,fin.fevrier as Fév,fin.mars as Mars,fin.avril as Avr,fin.mai as Mai,fin.juin as Juin,fin.juillet as Juil,fin.aout as Aout,fin.septembre as Sept,fin.octobre as Oct,fin.novembre as Nov,fin.decembre as Déc"	
 			." FROM( "
 			."  select trois.annee,trois.code_espece,trois.nom_espece,"
 			."  sum(trois.janvier) as janvier,sum(trois.fevrier) as fevrier,sum(trois.mars) as mars,sum(trois.avril) as avril,"
@@ -79,12 +79,12 @@ class SIP_reporting_peche_artisanale_model extends CI_Model {
 	public function reporting_artisanale_demersaux_par_mois_navire_espece($debut,$fin,$table_en_tete,$table_detail,$cle_etrangere_detail) {
 		// PAR MOIS PAR NAVIRE ET PAR ESPECE
 		// Reporting ACCESS 11.6
-		$requete="select final.annee,final.nom_navire,final.armateur,final.code_espece,final.nom_espece,"
+		$requete="select final.annee as Année,final.nom_navire as Navire,final.armateur as Armateur,final.nom_espece as Espèce,"
 			." sum(final.janvier+final.fevrier+final.mars+final.avril+final.mai+final.juin + "
-			." final.juillet+final.aout+final.septembre+final.octobre+final.novembre+final.decembre) as total,"
-			." sum(final.janvier) as janvier,sum(final.fevrier) as fevrier,sum(final.mars) as mars,sum(final.avril) as avril,"
-			." sum(final.mai) as mai,sum(final.juin) as juin,sum(final.juillet) as juillet,sum(final.aout) as aout,"
-			." sum(final.septembre) as septembre,sum(final.octobre) as octobre,sum(final.novembre) as novembre,sum(final.decembre) as decembre"
+			." final.juillet+final.aout+final.septembre+final.octobre+final.novembre+final.decembre) as Total,"
+			." sum(final.janvier) as Janv,sum(final.fevrier) as Fév,sum(final.mars) as Mars,sum(final.avril) as Avr,"
+			." sum(final.mai) as Mai,sum(final.juin) as Juin,sum(final.juillet) as Juil,sum(final.aout) as Aout,"
+			." sum(final.septembre) as Sept,sum(final.octobre) as Oct,sum(final.novembre) as Nov,sum(final.decembre) as Déc"
 			." from "
 			." ("
 			." select trois.annee,trois.nom_navire,trois.armateur,trois.code_espece,trois.nom_espece,"
