@@ -52,7 +52,9 @@ class SIP_receptiondesdonneesmobile extends REST_Controller {
 				'response' => $dataId,
 				'message' => "Inserer avec succès"
 					], REST_Controller::HTTP_OK);
-		} else {
+		} 
+        else 
+        {
 			$this->response([
 				'status' => FALSE,
 				'response' => 'ECHEC',
