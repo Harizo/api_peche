@@ -192,6 +192,30 @@ class SIP_export_vente_poissonnerie extends REST_Controller
                 break;
         }
     }
+
+    public function nombreFormat($res)
+    {
+        $data = str_ireplace('.', ',', $res) ; // remplace point en virgule
+        $part = '' ;
+        $val = '' ;
+        for ($i=0; $i < strlen($data); $i++) { 
+          if ($data[$i]==',') { // test si on a un virgule
+            $part = substr($data, 0, $i); // découpe la chaine avant le virgule
+            $val = substr($data, $i-strlen($data)); // découpe la chaine just au virgule
+            $inverse = strrev($part); // renverse la chaine
+            $part = chunk_split($inverse, 3, ' ') ; // ajout un espace à chaque 3 lettrede la chaine
+            $part = strrev($part) ; // reenverse la chaine
+          }
+          if($part==''){
+            $inverse = strrev($res); // renverse la chaine
+            $part = chunk_split($inverse, 3, ' ') ; // ajout un espace à chaque 3 lettrede la chaine
+            $part = strrev($part) ; // reenverse la chaine
+
+          }
+        }
+        return $res = $part.$val ;
+    }
+
     public function genererexcelpoissonnerie($poissonnerie, $data,$id_district, $id_commune, $dist, $com)
     {	require_once 'Classes/PHPExcel.php';
 		require_once 'Classes/PHPExcel/IOFactory.php';
@@ -714,9 +738,9 @@ class SIP_export_vente_poissonnerie extends REST_Controller
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->designation_article); $ABC++ ;
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->libelle_presentation); $ABC++ ; 
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->libelle_conservation);$ABC++ ;
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->quantite_vendu); $ABC++ ;	 
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->prix_kg); $ABC++ ; 
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->chiffre_affaire); $ABC++ ; 		 
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$this->nombreFormat($value->quantite_vendu)." Kg"); $ABC++ ; 
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$this->nombreFormat($value->prix_kg)." Ar/KG"); $ABC++ ; 
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$this->nombreFormat($value->chiffre_affaire)." Ar"); $ABC++ ; 
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($ABC).$ligne,$value->observations);
 			
 		}
