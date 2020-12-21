@@ -67,9 +67,10 @@ class SIP_sequence_peche_thon_etranger_capture_model extends CI_Model {
     {  
 
         $requete="select seqcap.id,seqcap.id_sequence_peche_thon_etranger,seqcap.id_espece,seqcap.qte,seqcap.nbre,             
-            esp.nom as espece,esp.code,esp.type_espece,esp.nom_scientifique  
+            esp.nom as nom_espece,esp.code as code_espece,esp.type_espece as id_type_espece,esp.nom_scientifique,tesp.libelle as type_espece     
 			 from sip_sequence_peche_thon_etranger_capture as seqcap 
 			  left join sip_espece as esp on esp.id=seqcap.id_espece 
+			  left join sip_type_espece as tesp on tesp.id=esp.type_espece 
 			   where seqcap.id_sequence_peche_thon_etranger=".$id_sequence_peche_thon_etranger
 			   ." and esp.type_espece=".$type_espece;
 		return $this->db->query($requete)->result();			  

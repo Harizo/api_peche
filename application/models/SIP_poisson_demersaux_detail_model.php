@@ -40,15 +40,19 @@ class SIP_poisson_demersaux_detail_model extends CI_Model {
         }  
     }
     public function findAll() {
-        $requete="select pdemers.id,pdemers.id_sip_poisson_demersaux,pdemers.id_espece,pdemers.quantite,e.nom as nom_espece,e.code as code_espece    
+        $requete="select pdemers.id,pdemers.id_sip_poisson_demersaux,pdemers.id_espece,pdemers.quantite,e.nom as nom_espece,e.code as code_espece,
+             te.libelle as type_espece		
 			 from sip_poisson_demersaux_detail as pdemers 
-			  join sip_espece as e on e.id=pdemers.id_espece";
+			  join sip_espece as e on e.id=pdemers.id_espece
+			  join sip_type_espece as te on te.id=e.type_espece";
 		return $this->db->query($requete)->result();			  
     }
     public function findById_poisson_demersaux($id_poisson_demersaux) {
-        $requete="select pdemers.id,pdemers.id_sip_poisson_demersaux,pdemers.id_espece,pdemers.quantite,e.nom as nom_espece,e.code as code_espece    
+        $requete="select pdemers.id,pdemers.id_sip_poisson_demersaux,pdemers.id_espece,pdemers.quantite,e.nom as nom_espece,e.code as code_espece,    
+		  	e.type_espece as id_type_espece,te.libelle as type_espece	
 			 from sip_poisson_demersaux_detail as pdemers 
 			  join sip_espece as e on e.id=pdemers.id_espece   
+			  join sip_type_espece as te on te.id=e.type_espece
 			  where pdemers.id_sip_poisson_demersaux=".$id_poisson_demersaux;
 		return $this->db->query($requete)->result();			  
     }

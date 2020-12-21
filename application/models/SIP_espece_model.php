@@ -143,4 +143,17 @@ class SIP_espece_model extends CI_Model {
             return null;
         } 
     }    
+	public function find_by_type_espece($type_espece) {
+        $requete="select distinct esp.id,esp.code,esp.nom as nom_espece,esp.type_espece as id_type_espece,esp.nom_francaise, esp.nom_scientifique,esp.nom_francaise,esp.nom_local,tesp.libelle as type_espece"
+			        ." from sip_espece as esp" 
+			        ." left outer join sip_type_espece as tesp on tesp.id=esp.type_espece" 
+			        ." where esp.type_espece=".$type_espece;
+		return $this->db->query($requete)->result();			  
+		 if($result)
+        {
+            return $result;
+        }else{
+            return null;
+        }
+	}
 }

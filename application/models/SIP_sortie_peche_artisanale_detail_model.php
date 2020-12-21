@@ -56,9 +56,10 @@ class SIP_sortie_peche_artisanale_detail_model extends CI_Model {
 	}
     public function findById_sortie_peche_artisanale($id_sortie_peche_artisanale) {
 
-        $requete="select poisart.id,poisart.id_sip_sortie_peche_artisanale,poisart.id_espece,poisart.quantite,e.nom as nom_espece,e.code as code_espece   
+        $requete="select poisart.id,poisart.id_sip_sortie_peche_artisanale,poisart.id_espece,poisart.quantite,e.nom as nom_espece,e.code as code_espece,e.type_espece as id_type_espece,tesp.libelle as type_espece        
 			 from sip_sortie_peche_artisanale_detail as poisart 
 			  join sip_espece as e on e.id=poisart.id_espece   
+			  left join sip_type_espece as tesp on tesp.id=e.type_espece 
 			  where poisart.id_sip_sortie_peche_artisanale=".$id_sortie_peche_artisanale;
 		return $this->db->query($requete)->result();			  
 	}

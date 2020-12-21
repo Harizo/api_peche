@@ -52,7 +52,7 @@ class sip_type_espece_model extends CI_Model {
     {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->order_by('id')
+                        ->order_by('libelle')
                         ->get()
                         ->result();
         if($result)
