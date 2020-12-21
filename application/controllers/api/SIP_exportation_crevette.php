@@ -22,14 +22,12 @@ class SIP_exportation_crevette extends REST_Controller {
         if (($id_presentation)||($id_conservation)) 
         {
            if($id_conservation)
-            {
-                $data = $this->SIP_exportation_crevetteManager->findCleConservation($id_conservation);
-            }
+                $x = $this->SIP_exportation_crevetteManager->findCleConservation($id_conservation);
 
             if($id_presentation)
-            {
-                $data = $this->SIP_exportation_crevetteManager->findClePresentation($id_presentation);
-            }
+                $x = $this->SIP_exportation_crevetteManager->findClePresentation($id_presentation);
+            if ($x) 
+                $data = $x;
         }
         
         else

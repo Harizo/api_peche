@@ -19,34 +19,31 @@ class SIP_societe_crevette extends REST_Controller {
         $id_base_geo = $this->get('id_base_geo');
         $data = array();
         if (($id_base_geo) || ($id_base_cote)) {
-            if ($id_base_geo) {
-                $data = $this->SIP_societe_crevetteManager->findBaseGeo($id_base_geo);
-            }
+            if ($id_base_geo) 
+                $x = $this->SIP_societe_crevetteManager->findBaseGeo($id_base_geo);
 
-            if ($id_base_cote) {
-               $data = $this->SIP_societe_crevetteManager->findBaseCote($id_base_cote);
-            }
-        } else {
-            if ($id) 
-            {
-                
-                $SIP_societe_crevette = $this->SIP_societe_crevetteManager->findById($id);
-                $data['id'] = $SIP_societe_crevette->id;
-                $data['code'] = $SIP_societe_crevette->code;
-                $data['nom'] = $SIP_societe_crevette->nom;
-            } 
+            if ($id_base_cote) 
+               $x = $this->SIP_societe_crevetteManager->findBaseCote($id_base_cote);
+
+           if ($x) 
+               $data = $x ;
+           
+        } 
+        else {
+            if ($id)                 
+                $data = $this->SIP_societe_crevetteManager->findById($id);
+     
             else 
             {
                 $response = $this->SIP_societe_crevetteManager->findAll();
                 if ($response) 
-                {
                     $data = $response ;
-                }
 
             }
         }
-        if (count($data)>0) 
-        {
+
+        if (count($data) > 0) {
+              
             $this->response([
                 'status' => TRUE,
                 'response' => $data,
@@ -61,6 +58,7 @@ class SIP_societe_crevette extends REST_Controller {
                 'message' => 'No data were found'
             ], REST_Controller::HTTP_OK);
         }
+        
     }
     public function index_post() 
     {

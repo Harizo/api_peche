@@ -23,19 +23,16 @@ class SIP_commercialisation_crevette extends REST_Controller {
          if (($id_presentation)||($id_conservation)||($id_espece)) 
         {
            if($id_conservation)
-            {
-                $data = $this->SIP_commercialisation_crevetteManager->findCleConservation($id_conservation);
-            }
+                $x = $this->SIP_commercialisation_crevetteManager->findCleConservation($id_conservation);
 
             if($id_presentation)
-            {
-                $data = $this->SIP_commercialisation_crevetteManager->findClePresentation($id_presentation);
-            }
+                $x = $this->SIP_commercialisation_crevetteManager->findClePresentation($id_presentation);
 
             if($id_espece)
-            {
-                $data = $this->SIP_commercialisation_crevetteManager->findEspece($id_espece);
-            }
+                $x = $this->SIP_commercialisation_crevetteManager->findEspece($id_espece);
+
+            if ($x) 
+                $data = $x ;
         }
         else
         {
