@@ -23,36 +23,28 @@ class SIP_poissonnerie extends REST_Controller {
         
         if ($id_region)
         { 
-            if ( $id_district && $id_commune && $id_commune!='null' && $id_district!='null' ) 
+            if (($id_district!='null' && $id_district!='-') && ($id_commune!='null' && $id_commune!='-')) 
                 $data = $this->SIP_poissonnerieManager->findByRegionDistrictCommune($id_region,$id_district,$id_commune);
              
             else
             {
-                if ( $id_district &&$id_district!='null'&&$id_commune=='null') 
-                $data = $this->SIP_poissonnerieManager->findByRegionDistrict($id_region,$id_district);
-            
+                if ( $id_district &&$id_district!='null'&&$id_district!='-'&&($id_commune=='null'||$id_commune=='-')) 
+                    $data = $this->SIP_poissonnerieManager->findByRegionDistrict($id_region,$id_district);
 
-                else  {
+                else  
                     $data = $this->SIP_poissonnerieManager->findCleRegion($id_region);
-                 } 
                     
             }
-            
-            
         }
 
         else {
             if ($id) 
-            { 
                  $data = $this->SIP_poissonnerieManager->findById($id);
-            } 
             else 
             { 
                 $response = $this->SIP_poissonnerieManager->findAll();
                 if ($response) 
-                {
                     $data = $response ;
-                }
             }
         } 
              

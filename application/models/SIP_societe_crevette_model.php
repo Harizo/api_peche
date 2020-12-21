@@ -67,11 +67,11 @@ class SIP_societe_crevette_model extends CI_Model {
         }  
     }
 
-     public function findBaseGeo($lib_base_geo)
+     public function findBaseGeo($id_base_geo)
     {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->where('base_geo=',$lib_base_geo)
+                        ->where('base_geo=',$id_base_geo)
                         ->get()
                         ->result();
         if($result)
@@ -83,11 +83,11 @@ class SIP_societe_crevette_model extends CI_Model {
     
     }
 
-    public function findBaseCote($lib_base_cote)
+    public function findBaseCote($id_base_cote)
     {
         $result =  $this->db->select('*')
                         ->from($this->table)
-                        ->where('base_cote=',$lib_base_cote)
+                        ->where('base_cote=',$id_base_cote)
                         ->get()
                         ->result();
         if($result)

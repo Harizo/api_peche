@@ -197,7 +197,7 @@ class Rapport_enqueteur extends REST_Controller
 	     return $requete;   
     	}*/
     
-    public function weeks($month, $year)
+  /* public function weeks($year, $month)
     {
         $num_of_days = date("t", mktime(0,0,0,$month,1,$year)); 
         $lastday = date("t", mktime(0, 0, 0, $month, 1, $year)); 
@@ -209,7 +209,29 @@ class Rapport_enqueteur extends REST_Controller
             $count_weeks++; 
         } 
 		return $count_weeks;
-	}
+	}*/
+public function weeks($year,$month) {
+	// Start of mois
+	$start = mktime(0, 0, 0, $month, 1, $year);
+	// End of mois
+	$end = mktime(0, 0, 0, $month, date('t', $start), $year);
+	// Start week
+	$start_week = date('W', $start);
+	// End week
+	$end_week = date('W', $end);
+	
+	if ($end_week < $start_week) { 
+			   //year has 52 weeks
+			   $weeksInYear = 52;
+			   //but if leap year, it has 53 weeks
+			   if($year % 4 == 0) {
+				   $weeksInYear = 53;
+			   }
+			   return (($weeksInYear + $end_week) - $start_week) + 1;
+		   }
+	
+	return ($end_week - $start_week) + 1;
+   }
     public function genererexcel($menu,$week,$nbrweek,$data,$annee, $mois,$date,$sum_total)
     {	require_once 'Classes/PHPExcel.php';
 		require_once 'Classes/PHPExcel/IOFactory.php';
@@ -281,6 +303,14 @@ class Rapport_enqueteur extends REST_Controller
 		$objPHPExcel->getActiveSheet()->getColumnDimension('AJ')->setWidth(5);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('AK')->setWidth(5);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('AL')->setWidth(5);
+		
+		$objPHPExcel->getActiveSheet()->getColumnDimension('AM')->setWidth(5);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('AN')->setWidth(5);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('AO')->setWidth(5);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('AP')->setWidth(5);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('AQ')->setWidth(5);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('AU')->setWidth(5);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('AR')->setWidth(5);
 
 
 		$objPHPExcel->getActiveSheet()->setTitle("Fiche_suivi");
@@ -365,7 +395,36 @@ class Rapport_enqueteur extends REST_Controller
 			$objPHPExcel->getActiveSheet()->mergeCells("AE".$ligne.":AK".$ligne);
 			$objPHPExcel->getActiveSheet()->getStyle("AE".$ligne.":AK".$ligne)->applyFromArray($styleSousTitre);
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AE'.$ligne, "Semaine du: ".$week[5]);
-		}else
+
+			$objPHPExcel->getActiveSheet()->mergeCells("AL".$ligne.":AR".$ligne);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$ligne, "Semaine du: 0000-00-00");
+		}elseif($nbrweek==6)
+		{
+			$objPHPExcel->getActiveSheet()->mergeCells("C".$ligne.":I".$ligne);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, "Semaine du: ".$week[1]);
+
+			$objPHPExcel->getActiveSheet()->mergeCells("J".$ligne.":P".$ligne);
+			$objPHPExcel->getActiveSheet()->getStyle("J".$ligne.":P".$ligne)->applyFromArray($styleSousTitre);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('J'.$ligne, "Semaine du: ".$week[2]);
+
+			$objPHPExcel->getActiveSheet()->mergeCells("Q".$ligne.":W".$ligne);
+			$objPHPExcel->getActiveSheet()->getStyle("Q".$ligne.":W".$ligne)->applyFromArray($styleSousTitre);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q'.$ligne, "Semaine du: ".$week[3]);
+
+			$objPHPExcel->getActiveSheet()->mergeCells("X".$ligne.":AD".$ligne);
+			$objPHPExcel->getActiveSheet()->getStyle("X".$ligne.":AD".$ligne)->applyFromArray($styleSousTitre);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('X'.$ligne, "Semaine du: ".$week[4]);
+
+			$objPHPExcel->getActiveSheet()->mergeCells("AE".$ligne.":AK".$ligne);
+			$objPHPExcel->getActiveSheet()->getStyle("AE".$ligne.":AK".$ligne)->applyFromArray($styleSousTitre);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AE'.$ligne, "Semaine du: ".$week[5]);
+
+			$objPHPExcel->getActiveSheet()->mergeCells("AL".$ligne.":AR".$ligne);
+			$objPHPExcel->getActiveSheet()->getStyle("AL".$ligne.":AR".$ligne)->applyFromArray($styleSousTitre);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$ligne, "Semaine du: ".$week[6]);
+
+		}
+		else
 		{
 			$objPHPExcel->getActiveSheet()->mergeCells("C".$ligne.":I".$ligne);
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, "Semaine du: ".$week[1]);
@@ -384,12 +443,15 @@ class Rapport_enqueteur extends REST_Controller
 
 			$objPHPExcel->getActiveSheet()->mergeCells("AE".$ligne.":AK".$ligne);
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AE'.$ligne, "Semaine du: 0000-00-00");
+
+			$objPHPExcel->getActiveSheet()->mergeCells("AL".$ligne.":AR".$ligne);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$ligne, "Semaine du: 0000-00-00");
 		}
 
-		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AL".$ligne)->applyFromArray($stylecontenu);
+		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AS".$ligne)->applyFromArray($stylecontenu);
 		$ligne=6;
-		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AL".$ligne)->getAlignment()->setWrapText(true);
-		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AL".$ligne)->applyFromArray($stylecontenu);
+		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AS".$ligne)->getAlignment()->setWrapText(true);
+		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AS".$ligne)->applyFromArray($stylecontenu);
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, "NON ENGIN ");
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$ligne, "Nombre d'echantillon réquis ");
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$ligne, "Lun ");
@@ -426,9 +488,18 @@ class Rapport_enqueteur extends REST_Controller
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AH'.$ligne, "Jeu");
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AI'.$ligne, "Ven");
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AJ'.$ligne, "Sam ");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AK'.$ligne, "Dim");		
-		$objPHPExcel->getActiveSheet()->mergeCells("AL5:AL".$ligne);		
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL5', "Total");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AK'.$ligne, "Dim");	
+		
+		
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$ligne, "Lun");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AM'.$ligne, "Mar");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AN'.$ligne, "Mer");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AO'.$ligne, "Jeu");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AP'.$ligne, "Ven");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AQ'.$ligne, "Sam ");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AR'.$ligne, "Dim");
+		$objPHPExcel->getActiveSheet()->mergeCells("AS5:AS".$ligne);		
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AS5', "Total");
 		
 		$ligne++;
 		$colonne=array();
@@ -464,10 +535,16 @@ class Rapport_enqueteur extends REST_Controller
 		$colonne[30]='AF';
 		$colonne[31]='AG';
 		$colonne[32]='AH';
+		$colonne[33]='AI';
+		$colonne[34]='AJ';
+		$colonne[35]='AK';
+		$colonne[36]='AL';
+		$colonne[37]='AM';
+		$colonne[38]='AN';
 		$c=1;
 		$lignecontenu=$ligne;
 		$nbrDate= count($date);
-		$lignefin=0;
+		$lignefin=0;$cool = array();
 		foreach ($date as $dat => $valuedate) {			
 			foreach ($data[$valuedate] as $key => $valu) {
 				if($valuedate==$annee."-".$mois."-01")
@@ -559,21 +636,21 @@ class Rapport_enqueteur extends REST_Controller
 				}
 				if($dat==$nbrDate)
 				{
-					$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$lignecontenu, $valu['total_echan_mois']);
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AS'.$lignecontenu, $valu['total_echan_mois']);
 				}
-				$objPHPExcel->getActiveSheet()->getStyle("A".$lignecontenu.":AL".$lignecontenu)->getAlignment()->setWrapText(true);
-				$objPHPExcel->getActiveSheet()->getStyle("A".$lignecontenu.":AL".$lignecontenu)->applyFromArray($stylecontenu);
-				$lignecontenu++;				
+				$objPHPExcel->getActiveSheet()->getStyle("A".$lignecontenu.":AS".$lignecontenu)->getAlignment()->setWrapText(true);
+				$objPHPExcel->getActiveSheet()->getStyle("A".$lignecontenu.":AS".$lignecontenu)->applyFromArray($stylecontenu);
+				$lignecontenu++; $cool[$dat][$key]	=$c	;		
 			}
 			$lignefin=$lignecontenu;
 			$lignecontenu=$ligne;
 			$c++;
 		}
 		$ligne = intval($lignefin)+1;
-		$objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":AK".$ligne);		
+		$objPHPExcel->getActiveSheet()->mergeCells("A".$ligne.":AR".$ligne);		
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$ligne, 'TOTAL');
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AL'.$ligne, $sum_total);
-		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AL".$ligne)->applyFromArray($stylecontenu);
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('AS'.$ligne, $sum_total);
+		$objPHPExcel->getActiveSheet()->getStyle("A".$ligne.":AS".$ligne)->applyFromArray($stylecontenu);
 
 		try
 		{
@@ -584,6 +661,7 @@ class Rapport_enqueteur extends REST_Controller
                 'status' => TRUE,
                 'response' => $nom_file.".xlsx",
                 'resp' => $data,
+                //'res' => $week,
                 'message' => 'Get file success',
             ], REST_Controller::HTTP_OK);
 		  

@@ -31,32 +31,28 @@ class SIP_espece extends REST_Controller {
 		else 	
         if (($id_type_espece)||($id_navire)||($id_famille)) {
             
-            if($id_famille) {
-                $data = $this->SIP_especeManager->findFamille($id_famille);
-            }
+            if($id_famille) 
+                $response = $this->SIP_especeManager->findFamille($id_famille);
 
             if ($id_type_espece) 
-            {
                 $response = $this->SIP_especeManager->find_all_by_type($id_type_espece);
-                if ($response) 
-                {
-                    $data = $response ;
-                }
-            }
 
-            if($id_navire) {
-                $data = $this->SIP_especeManager->find_all_by_navire($id_navire);
-            }
+            if($id_navire) 
+                $response = $this->SIP_especeManager->find_all_by_navire($id_navire);
+             
+            if ($response) 
+                $data = $response ;
         } 
         else {
             
             if ($id) 
             {
-                
+            
                 $SIP_espece = $this->SIP_especeManager->findById($id);
                 $data['id'] = $SIP_espece->id;
                 $data['code'] = $SIP_espece->code;
                 $data['nom'] = $SIP_espece->nom;
+                $data['typ_esp_id'] = $SIP_espece->type_espece;
             }  
             else
             {

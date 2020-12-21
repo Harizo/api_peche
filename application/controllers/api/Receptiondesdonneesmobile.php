@@ -172,7 +172,7 @@ class Receptiondesdonneesmobile extends REST_Controller {
 
             if ($dataId_fiche) //insertion zanany
             {
-                if (count($echantillons) > 0 ) 
+                if ($echantillons) 
                 {
                     
                     $etat_echantillon = $this->EchantillonManager->save_all($dataId_fiche, json_decode($echantillons));

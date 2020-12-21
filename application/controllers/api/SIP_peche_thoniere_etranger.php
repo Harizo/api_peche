@@ -18,6 +18,7 @@ class SIP_peche_thoniere_etranger extends REST_Controller {
 		$date_depart = $this->get('date_depart');
 		$date_arrive = $this->get('date_arrive');
         $liste_annee = $this->get('liste_annee');		
+        $id_navire = $this->get('id_navire');       
             $data = array();
             if ($id) 
             {               
@@ -39,12 +40,16 @@ class SIP_peche_thoniere_etranger extends REST_Controller {
 			}
 			else
             {
-                $response = $this->SIP_peche_thoniere_etrangerManager->findAll();
+                if ($id_navire) 
+                    $response = $this->SIP_peche_thoniere_etrangerManager->findCleNavire($id_navire);
+
+                else
+                    $response = $this->SIP_peche_thoniere_etrangerManager->findAll();
+                
                 if ($response) 
-                {
                     $data = $response ;
-                }
             }
+             
         if (count($data)>0) 
         {
             $this->response([
