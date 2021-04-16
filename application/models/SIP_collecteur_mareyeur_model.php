@@ -64,7 +64,7 @@ class SIP_collecteur_mareyeur_model extends CI_Model {
                
         $result = $this->db->select(
                                         '
-                                            scm.id as id,
+                                            DISTINCT(scm.id) as id,
                                             scm.code as code,
                                             scm.type_genre as type_genre,
                                             scm.nom,

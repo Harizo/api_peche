@@ -56,12 +56,19 @@ class SIP_coefficient_conversion_model extends CI_Model {
         }                 
     }
 
-    /*public function find_all_join($id_societe_crevette)
+    public function find_all_join()
     {
 
         $sql = 
         "
-            select 
+            select
+
+                scc.id as id,
+                ste.id as id_type_espece,
+                ste.libelle as libelle_type_espece,
+
+                se.id as id_espece,
+                se.nom as nom_espece,
 
 
                 cons.id as id_conservation,
@@ -70,26 +77,29 @@ class SIP_coefficient_conversion_model extends CI_Model {
                 pres.id as id_presentation,
                 pres.libelle as libelle_presentation,
 
+
+                scc.coefficient as coefficient
+
           
                 
 
            
             from
-                sip_coefficient_conversion as sch,
-                sip_societe_crevette as scrv,
-              
-                sip_presentation as pres,
-                sip_conservation as cons
+              sip_coefficient_conversion as scc,
+              sip_presentation as pres,
+              sip_conservation as cons,
+              sip_espece as se,
+              sip_type_espece as ste
             where
-                sch.id_societe_crevette = scrv.id
-                and sch.id_presentation = pres.id
-                and sch.id_conservation = cons.id
-                and scrv.id = ".$id_societe_crevette." 
-            order by sch.annee desc
+                scc.id_presentation = pres.id
+                and scc.id_conservation = cons.id 
+                and scc.id_espece = se.id 
+                and se.type_espece = ste.id 
+            order by se.nom 
 
         " ;
         return $this->db->query($sql)->result();
-    }*/
+    }
 
 
     public function findById($id)  {

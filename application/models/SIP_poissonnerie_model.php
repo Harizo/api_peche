@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class SIP_poissonnerie_model extends CI_Model {
-    protected $table = 'SIP_poissonnerie';
+    protected $table = 'sip_poissonnerie';
 
     public function add($SIP_poissonnerie) {
         $this->db->set($this->_set($SIP_poissonnerie))

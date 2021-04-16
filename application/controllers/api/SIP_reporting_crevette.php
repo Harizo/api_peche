@@ -339,7 +339,7 @@ class SIP_reporting_crevette extends REST_Controller {
                 	$alphabet = 65 ;
 	                foreach ($entete as $key => $value) 
 	                {
-	                	$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($alphabet).$ligne, $data[$i]->$value);
+	                	$objPHPExcel->setActiveSheetIndex(0)->setCellValue(chr($alphabet).$ligne, (string)($data[$i]->$value));
 	                	$alphabet++;
 	                }
 

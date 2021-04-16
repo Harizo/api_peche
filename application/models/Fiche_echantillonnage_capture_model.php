@@ -428,8 +428,96 @@ public function ecartypeAnalyse($requetesanssite)
             return null;
         }
 }
+    public function req_1($id_region,$annee)
+    {
+        $sql =" CALL req_1_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_2($id_region,$annee)
+    {
+        $sql =" CALL req_2_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_3($id_region,$annee)
+    {
+        $sql =" CALL req_3_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_4($id_region,$annee)
+    {
+        $sql =" CALL req_4_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_4_2($id_region,$annee)
+    {
+        $sql =" CALL req_4_2_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_5_1($id_region,$annee)
+    {
+        $sql =" CALL req_5_1_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_5_2($id_region,$annee)
+    {
+        $sql =" CALL req_5_2_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_5_6($id_region,$annee)
+    {
+        $sql =" CALL req_5_6_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_5_7($id_region,$annee)
+    {
+        $sql =" CALL req_5_7_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_6_2($id_region,$annee)
+    {
+        $sql =" CALL req_6_2_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_6_2_a($id_region,$annee)
+    {
+        $sql =" CALL req_6_2_a_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    
+    public function req_7_1($id_region,$annee)
+    {
+        $sql =" CALL req_7_1_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    
+    public function req_7_2($id_region,$annee)
+    {
+        $sql =" CALL req_7_2_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    
+    public function req_7_3($id_region,$annee)
+    {
+        $sql =" CALL req_7_3_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_8_2($id_region,$annee)
+    {
+        $sql =" CALL req_8_2_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_9_2($id_region,$annee)
+    {
+        $sql =" CALL req_9_2_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_9_3($id_region,$annee)
+    {
+        $sql =" CALL req_9_3_stocke('".$id_region."','".$annee."')";
+        return $this->db->query($sql)->result();
+    }
 
-    public function som_capture_totales_journaliere($requete)
+  /* public function som_capture_totales_journaliere($requete)
     {
         $result = $this->db->select('unite_peche.libelle as libelle_unite_peche,date,site_embarquement.libelle,SUM(espece_capture.capture ) as capture,SUM(espece_capture.capture/duree_mare) as cpue')
                             ->from('fiche_echantillonnage_capture')
@@ -459,7 +547,7 @@ public function ecartypeAnalyse($requetesanssite)
         }
 
 
-    }
+    }*/
 
   /* requete 1 talou 27/09/2019 
 
@@ -785,7 +873,7 @@ public function ecartypeAnalyse($requetesanssite)
     
     }
 
-    public function req_7_1($requete)
+    /*public function req_7_1($requete)
     {
         
         $result = $this->db->select('SUM(espece_capture.capture) as capture_par_espece,unite_peche.libelle as libelle_unite_peche,unite_peche.id as id_unite_peche,
@@ -815,9 +903,9 @@ public function ecartypeAnalyse($requetesanssite)
         }
 
 
-    }
+    }*/
 
-    public function req_7_2($requete)
+   /* public function req_7_2($requete)
     {
         
         $result = $this->db->select('SUM(espece_capture.capture) as capture_par_espece,unite_peche.libelle as libelle_unite_peche,
@@ -846,7 +934,7 @@ public function ecartypeAnalyse($requetesanssite)
         }
 
 
-    }
+    }*/
 
     public function pour_7_3($mois, $annee, $id_unite_peche, $id_region)
     {

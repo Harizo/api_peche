@@ -42,7 +42,8 @@ class SIP_production_commercialisation_region_model extends CI_Model {
             'quantite_en_nbre'                   => $sip_production_commercialisation_region['quantite_en_nbre'],
             'code_comm'                          => $sip_production_commercialisation_region['code_comm'],
             'quantite_comm'                      => $sip_production_commercialisation_region['quantite_comm'],
-            'id_region'                          => $sip_production_commercialisation_region['id_region']
+            'id_region'                          => $sip_production_commercialisation_region['id_region'],
+            'id_district'                          => $sip_production_commercialisation_region['id_district']
         );
     }
     public function delete($id)
@@ -73,7 +74,7 @@ class SIP_production_commercialisation_region_model extends CI_Model {
     }
 
 
-    public function findAll($id_region)
+    public function findAll($id_region, $annee)
     {
 
         $sql = 
@@ -99,18 +100,39 @@ class SIP_production_commercialisation_region_model extends CI_Model {
                 esp.nom_scientifique as nom_scientifique,
 
                 reg.id as id_region,
-                reg.nom as nom_region
+                reg.nom as nom_region,
+
+                dist.id as id_district,
+                dist.nom as nom_district
 
             from
                 sip_production_commercialisation_region as spcr,
                 sip_espece as esp,
-                region as reg
+                region as reg,
+                district as dist
                 
             where
                 spcr.id_espece = esp.id
                 and spcr.id_region = reg.id 
+                and spcr.id_district = dist.id 
                 and reg.id = ".$id_region."
+                and spcr.annee = ".$annee."
             order by spcr.annee desc
+
+        " ;
+        return $this->db->query($sql)->result();
+    }
+
+    public function get_annee()
+    {
+
+        $sql = 
+        "
+            select 
+                DISTINCT(spcr.annee) 
+            FROM 
+                sip_production_commercialisation_region AS spcr 
+            ORDER BY annee
 
         " ;
         return $this->db->query($sql)->result();

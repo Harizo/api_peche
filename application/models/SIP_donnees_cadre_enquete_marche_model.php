@@ -98,6 +98,9 @@ class SIP_donnees_cadre_enquete_marche_model extends CI_Model {
                 esp.nom_francaise as nom_francaise,
                 esp.nom_scientifique as nom_scientifique,
 
+                ste.id as id_type_espece,
+                ste.libelle as libelle_type_espece,
+
                 scp.nbr_tot_etal as nbr_tot_etal,
                 scp.nbr_etal_pdt_frais as nbr_etal_pdt_frais,
                 scp.nbr_etal_pdt_transforme as nbr_etal_pdt_transforme
@@ -110,7 +113,8 @@ class SIP_donnees_cadre_enquete_marche_model extends CI_Model {
                 commune as com,
                 district as dis,
                 region as reg,
-                sip_espece as esp
+                sip_espece as esp,
+                sip_type_espece as ste
                 
             where
                 scp.id_commune = com.id
@@ -118,6 +122,7 @@ class SIP_donnees_cadre_enquete_marche_model extends CI_Model {
                 and dis.id_region = reg.id
                 and dis.id = ".$id_district." 
                 and scp.id_espece = esp.id
+                and esp.type_espece = ste.id
             order by scp.id desc
 
         " ;

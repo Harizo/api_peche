@@ -127,7 +127,12 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                         fm.libelle AS libelle_famille,
 
                         vp.type_famille,
+
                         vp.designation_article, 
+                        se.nom as nom_espece,
+
+                        ste.id as id_type_espece,
+                        ste.libelle as libelle_type_espece,
                         
                         vp.id_presentation,
                         pres.libelle AS libelle_presentation,
@@ -144,13 +149,17 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                         sip_famille AS fm, 
                         sip_poissonnerie AS pois,
                         sip_presentation AS pres,  
-                        sip_conservation AS cons 
+                        sip_conservation AS cons ,
+                        sip_espece as se,
+                        sip_type_espece as ste
                 
                 WHERE vp.famille_rh=fm.id 
                       and vp.id_presentation=pres.id 
                       and vp.id_conservation=cons.id 
                       and vp.id_poissonnerie = ".$id_poissonnerie."
                       and pois.id=vp.id_poissonnerie
+                      and vp.designation_article = se.id 
+                      and se.type_espece = ste.id 
         
                 ORDER BY vp.reference_fournisseur ";
 
@@ -177,7 +186,11 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
 
                         vp.type_famille,
                         vp.designation_article, 
-                        
+                        se.nom as nom_espece,
+
+                        ste.id as id_type_espece,
+                        ste.libelle as libelle_type_espece,
+
                         vp.id_presentation,
                         pres.libelle AS libelle_presentation,
 
@@ -193,7 +206,9 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                         sip_famille AS fm, 
                         sip_poissonnerie AS pois,
                         sip_presentation AS pres, 
-                        sip_conservation AS cons 
+                        sip_conservation AS cons ,
+                        sip_espece as se,
+                        sip_type_espece as ste
                 
                 WHERE vp.famille_rh=fm.id 
                       and vp.id_presentation=pres.id 
@@ -202,6 +217,8 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                       and vp.annee=".$annee."
                       and vp.mois=".$mois."
                       and pois.id=vp.id_poissonnerie
+                      and vp.designation_article = se.id 
+                      and se.type_espece = ste.id 
         
                 ORDER BY vp.annee DESC ";
 
@@ -228,6 +245,10 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
 
                         vp.type_famille,
                         vp.designation_article, 
+                        se.nom as nom_espece,
+
+                        ste.id as id_type_espece,
+                        ste.libelle as libelle_type_espece,
                         
                         vp.id_presentation,
                         pres.libelle AS libelle_presentation,
@@ -244,7 +265,9 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                         sip_famille AS fm, 
                         sip_poissonnerie AS pois,
                         sip_presentation AS pres, 
-                        sip_conservation AS cons 
+                        sip_conservation AS cons ,
+                        sip_espece as se,
+                        sip_type_espece as ste
                 
                 WHERE vp.famille_rh=fm.id 
                       and vp.id_presentation=pres.id 
@@ -252,6 +275,8 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                       and vp.id_poissonnerie = ".$id_poissonnerie."
                       and pois.id=vp.id_poissonnerie
                       and vp.mois=".$mois."
+                      and vp.designation_article = se.id 
+                      and se.type_espece = ste.id 
         
                 ORDER BY vp.annee DESC ";
 
@@ -278,6 +303,10 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
 
                         vp.type_famille,
                         vp.designation_article, 
+                        se.nom as nom_espece,
+
+                        ste.id as id_type_espece,
+                        ste.libelle as libelle_type_espece,
                         
                         vp.id_presentation,
                         pres.libelle AS libelle_presentation,
@@ -294,7 +323,9 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                         sip_famille AS fm, 
                         sip_poissonnerie AS pois,
                         sip_presentation AS pres, 
-                        sip_conservation AS cons 
+                        sip_conservation AS cons ,
+                        sip_espece as se,
+                        sip_type_espece as ste
                 
                 WHERE vp.famille_rh=fm.id 
                       and vp.id_presentation=pres.id 
@@ -302,6 +333,8 @@ class SIP_saisie_vente_poissonnerie_model extends CI_Model {
                       and vp.id_poissonnerie = ".$id_poissonnerie."
                       and pois.id=vp.id_poissonnerie
                       and vp.annee=".$annee."
+                      and vp.designation_article = se.id 
+                      and se.type_espece = ste.id 
         
                 ORDER BY vp.mois DESC ";
 

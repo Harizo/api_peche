@@ -98,6 +98,11 @@ class Utilisateurs extends REST_Controller {
                 $data = array();
             }
         }
+
+        if ($type_get == "io_tester") 
+        {
+            $data=["postmaster@localhost","mrk@localhost"];
+        }
         
        
 

@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class SIP_saisie_collecte_culture_algues_model extends CI_Model {
-    protected $table = 'SIP_saisie_collecte_culture_algues';
+    protected $table = 'sip_saisie_collecte_culture_algues';
 
     public function add($SIP_saisie_collecte_culture_algues) {
         $this->db->set($this->_set($SIP_saisie_collecte_culture_algues))

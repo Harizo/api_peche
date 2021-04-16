@@ -65,14 +65,15 @@ class SIP_sequence_transbordement extends REST_Controller {
             if ($id == 0) 
             {
                 $data = array(
-                    'id_sequence_peche'       => $this->post('id_sequence_peche'),
+                    'id_sequence_peche'             => $this->post('id_sequence_peche'),
                     'date'                          => $this->post('date'),
                     'heurep'                        => $this->post('heurep'),
                     'minutep'                       => $this->post('minutep'),
                     'heuret'                        => $this->post('heuret'),
                     'minutet'                       => $this->post('minutet'),
                     'postlatitude'                  => $this->post('postlatitude'),
-                    'postlongitude'                 => $this->post('postlongitude')
+                    'postlongitude'                 => $this->post('postlongitude'),
+                    'id_navire'                     => $this->post('id_navire')
                 );
                 if (!$data) {
                     $this->response([
@@ -99,14 +100,15 @@ class SIP_sequence_transbordement extends REST_Controller {
             else 
             {
                 $data = array(
-                    'id_sequence_peche'       => $this->post('id_sequence_peche'),
+                    'id_sequence_peche'             => $this->post('id_sequence_peche'),
                     'date'                          => $this->post('date'),
                     'heurep'                        => $this->post('heurep'),
                     'minutep'                       => $this->post('minutep'),
                     'heuret'                        => $this->post('heuret'),
                     'minutet'                       => $this->post('minutet'),
                     'postlatitude'                  => $this->post('postlatitude'),
-                    'postlongitude'                 => $this->post('postlongitude')
+                    'postlongitude'                 => $this->post('postlongitude'),
+                    'id_navire'                     => $this->post('id_navire')
                 );
 
                 if (!$data || !$id) {

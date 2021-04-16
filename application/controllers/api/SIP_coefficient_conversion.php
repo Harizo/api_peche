@@ -36,7 +36,7 @@ class SIP_coefficient_conversion extends REST_Controller {
                 }
                 else
                 {
-                    $response = $this->SIP_coefficient_conversionManager->findAll();
+                    $response = $this->SIP_coefficient_conversionManager->find_all_join();
                     if ($response) 
                     {
                         $data = $response ;
@@ -44,7 +44,7 @@ class SIP_coefficient_conversion extends REST_Controller {
                 }
 
             }
-        if (count($data)>0) 
+        if ($data) 
         {
             $this->response([
                 'status' => TRUE,

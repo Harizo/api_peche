@@ -37,7 +37,8 @@ class SIP_sequence_transbordement_model extends CI_Model {
             'heuret'                        => $sip_sequence_transbordement['heuret'],
             'minutet'                       => $sip_sequence_transbordement['minutet'],
             'postlatitude'                  => $sip_sequence_transbordement['postlatitude'],
-            'postlongitude'                 => $sip_sequence_transbordement['postlongitude']
+            'postlongitude'                 => $sip_sequence_transbordement['postlongitude'],
+            'id_navire'                 => $sip_sequence_transbordement['id_navire']
         );
     }
     public function delete($id)

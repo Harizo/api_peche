@@ -16,6 +16,8 @@ class SIP_production_commercialisation_region extends REST_Controller {
     {
         $id = $this->get('id');
         $id_region = $this->get('id_region');
+        $annee = $this->get('annee');
+        $get_annee = $this->get('get_annee');
             $data = array();
             if ($id) 
             {
@@ -23,10 +25,19 @@ class SIP_production_commercialisation_region extends REST_Controller {
                 $data = $this->SIP_production_commercialisation_regionManager->findById($id);
                 
             } 
-            else 
+            
+            if($id_region) 
             {
                 
-                $data = $this->SIP_production_commercialisation_regionManager->findAll($id_region);
+                $data = $this->SIP_production_commercialisation_regionManager->findAll($id_region, $annee);
+                
+
+            }
+
+            if($get_annee) 
+            {
+                
+                $data = $this->SIP_production_commercialisation_regionManager->get_annee();
                 
 
             }
@@ -66,7 +77,8 @@ class SIP_production_commercialisation_region extends REST_Controller {
                     'quantite_en_nbre'                   => $this->post('quantite_en_nbre'),
                     'code_comm'                          => $this->post('code_comm'),
                     'quantite_comm'                      => $this->post('quantite_comm'),
-                    'id_region'                          => $this->post('id_region')
+                    'id_region'                          => $this->post('id_region'),
+                    'id_district'                          => $this->post('id_district')
                 );
                 if (!$data) {
                     $this->response([
@@ -103,7 +115,8 @@ class SIP_production_commercialisation_region extends REST_Controller {
                     'quantite_en_nbre'                   => $this->post('quantite_en_nbre'),
                     'code_comm'                          => $this->post('code_comm'),
                     'quantite_comm'                      => $this->post('quantite_comm'),
-                    'id_region'                          => $this->post('id_region')
+                    'id_region'                          => $this->post('id_region'),
+                    'id_district'                          => $this->post('id_district')
                 );
 
                 if (!$data || !$id) {

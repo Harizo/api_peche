@@ -62,6 +62,8 @@ class SIP_espece_model extends CI_Model {
                     INNER JOIN sip_type_espece AS tesp on esp.type_espece = tesp.id
                    
                     LEFT join sip_famille AS fam ON fam.id=esp.id_famille
+
+                    order by esp.nom
            ";
            return $this->db->query($sql)->result();
 
