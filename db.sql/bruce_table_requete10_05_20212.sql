@@ -48,8 +48,8 @@ BEGIN
 				 nom_site_embarquement AS 'Site embarquement',
 				 date AS date,
 				 libelle_unite_peche AS 'Unite peche',
-				 capture AS 'Capture',
-				 cpue AS 'cpue'
+				ROUND(capture,3) AS 'Capture',
+				 ROUND(cpue,3) AS 'cpue'
 			 
 			 FROM req_1
 			 WHERE id_region=Paramidregion AND 
@@ -63,8 +63,8 @@ BEGIN
 						 nom_site_embarquement AS 'Site embarquement',
 						date AS date,
 						libelle_unite_peche AS 'Unite peche',
-						capture AS 'Capture',
-						cpue AS 'cpue'
+						ROUND(capture,3) AS 'Capture',
+						ROUND(cpue,3) AS 'cpue'
 					 
 					 FROM req_1
 					 WHERE id_region=Paramidregion AND 
@@ -76,8 +76,8 @@ BEGIN
 						 nom_site_embarquement AS 'Site embarquement',
 						date AS date,
 						libelle_unite_peche AS 'Unite peche',
-						capture AS 'Capture',
-						cpue AS 'cpue'
+						ROUND(capture,3) AS 'Capture',
+						ROUND(cpue,3) AS 'cpue'
 					 
 					 FROM req_1
 					 WHERE id_region=Paramidregion AND 
@@ -119,11 +119,11 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 				req2.mois AS 'Mois',
 				req2.nom_region AS 'Nom region',
 				req2.libelle_unite_peche AS 'Unite peche',
-				req2.average_cpue AS 'Average cpue',
-				req2.stddev_cpue AS 'Stddev cpue',
-				req2.nbr_cpue AS 'Nombre cpue',
-				req2.sqrt_cpue AS 'Sqrt cpue',
-				req2.degree_liberte AS  'Degree liberte'
+				ROUND(req2.average_cpue,3) AS 'Average cpue',
+				ROUND(req2.stddev_cpue,3) AS 'Stddev cpue',
+				ROUND(req2.nbr_cpue,3) AS 'Nombre cpue',
+				ROUND(req2.sqrt_cpue,3) AS 'Sqrt cpue',
+				ROUND(req2.degree_liberte,3) AS  'Degree liberte'
 				
 				FROM 
 				(
@@ -172,11 +172,11 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 				req2.mois AS 'Mois',
 				req2.nom_region AS 'Nom region',
 				req2.libelle_unite_peche AS 'Unite peche',
-				req2.average_cpue AS 'Average cpue',
-				req2.stddev_cpue AS 'Stddev cpue',
-				req2.nbr_cpue AS 'Nombre cpue',
-				req2.sqrt_cpue AS 'Sqrt cpue',
-				req2.degree_liberte AS  'Degree liberte'
+				ROUND(req2.average_cpue,3) AS 'Average cpue',
+				ROUND(req2.stddev_cpue,3) AS 'Stddev cpue',
+				ROUND(req2.nbr_cpue,3) AS 'Nombre cpue',
+				ROUND(req2.sqrt_cpue,3) AS 'Sqrt cpue',
+				ROUND(req2.degree_liberte,3) AS  'Degree liberte'
 				
 				FROM 
 				(
@@ -226,11 +226,11 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 				req2.mois AS 'Mois',
 				req2.nom_region AS 'Nom region',
 				req2.libelle_unite_peche AS 'Unite peche',
-				req2.average_cpue AS 'Average cpue',
-				req2.stddev_cpue AS 'Stddev cpue',
-				req2.nbr_cpue AS 'Nombre cpue',
-				req2.sqrt_cpue AS 'Sqrt cpue',
-				req2.degree_liberte AS  'Degree liberte'
+				ROUND(req2.average_cpue,3) AS 'Average cpue',
+				ROUND(req2.stddev_cpue,3) AS 'Stddev cpue',
+				ROUND(req2.nbr_cpue,3) AS 'Nombre cpue',
+				ROUND(req2.sqrt_cpue,3) AS 'Sqrt cpue',
+				ROUND(req2.degree_liberte,3) AS  'Degree liberte'
 				
 				FROM 
 				(
@@ -310,14 +310,14 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 			req2stoke.mois AS 'Mois',
 			req2stoke.nom_region AS 'Nom region',
 			req2stoke.libelle_unite_peche AS 'Unite peche',
-			req2stoke.average_cpue AS 'Average cpue',
-			req2stoke.stddev_cpue AS 'Stdev cpue',
-			req2stoke.sqrt_cpue AS 'Sqrt cpue',
-			distribution_fractile.PercentFractile90 AS 'Percent Fractile 90',
-			((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue) AS 'Clcpue',
-			(((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)/req2stoke.average_cpue) AS 'relErreurCPUE90',
-			req2stoke.nbr_cpue AS nbr_cpue,
-			(((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)+req2stoke.average_cpue) AS 'Max cpue'
+			ROUND(req2stoke.average_cpue,3) AS 'Average cpue',
+			ROUND(req2stoke.stddev_cpue,3) AS 'Stdev cpue',
+			ROUND(req2stoke.sqrt_cpue,3) AS 'Sqrt cpue',
+			ROUND(distribution_fractile.PercentFractile90,3) AS 'Percent Fractile 90',
+			ROUND(((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue),3) AS 'Clcpue',
+			ROUND((((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)/req2stoke.average_cpue),3) AS 'relErreurCPUE90',
+			ROUND(req2stoke.nbr_cpue,3) AS nbr_cpue,
+			ROUND((((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)+req2stoke.average_cpue),3) AS 'Max cpue'
 			FROM distribution_fractile
 			
 			INNER JOIN (SELECT 	req2.annee AS annee,
@@ -378,14 +378,14 @@ ELSE IF(Paramiddistrict!=0) THEN
 						req2stoke.mois AS 'Mois',
 						req2stoke.nom_region AS 'Nom region',
 						req2stoke.libelle_unite_peche AS 'Unite peche',
-						req2stoke.average_cpue AS 'Average cpue',
-						req2stoke.stddev_cpue AS 'Stdev cpue',
-						req2stoke.sqrt_cpue AS 'Sqrt cpue',
-						distribution_fractile.PercentFractile90 AS 'Percent Fractile 90',
-						((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue) AS 'Clcpue',
-						(((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)/req2stoke.average_cpue) AS 'relErreurCPUE90',
-						req2stoke.nbr_cpue AS nbr_cpue,
-						(((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)+req2stoke.average_cpue) AS 'Max cpue'
+						ROUND(req2stoke.average_cpue,3) AS 'Average cpue',
+						ROUND(req2stoke.stddev_cpue,3) AS 'Stdev cpue',
+						ROUND(req2stoke.sqrt_cpue,3) AS 'Sqrt cpue',
+						ROUND(distribution_fractile.PercentFractile90,3) AS 'Percent Fractile 90',
+						ROUND(((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue),3) AS 'Clcpue',
+						ROUND((((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)/req2stoke.average_cpue),3) AS 'relErreurCPUE90',
+						ROUND(req2stoke.nbr_cpue,3) AS nbr_cpue,
+						ROUND((((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)+req2stoke.average_cpue),3) AS 'Max cpue'
 						FROM distribution_fractile
 						
 						INNER JOIN (SELECT 	req2.annee AS annee,
@@ -444,14 +444,14 @@ ELSE IF(Paramiddistrict!=0) THEN
 							req2stoke.mois AS 'Mois',
 							req2stoke.nom_region AS 'Nom region',
 							req2stoke.libelle_unite_peche AS 'Unite peche',
-							req2stoke.average_cpue AS 'Average cpue',
-							req2stoke.stddev_cpue AS 'Stdev cpue',
-							req2stoke.sqrt_cpue AS 'Sqrt cpue',
-							distribution_fractile.PercentFractile90 AS 'Percent Fractile 90',
-							((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue) AS 'Clcpue',
-							(((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)/req2stoke.average_cpue) AS 'relErreurCPUE90',
-							req2stoke.nbr_cpue AS nbr_cpue,
-							(((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)+req2stoke.average_cpue) AS 'Max cpue'
+							ROUND(req2stoke.average_cpue,3) AS 'Average cpue',
+							ROUND(req2stoke.stddev_cpue,3) AS 'Stdev cpue',
+							ROUND(req2stoke.sqrt_cpue,3) AS 'Sqrt cpue',
+							ROUND(distribution_fractile.PercentFractile90,3) AS 'Percent Fractile 90',
+							ROUND(((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue),3) AS 'Clcpue',
+							ROUND((((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)/req2stoke.average_cpue),3) AS 'relErreurCPUE90',
+							ROUND(req2stoke.nbr_cpue,3) AS nbr_cpue,
+							ROUND((((distribution_fractile.PercentFractile90 * req2stoke.stddev_cpue)/req2stoke.sqrt_cpue)+req2stoke.average_cpue),3) AS 'Max cpue'
 							FROM distribution_fractile
 							
 							INNER JOIN (SELECT 	req2.annee AS annee,
@@ -676,7 +676,7 @@ BEGIN
 				peche_hier AS 'Peche hier',
 				peche_avant_hier AS 'Peche avant hier',
 				nbr_jrs_peche_dernier_sem AS 'Nombre jrs peche derniere semaine',
-				pab AS 'PAB'
+				ROUND(pab,3) AS 'PAB'
 				FROM req_5_1
 				WHERE id_region=paramsidregion 
 						AND DATE_FORMAT(DATE,"%Y")=paramsannee
@@ -691,7 +691,7 @@ BEGIN
 							peche_hier AS 'Peche hier',
 							peche_avant_hier AS 'Peche avant hier',
 							nbr_jrs_peche_dernier_sem AS 'Nombre jrs peche derniere semaine',
-							pab AS 'PAB'
+							ROUND(pab,3) AS 'PAB'
 							FROM req_5_1
 							WHERE id_region=paramsidregion 
 									AND DATE_FORMAT(DATE,"%Y")=paramsannee
@@ -705,7 +705,7 @@ BEGIN
 							peche_hier AS 'Peche hier',
 							peche_avant_hier AS 'Peche avant hier',
 							nbr_jrs_peche_dernier_sem AS 'Nombre jrs peche derniere semaine',
-							pab AS 'PAB'
+							ROUND(pab,3) AS 'PAB'
 							FROM req_5_1
 							WHERE id_region=paramsidregion 
 									AND DATE_FORMAT(DATE,"%Y")=paramsannee;
@@ -746,12 +746,12 @@ BEGIN
 					DATE_FORMAT(req51.date,"%c") AS 'Mois',
 					req51.nom_region AS 'Nom region',
 					req51.libelle_unite_peche AS 'Unite peche',
-					AVG(req51.pab) AS 'Average pab',
-					STDDEV_SAMP(req51.pab) AS 'stddev pab',
-					COUNT(req51.pab) AS 'Nombre pab',
-					(AVG(req51.pab)*30.5) AS 'NbMonthlyFishingDaysFAC',
-					(COUNT(req51.pab)-1) AS 'Degree liberte',
-					SQRT(COUNT(req51.pab)) AS 'sqrt pab'
+					ROUND(AVG(req51.pab),3) AS 'Average pab',
+					ROUND(STDDEV_SAMP(req51.pab),3) AS 'stddev pab',
+					ROUND(COUNT(req51.pab),3) AS 'Nombre pab',
+					ROUND((AVG(req51.pab)*30.5),3) AS 'NbMonthlyFishingDaysFAC',
+					ROUND((COUNT(req51.pab)-1),3) AS 'Degree liberte',
+					ROUND(SQRT(COUNT(req51.pab)),3) AS 'sqrt pab'
 					
 					FROM 
 						(
@@ -781,12 +781,12 @@ BEGIN
 					DATE_FORMAT(req51.date,"%c") AS 'Mois',
 					req51.nom_region AS 'Nom region',
 					req51.libelle_unite_peche AS 'Unite peche',
-					AVG(req51.pab) AS 'Average pab',
-					STDDEV_SAMP(req51.pab) AS 'stddev pab',
-					COUNT(req51.pab) AS 'Nombre pab',
-					(AVG(req51.pab)*30.5) AS 'NbMonthlyFishingDaysFAC',
-					(COUNT(req51.pab)-1) AS 'Degree liberte',
-					SQRT(COUNT(req51.pab)) AS 'sqrt pab'
+					ROUND(AVG(req51.pab),3) AS 'Average pab',
+					ROUND(STDDEV_SAMP(req51.pab),3) AS 'stddev pab',
+					ROUND(COUNT(req51.pab),3) AS 'Nombre pab',
+					ROUND((AVG(req51.pab)*30.5),3) AS 'NbMonthlyFishingDaysFAC',
+					ROUND((COUNT(req51.pab)-1),3) AS 'Degree liberte',
+					ROUND(SQRT(COUNT(req51.pab)),3) AS 'sqrt pab'
 					
 					FROM 
 						(
@@ -815,12 +815,12 @@ BEGIN
 						DATE_FORMAT(req51.date,"%c") AS 'Mois',
 						req51.nom_region AS 'Nom region',
 						req51.libelle_unite_peche AS 'Unite peche',
-						AVG(req51.pab) AS 'Average pab',
-						STDDEV_SAMP(req51.pab) AS 'stddev pab',
-						COUNT(req51.pab) AS 'Nombre pab',
-						(AVG(req51.pab)*30.5) AS 'NbMonthlyFishingDaysFAC',
-						(COUNT(req51.pab)-1) AS 'Degree liberte',
-						SQRT(COUNT(req51.pab)) AS 'sqrt pab'
+						ROUND(AVG(req51.pab),3) AS 'Average pab',
+						ROUND(STDDEV_SAMP(req51.pab),3) AS 'stddev pab',
+						ROUND(COUNT(req51.pab),3) AS 'Nombre pab',
+						ROUND((AVG(req51.pab)*30.5),3) AS 'NbMonthlyFishingDaysFAC',
+						ROUND((COUNT(req51.pab)-1),3) AS 'Degree liberte',
+						ROUND(SQRT(COUNT(req51.pab)),3) AS 'sqrt pab'
 						
 						FROM 
 							(
@@ -1339,7 +1339,7 @@ BEGIN
 IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 	SELECT annee AS 'Annee',
 				libelle_unite_peche AS 'Unite peche',
-		 ROUND(sum(NbrTotalMonthlyFishingDays),3) AS TotalAnnualFishingDays	 
+		 ROUND(sum(NbrTotalMonthlyFishingDays), 3) AS TotalAnnualFishingDays	 
 		FROM req_6_2
 		WHERE	id_region=paramsidregion 
 				AND annee=paramsannee
@@ -1349,7 +1349,7 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 ELSE IF(Paramiddistrict!=0) THEN
 		SELECT annee AS 'Annee',
 						libelle_unite_peche AS 'Unite peche',
-				 ROUND(sum(NbrTotalMonthlyFishingDays),3) AS TotalAnnualFishingDays	 
+				 ROUND(sum(NbrTotalMonthlyFishingDays), 3) AS TotalAnnualFishingDays	 
 				FROM req_6_2
 				WHERE	id_region=paramsidregion 
 						AND annee=paramsannee
@@ -1358,7 +1358,7 @@ ELSE IF(Paramiddistrict!=0) THEN
 		ELSE
 		SELECT annee AS 'Annee',
 				libelle_unite_peche AS 'Unite peche',
-		 ROUND(sum(NbrTotalMonthlyFishingDays),3) AS TotalAnnualFishingDays	 
+		ROUND(sum(NbrTotalMonthlyFishingDays), 3) AS TotalAnnualFishingDays	 
 		FROM req_6_2
 		WHERE	id_region=paramsidregion 
 				AND annee=paramsannee
@@ -1390,7 +1390,7 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 			ROUND(req3.average_cpue,3) AS average_cpue,
 			ROUND(((req41.nbr_unite_peche*req57.NbMonthlyFishingDaysPAB*req3.average_cpue)/1000),3) AS CapturesTotalest,
 			ROUND(req3.relErreurCPUE90,3) AS relErreurCPUE90,
-			req3.nbr_cpue AS 'Nombre cpue',
+			ROUND(req3.nbr_cpue,3) AS 'Nombre cpue',
 			ROUND(req57.avgmaxpab,3) AS avgmaxpab,
 			ROUND(req3.max_cpue,3) AS max_cpue,
 			req57.monthlyday AS monthlyday,
@@ -1566,7 +1566,7 @@ ELSE IF(Paramiddistrict!=0) THEN
 			ROUND(req3.average_cpue,3) AS average_cpue,
 			ROUND(((req41.nbr_unite_peche*req57.NbMonthlyFishingDaysPAB*req3.average_cpue)/1000),3) AS CapturesTotalest,
 			ROUND(req3.relErreurCPUE90,3) AS relErreurCPUE90,
-			req3.nbr_cpue AS 'Nombre cpue',
+			ROUND(req3.nbr_cpue,3) AS 'Nombre cpue',
 			ROUND(req57.avgmaxpab,3) AS avgmaxpab,
 			ROUND(req3.max_cpue,3) AS max_cpue,
 			req57.monthlyday AS monthlyday,
@@ -1739,7 +1739,7 @@ ELSE IF(Paramiddistrict!=0) THEN
 			ROUND(req3.average_cpue,3) AS average_cpue,
 			ROUND(((req41.nbr_unite_peche*req57.NbMonthlyFishingDaysPAB*req3.average_cpue)/1000),3) AS CapturesTotalest,
 			ROUND(req3.relErreurCPUE90,3) AS relErreurCPUE90,
-			req3.nbr_cpue AS 'Nombre cpue',
+			ROUND(req3.nbr_cpue,3) AS 'Nombre cpue',
 			ROUND(req57.avgmaxpab,3) AS avgmaxpab,
 			ROUND(req3.max_cpue,3) AS max_cpue,
 			req57.monthlyday AS monthlyday,
@@ -1931,7 +1931,7 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 		region.nom AS `Region`,
 		unite_peche.libelle AS `Unite peche`,
 		espece.code AS `Code3alpha`,
-		sum(espece_capture.capture) AS `capture`,
+		ROUND(sum(espece_capture.capture),3) AS `capture`,
 		ROUND(avg(espece_capture.prix),3) AS `average_prix` 
 		from (((((unite_peche 
 				join echantillon on(echantillon.id_unite_peche = unite_peche.id)) 
@@ -1954,7 +1954,7 @@ ELSE IF(Paramiddistrict!=0) THEN
 				region.nom AS `Region`,
 				unite_peche.libelle AS `Unite peche`,
 				espece.code AS `Code3alpha`,
-				sum(espece_capture.capture) AS `capture`,
+				ROUND(sum(espece_capture.capture),3) AS `capture`,
 				ROUND(avg(espece_capture.prix),3) AS `average_prix` 
 				from (((((unite_peche 
 						join echantillon on(echantillon.id_unite_peche = unite_peche.id)) 
@@ -1976,7 +1976,7 @@ ELSE IF(Paramiddistrict!=0) THEN
 				region.nom AS `Region`,
 				unite_peche.libelle AS `Unite peche`,
 				espece.code AS `Code3alpha`,
-				sum(espece_capture.capture) AS `capture`,
+				ROUND(sum(espece_capture.capture),3) AS `capture`,
 				ROUND(avg(espece_capture.prix),3) AS `average_prix` 
 				from (((((unite_peche 
 						join echantillon on(echantillon.id_unite_peche = unite_peche.id)) 
@@ -2116,10 +2116,10 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 			req73.nom_region AS 'Region',
 			req73.libelle_unite_peche AS 'Unite peche',
 			req73.Code3alpha AS Code3alpha,
-			req73.capture AS capture,
-			req73.totalcapture AS 'Totalcapture',
-			req73.CompEspece AS	CompEspece,
-			req73.average_prix AS 'Average prix'			
+			ROUND(req73.capture,3) AS capture,
+			ROUND(req73.totalcapture,3) AS 'Totalcapture',
+			ROUND(req73.CompEspece,3) AS	CompEspece,
+			ROUND(req73.average_prix,3) AS 'Average prix'			
 			
 			FROM (select req71.annee AS annee,
 			req71.mois AS mois,
@@ -2181,10 +2181,10 @@ ELSE IF(Paramiddistrict!=0) THEN
 					req73.nom_region AS 'Region',
 					req73.libelle_unite_peche AS 'Unite peche',
 					req73.Code3alpha AS Code3alpha,
-					req73.capture AS capture,
-					req73.totalcapture AS 'Totalcapture',
-					req73.CompEspece AS	CompEspece,
-					req73.average_prix AS 'Average prix'			
+					ROUND(req73.capture,3) AS capture,
+					ROUND(req73.totalcapture,3) AS 'Totalcapture',
+					ROUND(req73.CompEspece,3) AS	CompEspece,
+					ROUND(req73.average_prix,3) AS 'Average prix'			
 					
 					FROM (select req71.annee AS annee,
 					req71.mois AS mois,
@@ -2245,10 +2245,10 @@ ELSE IF(Paramiddistrict!=0) THEN
 					req73.nom_region AS 'Region',
 					req73.libelle_unite_peche AS 'Unite peche',
 					req73.Code3alpha AS Code3alpha,
-					req73.capture AS capture,
-					req73.totalcapture AS 'Totalcapture',
-					req73.CompEspece AS	CompEspece,
-					req73.average_prix AS 'Average prix'			
+					ROUND(req73.capture,3) AS capture,
+					ROUND(req73.totalcapture,3) AS 'Totalcapture',
+					ROUND(req73.CompEspece,3) AS	CompEspece,
+					ROUND(req73.average_prix,3) AS 'Average prix'			
 					
 					FROM (select req71.annee AS annee,
 					req71.mois AS mois,
@@ -2349,17 +2349,17 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 			req62.nom_region AS 'Region',
 			req62.nom_site_embarquement AS 'Site embarquement',
 			req62.libelle_unite_peche AS 'Unite peche',
-			req62.NbMonthlyFishingDaysPAB AS	NbMonthlyFishingDaysPAB,
-			req62.NbrTotalMonthlyFishingDays AS NbrTotalMonthlyFishingDays,
+			ROUND(req62.NbMonthlyFishingDaysPAB,3) AS	NbMonthlyFishingDaysPAB,
+			ROUND(req62.NbrTotalMonthlyFishingDays,3) AS NbrTotalMonthlyFishingDays,
 			req73.Code3alpha AS Code3alpha,			
-			req62.relErreurCPUE90 AS relErreurCPUE90,
-			req62.RelErrorCapuresTotales90 AS RelErrorCapuresTotales90,
-			req62.nbr_cpue AS 'Nombre cpue',
-			req62.CapturesTotalest AS CapturesTotalest, 
-			req73.CompEspece AS	CompEspece,
-			(req62.CapturesTotalest*req73.CompEspece) AS Total_catch_specie,
-			req73.average_prix AS average_prix,
-			(req62.CapturesTotalest*req73.CompEspece)*req73.average_prix AS Value_specie
+			ROUND(req62.relErreurCPUE90,3) AS relErreurCPUE90,
+			ROUND(req62.RelErrorCapuresTotales90,3) AS RelErrorCapuresTotales90,
+			ROUND(req62.nbr_cpue,3) AS 'Nombre cpue',
+			ROUND(req62.CapturesTotalest,3) AS CapturesTotalest, 
+			ROUND(req73.CompEspece,3) AS	CompEspece,
+			ROUND((req62.CapturesTotalest*req73.CompEspece),3) AS Total_catch_specie,
+			ROUND(req73.average_prix,3) AS average_prix,
+			ROUND(((req62.CapturesTotalest*req73.CompEspece)*req73.average_prix),3) AS Value_specie
 
  
  	FROM (SELECT 	req3.annee AS annee,
@@ -2600,17 +2600,17 @@ ELSE IF(Paramiddistrict!=0) THEN
 						req62.nom_region AS 'Region',
 						req62.nom_site_embarquement AS 'Site embarquement',
 						req62.libelle_unite_peche AS 'Unite peche',
-						req62.NbMonthlyFishingDaysPAB AS	NbMonthlyFishingDaysPAB,
-						req62.NbrTotalMonthlyFishingDays AS NbrTotalMonthlyFishingDays,
+						ROUND(req62.NbMonthlyFishingDaysPAB,3) AS	NbMonthlyFishingDaysPAB,
+						ROUND(req62.NbrTotalMonthlyFishingDays,3) AS NbrTotalMonthlyFishingDays,
 						req73.Code3alpha AS Code3alpha,			
-						req62.relErreurCPUE90 AS relErreurCPUE90,
-						req62.RelErrorCapuresTotales90 AS RelErrorCapuresTotales90,
-						req62.nbr_cpue AS 'Nombre cpue',
-						req62.CapturesTotalest AS CapturesTotalest, 
-						req73.CompEspece AS	CompEspece,
-						(req62.CapturesTotalest*req73.CompEspece) AS Total_catch_specie,
-						req73.average_prix AS average_prix,
-						(req62.CapturesTotalest*req73.CompEspece)*req73.average_prix AS Value_specie
+						ROUND(req62.relErreurCPUE90,3) AS relErreurCPUE90,
+						ROUND(req62.RelErrorCapuresTotales90,3) AS RelErrorCapuresTotales90,
+						ROUND(req62.nbr_cpue,3) AS 'Nombre cpue',
+						ROUND(req62.CapturesTotalest,3) AS CapturesTotalest, 
+						ROUND(req73.CompEspece,3) AS	CompEspece,
+						ROUND((req62.CapturesTotalest*req73.CompEspece),3) AS Total_catch_specie,
+						ROUND(req73.average_prix,3) AS average_prix,
+						ROUND(((req62.CapturesTotalest*req73.CompEspece)*req73.average_prix),3) AS Value_specie
 			
 			 
 			 	FROM (SELECT 	req3.annee AS annee,
@@ -2846,17 +2846,17 @@ ELSE IF(Paramiddistrict!=0) THEN
 						req62.nom_region AS 'Region',
 						req62.nom_site_embarquement AS 'Site embarquement',
 						req62.libelle_unite_peche AS 'Unite peche',
-						req62.NbMonthlyFishingDaysPAB AS	NbMonthlyFishingDaysPAB,
-						req62.NbrTotalMonthlyFishingDays AS NbrTotalMonthlyFishingDays,
+						ROUND(req62.NbMonthlyFishingDaysPAB,3) AS	NbMonthlyFishingDaysPAB,
+						ROUND(req62.NbrTotalMonthlyFishingDays,3) AS NbrTotalMonthlyFishingDays,
 						req73.Code3alpha AS Code3alpha,			
-						req62.relErreurCPUE90 AS relErreurCPUE90,
-						req62.RelErrorCapuresTotales90 AS RelErrorCapuresTotales90,
-						req62.nbr_cpue AS 'Nombre cpue',
-						req62.CapturesTotalest AS CapturesTotalest, 
-						req73.CompEspece AS	CompEspece,
-						(req62.CapturesTotalest*req73.CompEspece) AS Total_catch_specie,
-						req73.average_prix AS average_prix,
-						(req62.CapturesTotalest*req73.CompEspece)*req73.average_prix AS Value_specie
+						ROUND(req62.relErreurCPUE90,3) AS relErreurCPUE90,
+						ROUND(req62.RelErrorCapuresTotales90,3) AS RelErrorCapuresTotales90,
+						ROUND(req62.nbr_cpue,3) AS 'Nombre cpue',
+						ROUND(req62.CapturesTotalest,3) AS CapturesTotalest, 
+						ROUND(req73.CompEspece,3) AS	CompEspece,
+						ROUND((req62.CapturesTotalest*req73.CompEspece),3) AS Total_catch_specie,
+						ROUND(req73.average_prix,3) AS average_prix,
+						ROUND(((req62.CapturesTotalest*req73.CompEspece)*req73.average_prix),3) AS Value_specie
 			
 			 
 			 	FROM (SELECT 	req3.annee AS annee,
@@ -3109,7 +3109,7 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 	SELECT req92.annee AS 'Annee',
 			req92.nom_site_embarquement AS 'Site embarquement',
 			req92.libelle_unite_peche AS 'Unite peche',
-			req92.nbr_unite_peche AS 'Nombre unite peche'
+			ROUND(req92.nbr_unite_peche,3) AS 'Nombre unite peche'
  	FROM (select enquete_cadre.annee AS annee,
 		site_embarquement.libelle AS nom_site_embarquement,
 		unite_peche.libelle AS libelle_unite_peche,
@@ -3129,7 +3129,7 @@ ELSE IF(Paramiddistrict!=0) THEN
 			SELECT req92.annee AS 'Annee',
 						req92.nom_site_embarquement AS 'Site embarquement',
 						req92.libelle_unite_peche AS 'Unite peche',
-						req92.nbr_unite_peche AS 'Nombre unite peche'
+						ROUND(req92.nbr_unite_peche,3) AS 'Nombre unite peche'
 			 	FROM (select enquete_cadre.annee AS annee,
 					site_embarquement.libelle AS nom_site_embarquement,
 					unite_peche.libelle AS libelle_unite_peche,
@@ -3148,7 +3148,7 @@ ELSE IF(Paramiddistrict!=0) THEN
 			SELECT req92.annee AS 'Annee',
 				req92.nom_site_embarquement AS 'Site embarquement',
 				req92.libelle_unite_peche AS 'Unite peche',
-				req92.nbr_unite_peche AS 'Nombre unite peche'
+				ROUND(req92.nbr_unite_peche,3) AS 'Nombre unite peche'
 	 	FROM (select enquete_cadre.annee AS annee,
 			site_embarquement.libelle AS nom_site_embarquement,
 			unite_peche.libelle AS libelle_unite_peche,
@@ -3193,7 +3193,7 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 	SELECT req93.annee AS 'Annee',
 			req93.nom_region AS 'Nom region',
 			req93.libelle_unite_peche AS 'Unite peche',
-			req93.nbr_unite_peche AS 'Nombre unite peche'
+			ROUND(req93.nbr_unite_peche,3) AS 'Nombre unite peche'
 	 
 		FROM (select enquete_cadre.annee AS annee,
 			region.nom AS nom_region,
@@ -3218,7 +3218,7 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 			SELECT req93.annee AS 'Annee',
 					req93.nom_region AS 'Nom region',
 					req93.libelle_unite_peche AS 'Unite peche',
-					req93.nbr_unite_peche AS 'Nombre unite peche'
+					ROUND(req93.nbr_unite_peche,3) AS 'Nombre unite peche'
 			 
 				FROM (select enquete_cadre.annee AS annee,
 					region.nom AS nom_region,
@@ -3241,7 +3241,7 @@ IF(Paramiddistrict!=0 AND Paramidsiteembarquement!=0) THEN
 			SELECT req93.annee AS 'Annee',
 				req93.nom_region AS 'Nom region',
 				req93.libelle_unite_peche AS 'Unite peche',
-				req93.nbr_unite_peche AS 'Nombre unite peche'
+				ROUND(req93.nbr_unite_peche,3) AS 'Nombre unite peche'
 		 
 			FROM (select enquete_cadre.annee AS annee,
 				region.nom AS nom_region,
