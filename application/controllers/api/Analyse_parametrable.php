@@ -24,7 +24,7 @@ class Analyse_parametrable extends REST_Controller
     public function index_get() 
     {
         set_time_limit(0);
-        ini_set ('memory_limit', '4096M');
+        ini_set ('memory_limit', '-1');
         $menu = $this->get('menu');
         $menu_excel = $this->get('menu_excel');
         $annee = $this->get('annee');
