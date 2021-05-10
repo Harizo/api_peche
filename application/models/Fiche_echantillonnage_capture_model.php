@@ -533,92 +533,92 @@ public function ecartypeAnalyse($requetesanssite)
             return null;
         }
 }
-    public function req_1($id_region,$annee)
+    public function req_1($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_1_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_1_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_2($id_region,$annee)
+    public function req_2( $id_region, $annee,$id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_2_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_2_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_3($id_region,$annee)
+    public function req_3($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_3_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_3_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_4($id_region,$annee)
+    public function req_4($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_4_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_4_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_4_2($id_region,$annee)
+    public function req_4_2($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_4_2_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_4_2_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_5_1($id_region,$annee)
+    public function req_5_1($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_5_1_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_5_1_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_5_2($id_region,$annee)
+    public function req_5_2($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_5_2_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_5_2_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_5_6($id_region,$annee)
+    public function req_5_6($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_5_6_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_5_6_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_5_7($id_region,$annee)
+    public function req_5_7($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_5_7_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_5_7_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_6_2($id_region,$annee)
+    public function req_6_2($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_6_2_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_6_2_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_6_2_a($id_region,$annee)
+    public function req_6_2_a($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_6_2_a_stocke('".$id_region."','".$annee."')";
-        return $this->db->query($sql)->result();
-    }
-    
-    public function req_7_1($id_region,$annee)
-    {
-        $sql =" CALL req_7_1_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_6_2_a_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
     
-    public function req_7_2($id_region,$annee)
+    public function req_7_1($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_7_2_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_7_1_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
     
-    public function req_7_3($id_region,$annee)
+    public function req_7_2($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_7_3_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_7_2_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_8_2($id_region,$annee)
+    
+    public function req_7_3($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_8_2_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_7_3_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_9_2($id_region,$annee)
+    public function req_8_2($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_9_2_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_8_2_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
-    public function req_9_3($id_region,$annee)
+    public function req_9_2($id_region,$annee, $id_district, $id_site_embarquement)
     {
-        $sql =" CALL req_9_3_stocke('".$id_region."','".$annee."')";
+        $sql =" CALL req_9_2_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
+        return $this->db->query($sql)->result();
+    }
+    public function req_9_3($id_region,$annee, $id_district, $id_site_embarquement)
+    {
+        $sql =" CALL req_9_3_stocke('".$id_region."','".$annee."','".$id_district."','".$id_site_embarquement."')";
         return $this->db->query($sql)->result();
     }
 
