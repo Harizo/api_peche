@@ -43,22 +43,24 @@ $data=array();
 
                   if ($pivot == 'req_1') 
                   {
-                    $data = $this->requete_1($id_region,$annee) ;
+                    //$data = $this->requete_1($id_region,$annee) ;
+                    $data = $this->requete_1($id_region, $annee,$id_district, $id_site_embarquement) ;
                   }                  
 
                   if ($pivot == 'req_2') 
                   {
-                    $data = $this->requete_2($id_region,$annee) ;
+                    //$data = $this->requete_2($id_region,$annee) ;                    
+                    $data = $this->requete_2( $id_region, $annee,$id_district, $id_site_embarquement) ;
                   }            
             
                   if ($pivot == 'req_3') 
                   {
-                    $data = $this->requete_3($id_region,$annee) ;
+                    $data = $this->requete_3($id_region,$annee, $id_district, $id_site_embarquement) ;
                   }            
             
                   if ($pivot == 'req_4_1') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_4($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_4($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -71,7 +73,7 @@ $data=array();
 
                   if ($pivot == 'req_4_2') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_4_2($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_4_2($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -83,7 +85,7 @@ $data=array();
                   }
                   if ($pivot == 'req_5_1') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_5_1($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_5_1($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -95,7 +97,7 @@ $data=array();
                   }
                   if ($pivot == 'req_5_2') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_5_2($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_5_2($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -107,7 +109,7 @@ $data=array();
                   }
                   if ($pivot == 'req_5_6') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_5_6($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_5_6($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -119,7 +121,7 @@ $data=array();
                   }
                   if ($pivot == 'req_5_7') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_5_7($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_5_7($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -131,7 +133,7 @@ $data=array();
                   }
                   if ($pivot == 'req_6_2') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_6_2($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_6_2($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -144,7 +146,7 @@ $data=array();
                   
                   if ($pivot == 'req_6_2_a') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_6_2_a($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_6_2_a($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -157,7 +159,7 @@ $data=array();
                   
                   if ($pivot == 'req_7_1') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_7_1($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_7_1($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -170,7 +172,7 @@ $data=array();
                   
                   if ($pivot == 'req_7_2') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_7_2($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_7_2($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -183,7 +185,7 @@ $data=array();
                   
                   if ($pivot == 'req_7_3') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_7_3($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_7_3($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -196,7 +198,7 @@ $data=array();
                   
                   if ($pivot == 'req_8') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_8_2($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_8_2($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -209,7 +211,7 @@ $data=array();
                   
                   if ($pivot == 'req_9') 
                  {
-                   $donnees=$this->Fiche_echantillonnage_captureManager->req_9_2($id_region,$annee);
+                   $donnees=$this->Fiche_echantillonnage_captureManager->req_9_2($id_region,$annee, $id_district, $id_site_embarquement);
      
                    if ($donnees) 
                    {               
@@ -222,7 +224,7 @@ $data=array();
                   
                    if ($pivot == 'req_9_3') 
                   {
-                    $donnees=$this->Fiche_echantillonnage_captureManager->req_9_3($id_region,$annee);
+                    $donnees=$this->Fiche_echantillonnage_captureManager->req_9_3($id_region,$annee, $id_district, $id_site_embarquement);
       
                     if ($donnees) 
                     {               
@@ -261,10 +263,10 @@ $data=array();
     }
 
 
-    public function requete_1($id_region,$annee)
+    public function requete_1($id_region, $annee, $id_district, $id_site_embarquement)
     {
        $data = array();
-            $donnees=$this->Fiche_echantillonnage_captureManager->req_1($id_region,$annee);
+            $donnees=$this->Fiche_echantillonnage_captureManager->req_1($id_region,$annee, $id_district, $id_site_embarquement);
       
             if ($donnees) 
             {               
@@ -273,10 +275,10 @@ $data=array();
        return $data ;
     }
     
-    public function requete_2($id_region,$annee)
+    public function requete_2($id_region, $annee, $id_district, $id_site_embarquement)
     {
       $data = array();
-            $donnees=$this->Fiche_echantillonnage_captureManager->req_2($id_region,$annee);
+            $donnees=$this->Fiche_echantillonnage_captureManager->req_2( $id_region, $annee,$id_district, $id_site_embarquement);
       
             if ($donnees) 
             {               
@@ -285,10 +287,10 @@ $data=array();
        return $data ;
     }
     
-    public function requete_3($id_region,$annee)
+    public function requete_3($id_region,$annee, $id_district, $id_site_embarquement)
     {
       $data = array();
-            $donnees=$this->Fiche_echantillonnage_captureManager->req_3($id_region,$annee);
+            $donnees=$this->Fiche_echantillonnage_captureManager->req_3($id_region,$annee, $id_district, $id_site_embarquement);
       
             if ($donnees) 
             {               
@@ -511,6 +513,43 @@ $data=array();
                    'message' => "Something went wrong: ". $e->getMessage(),
                 ], REST_Controller::HTTP_OK);
         }
+    }
+
+    public function generer_requete($annee, $mois, $id_region, $id_district, $id_site_embarquement, $id_unite_peche, $id_espece)
+    {
+        $requete = "annee='".$annee."'" ;  
+            
+            if (($mois!='*')&&($mois!='undefined')) 
+            {
+                $requete = $requete." AND mois='".$mois."'" ;
+            }
+
+            if (($id_region!='*')&&($id_region!='undefined')) 
+            {
+                $requete = $requete." AND id_region='".$id_region."'" ;
+            }
+
+            if (($id_district!='*')&&($id_district!='undefined')) 
+            {
+                $requete = $requete." AND id_district='".$id_district."'" ;
+            }
+
+            if (($id_site_embarquement!='*')&&($id_site_embarquement!='undefined')) 
+            {
+                $requete = $requete." AND id_site_embarquement='".$id_site_embarquement."'" ;
+            }
+
+            if (($id_unite_peche!='*')&&($id_unite_peche!='undefined')) 
+            {
+                $requete = $requete." AND id_unite_peche='".$id_unite_peche."'" ;
+            }
+
+            if (($id_espece!='*')&&($id_espece!='undefined')) 
+            {
+                $requete = $requete." AND id_espece='".$id_espece."'" ;
+            }
+
+        return $requete ;
     }
 
 }
