@@ -168,7 +168,7 @@ class Fiche_echantillonnage_capture_model extends CI_Model
         
     }
 
-    public function get_nbr_echantillon($condition)
+    public function get_nbr_echantillonTALOHA($condition)
     {
         
 
@@ -187,6 +187,111 @@ class Fiche_echantillonnage_capture_model extends CI_Model
             }else{
                 return null;
             }  
+    }
+
+    public function get_nbr_echantillon($annee, $mois, $id_region, $id_district,$id_site_embarquement, $id_unite_peche)
+    {
+        if (($id_district!='*')&&($id_district!='undefined')) 
+        {
+            if (($id_site_embarquement!='*')&&($id_site_embarquement!='undefined')) 
+            {
+                $sql = 
+                "
+                    select
+                        COUNT(distinct(ech.id)) as nombre,up.libelle
+                    FROM
+                        echantillon AS ech,
+                        fiche_echantillonnage_capture AS fec,
+                        unite_peche AS up,
+                        region AS reg,
+                        district AS dis,
+                        site_embarquement AS site
+                    WHERE 
+                        fec.id = ech.id_fiche_echantillonnage_capture
+                        AND up.id = ech.id_unite_peche
+                        AND fec.id_site_embarquement = site.id
+                        AND site.id_district = dis.id
+                        AND reg.id = dis.id_region
+
+                        AND reg.id = ".$id_region."
+                        AND site.id = ".$id_site_embarquement."
+                        
+                        AND EXTRACT(YEAR FROM fec.DATE) = ".$annee."
+                        AND EXTRACT(MONTH FROM fec.DATE) = ".$mois."
+                        AND up.id = ".$id_unite_peche."
+
+                    GROUP BY up.id
+                ";
+            }
+            else
+            {
+                $sql = 
+                "
+                    select
+                        COUNT(distinct(ech.id)) as nombre,up.libelle
+                    FROM
+                        echantillon AS ech,
+                        fiche_echantillonnage_capture AS fec,
+                        unite_peche AS up,
+                        region AS reg,
+                        district AS dis,
+                        site_embarquement AS site
+                    WHERE 
+                        fec.id = ech.id_fiche_echantillonnage_capture
+                        AND up.id = ech.id_unite_peche
+                        AND fec.id_site_embarquement = site.id
+                        AND site.id_district = dis.id
+                        AND reg.id = dis.id_region
+
+                        AND reg.id = ".$id_region."
+                        AND dis.id = ".$id_district."
+                        
+                        AND EXTRACT(YEAR FROM fec.DATE) = ".$annee."
+                        AND EXTRACT(MONTH FROM fec.DATE) = ".$mois."
+                        AND up.id = ".$id_unite_peche."
+
+                    GROUP BY up.id
+                ";
+            }
+        }
+        else
+        {
+            $sql = 
+            "
+                select
+                    COUNT(distinct(ech.id)) as nombre,up.libelle
+                FROM
+                    echantillon AS ech,
+                    fiche_echantillonnage_capture AS fec,
+                    unite_peche AS up,
+                    region AS reg,
+                    district AS dis,
+                    site_embarquement AS site
+                WHERE 
+                    fec.id = ech.id_fiche_echantillonnage_capture
+                    AND up.id = ech.id_unite_peche
+                    AND fec.id_site_embarquement = site.id
+                    AND site.id_district = dis.id
+                    AND reg.id = dis.id_region
+
+                    AND reg.id = ".$id_region."
+                    AND EXTRACT(YEAR FROM fec.DATE) = ".$annee."
+                    AND EXTRACT(MONTH FROM fec.DATE) = ".$mois."
+                    AND up.id = ".$id_unite_peche."
+
+                GROUP BY up.id
+            ";
+        }
+
+        if ($sql) 
+        {
+            $query= $this->db->query($sql);
+            return $query->result();
+        }
+        else
+            return false;
+
+        
     }
 
 

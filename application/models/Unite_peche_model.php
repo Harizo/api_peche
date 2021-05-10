@@ -63,6 +63,29 @@ class Unite_peche_model extends CI_Model {
         }                 
     }
 
+    public function findAll_filtrer_echantillon()
+    {
+        $sql = 
+        "
+            select 
+                DISTINCT(up.id) ,
+                up.libelle
+            FROM
+                unite_peche AS up,
+                echantillon AS ech
+            WHERE 
+                up.id = ech.id_unite_peche
+        ";
+
+        if ($sql) 
+        {
+            $query= $this->db->query($sql);
+            return $query->result();
+        }
+        else
+            return false;
+    }
+
     public function findByIdtab($id)
     {   $result =  $this->db->select('*')
                         ->from($this->table)

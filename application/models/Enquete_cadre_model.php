@@ -122,7 +122,7 @@ class Enquete_cadre_model extends CI_Model {
         }                 
     }
 
-    public function findByannee_site_unite_peche_region($requete) {
+    public function findByannee_site_unite_peche_regionTALOHA($requete) {
         $result =  $this->db->select_sum('nbr_unite_peche')
                         ->from($this->table)
                         ->where($requete)
@@ -140,6 +140,96 @@ class Enquete_cadre_model extends CI_Model {
             return null;
         }                 
     }
+
+    public function findByannee_site_unite_peche_region($annee, $id_region, $id_district,$id_site_embarquement, $id_unite_peche)
+    {
+        
+
+
+        if (($id_district!='*')&&($id_district!='undefined')) 
+        {
+            if (($id_site_embarquement!='*')&&($id_site_embarquement!='undefined')) 
+            {
+                $sql = 
+                "
+                    select 
+                        COUNT(ec.id_unite_peche) as nbr_unite_peche,
+                        up.libelle
+                    FROM 
+                        enquete_cadre AS ec,
+                        unite_peche AS up,
+                        site_embarquement AS se,
+                        district AS dist
+                    WHERE 
+                        ec.id_unite_peche = up.id
+                        AND ec.id_site_embarquement = se.id
+                        AND dist.id = se.id_district
+
+                        AND ec.annee = ".$annee."
+                        AND ec.id_region = ".$id_region."
+                        AND dist.id = ".$id_district."
+                        AND se.id = ".$id_site_embarquement."
+                        AND ec.id_unite_peche = ".$id_unite_peche."
+                ";
+            }
+            else
+            {
+                $sql = 
+                "
+                    select 
+                        COUNT(ec.id_unite_peche) as nbr_unite_peche,
+                        up.libelle
+                    FROM 
+                        enquete_cadre AS ec,
+                        unite_peche AS up,
+                        site_embarquement AS se,
+                        district AS dist
+                    WHERE 
+                        ec.id_unite_peche = up.id
+                        AND ec.id_site_embarquement = se.id
+                        AND dist.id = se.id_district
+
+                        AND ec.annee = ".$annee."
+                        AND ec.id_region = ".$id_region."
+                        AND dist.id = ".$id_district."
+                        AND ec.id_unite_peche = ".$id_unite_peche."
+                ";
+            }
+        }
+        else
+        {
+            $sql = 
+            "
+                select 
+                    COUNT(ec.id_unite_peche) as nbr_unite_peche,
+                    up.libelle
+                FROM 
+                    enquete_cadre AS ec,
+                    unite_peche AS up,
+                    site_embarquement AS se,
+                    district AS dist
+                WHERE 
+                    ec.id_unite_peche = up.id
+                    AND ec.id_site_embarquement = se.id
+                    AND dist.id = se.id_district
+
+                    AND ec.annee = ".$annee."
+                    AND ec.id_region = ".$id_region."
+                    AND ec.id_unite_peche = ".$id_unite_peche."
+            ";
+        }
+
+        if ($sql) 
+        {
+            $query= $this->db->query($sql);
+            return $query->result();
+        }
+        else
+            return false;
+    }
+
+
+
 
     public function findById($id)  {
         $this->db->where("id", $id);
