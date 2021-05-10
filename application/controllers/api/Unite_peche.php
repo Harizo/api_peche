@@ -19,6 +19,7 @@ class Unite_peche extends REST_Controller {
     {
         $id = $this->get('id');
         $cle_etrangere = $this->get('cle_etrangere');
+        $filtrer_echantillon = $this->get('filtrer_echantillon');
 		$taiza="";
         if($cle_etrangere)
         {
@@ -56,27 +57,38 @@ class Unite_peche extends REST_Controller {
                 
             } 
             else
-            {	$taiza="findAll no nataony";
-                $menu = $this->Unite_pecheManager->findAll();
-                if ($menu)
-                {   foreach ($menu as $key => $value)
-                    {   $site_embarquement = array();
-                        $type_canoe = array();
-                        $type_engin = array();
-
-                        $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
-                        $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
-
-                        
-                        $data[$key]['id'] = $value->id;
-                        $data[$key]['libelle'] = $value->libelle;
-                            
-                        $data[$key]['type_canoe'] = $type_canoe;
-                        $data[$key]['type_engin'] = $type_engin;
-                          
+            {	
+                if ($filtrer_echantillon) {
+                    $data = array();
+                    $all_unite_peche = $this->Unite_pecheManager->findAll_filtrer_echantillon();
+                    if ($all_unite_peche) {
+                        $data = $all_unite_peche ;
                     }
-                } else
-                        $data = array();
+                }
+                else
+                {
+                    $taiza="findAll no nataony";
+                    $menu = $this->Unite_pecheManager->findAll();
+                    if ($menu)
+                    {   foreach ($menu as $key => $value)
+                        {   $site_embarquement = array();
+                            $type_canoe = array();
+                            $type_engin = array();
+
+                            $type_canoe = $this->Type_canoeManager->findById($value->id_type_canoe);
+                            $type_engin = $this->Type_enginManager->findById($value->id_type_engin);
+
+                            
+                            $data[$key]['id'] = $value->id;
+                            $data[$key]['libelle'] = $value->libelle;
+                                
+                            $data[$key]['type_canoe'] = $type_canoe;
+                            $data[$key]['type_engin'] = $type_engin;
+                              
+                        }
+                    } else
+                            $data = array();
+                }
                 
             }
         }
